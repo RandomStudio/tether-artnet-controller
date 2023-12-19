@@ -9,7 +9,7 @@ use clap::Parser;
 
 use crate::{
     model::{ArtNetInterface, Model},
-    settings::Cli,
+    settings::{Cli, CHANNELS_PER_UNIVERSE},
 };
 
 mod model;
@@ -38,9 +38,12 @@ fn main() {
 
     let socket = UdpSocket::bind(src).unwrap();
 
+    let mut channels_state = Vec::with_capacity(CHANNELS_PER_UNIVERSE as usize);
+    channels_state = [0].repeat(CHANNELS_PER_UNIVERSE as usize); // init zeroes
+
     let mut model = Model {
         tether_agent,
-        channels_state: [0; 256],
+        channels_state,
         input_midi_cc,
         settings: cli.clone(),
         artnet: ArtNetInterface {

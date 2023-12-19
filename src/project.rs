@@ -3,12 +3,12 @@ use std::fs;
 use log::{error, info, warn};
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Project {
     pub fixtures: Vec<FixtureConfig>,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct FixtureConfig {
     pub path: String,
@@ -17,20 +17,20 @@ pub struct FixtureConfig {
     pub mode: usize,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Fixture {
     pub name: String,
     pub reference: String,
     pub modes: Vec<ControlMode>,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct ControlMode {
     pub name: String,
     pub mappings: Vec<Mapping>,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Mapping {
     pub channel: u16,
     pub label: String,
@@ -38,7 +38,7 @@ pub struct Mapping {
     pub ranges: Option<Vec<RangeDescription>>,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct RangeDescription {
     pub range: [u8; 2],
     pub label: String,

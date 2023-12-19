@@ -43,10 +43,21 @@ fn main() {
 
     let socket = UdpSocket::bind(src).unwrap();
 
+    let project = Project::load("./project.json").expect("failed to load project");
+
     let mut channels_state = Vec::with_capacity(CHANNELS_PER_UNIVERSE as usize);
     channels_state = [0].repeat(CHANNELS_PER_UNIVERSE as usize); // init zeroes
-
-    let project = Project::load("./project.json").expect("failed to load project");
+    for fc in project.clone().fixtures.iter() {
+        if let Some(fixture) = &fc.fixture {
+            let current_mode = &fixture.modes[fc.mode];
+            for m in &current_mode.mappings {
+                if let Some(default_value) = m.default {
+                    channels_state[(m.channel - 1) as usize] = default_value;
+                }
+            }
+        }
+    }
+    for c in channels_state.iter_mut() {}
 
     let mut model = Model {
         tether_agent,

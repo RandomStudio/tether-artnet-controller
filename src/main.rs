@@ -9,10 +9,12 @@ use clap::Parser;
 
 use crate::{
     model::{ArtNetInterface, Model},
+    project::Project,
     settings::{Cli, CHANNELS_PER_UNIVERSE},
 };
 
 mod model;
+mod project;
 mod settings;
 mod ui;
 
@@ -21,6 +23,9 @@ fn main() {
 
     env_logger::Builder::from_env(Env::default().default_filter_or(&cli.log_level))
         .filter_module("paho_mqtt", log::LevelFilter::Warn)
+        .filter_module("egui_glow", log::LevelFilter::Warn)
+        .filter_module("egui_winit", log::LevelFilter::Warn)
+        .filter_module("eframe", log::LevelFilter::Warn)
         .init();
 
     debug!("Started with settings: {:?}", cli);
@@ -41,6 +46,8 @@ fn main() {
     let mut channels_state = Vec::with_capacity(CHANNELS_PER_UNIVERSE as usize);
     channels_state = [0].repeat(CHANNELS_PER_UNIVERSE as usize); // init zeroes
 
+    let project = Project::load("./project.json").expect("failed to load project");
+
     let mut model = Model {
         tether_agent,
         channels_state,
@@ -50,6 +57,7 @@ fn main() {
             socket,
             destination: dst,
         },
+        project,
     };
 
     if cli.headless_mode {

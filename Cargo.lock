@@ -2510,6 +2510,7 @@ dependencies = [
 name = "tether-artnet-controller"
 version = "0.1.0"
 dependencies = [
+ "anyhow",
  "artnet_protocol",
  "clap",
  "eframe",

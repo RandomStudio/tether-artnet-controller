@@ -1,0 +1,9 @@
+{
+  "fixtures": [
+    {
+      "path": "./fixtures/ADJ_Vizi_Hex_Wash7.json",
+      "offsetChannels": 0,
+      "mode": 0
+    }
+  ]
+}

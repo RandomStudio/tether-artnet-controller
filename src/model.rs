@@ -10,8 +10,9 @@ use serde::{Deserialize, Serialize};
 use tether_agent::{PlugDefinition, TetherAgent};
 
 use crate::{
+    project::Project,
     settings::{Cli, CHANNELS_PER_UNIVERSE},
-    ui::render,
+    ui::{render_fixture_controls, render_sliders},
 };
 
 pub struct ArtNetInterface {
@@ -32,14 +33,19 @@ pub struct Model {
     pub input_midi_cc: PlugDefinition,
     pub settings: Cli,
     pub artnet: ArtNetInterface,
+    pub project: Project,
 }
 
 impl eframe::App for Model {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         ctx.request_repaint();
 
+        egui::SidePanel::right("Fixtures").show(ctx, |ui| {
+            render_fixture_controls(self, ui);
+        });
+
         egui::CentralPanel::default().show(ctx, |ui| {
-            render(self, ui);
+            render_sliders(self, ui);
         });
 
         self.update();

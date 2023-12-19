@@ -1,0 +1,132 @@
+{
+  "name": "AJD Vizi Hex Wash 7",
+  "reference": "http://adjmedia.s3-website-eu-west-1.amazonaws.com/manuals/ADJ%20Vizi%20Hex%20Wash7%20User%20Manual.pdf",
+  "modes": [
+    {
+      "name": "27 Channel DMX Mode (up to #21)",
+      "mappings": [
+        {
+          "channel": 1,
+          "label": "PAN MOVEMENT 8bit (540° or 630°)"
+        },
+        {
+          "channel": 2,
+          "label": "PAN MOVEMENT FINE 16bit"
+        },
+        {
+          "channel": 3,
+          "label": "TILT MOVEMENT 8bit",
+          "default": 128
+        },
+        {
+          "channel": 4,
+          "label": "TILT MOVEMENT FINE 16bit"
+        },
+        {
+          "channel": 5,
+          "label": "RED CENTER LED 0% - 100%"
+        },
+        {
+          "channel": 6,
+          "label": "GREEN CENTER LED 0% - 100%"
+        },
+        {
+          "channel": 7,
+          "label": "BLUE CENTER LED 0% - 100%"
+        },
+        {
+          "channel": 8,
+          "label": "WHITE CENTER LED 0% - 100%"
+        },
+        {
+          "channel": 9,
+          "label": "AMBER CENTER LED 0% - 100%"
+        },
+        {
+          "channel": 10,
+          "label": "UV CENTER LED 0% - 100%"
+        },
+        {
+          "channel": 11,
+          "label": "RED OUTER LED’S 0% - 100%"
+        },
+        {
+          "channel": 12,
+          "label": "GREEN OUTER LED’S 0% - 100%"
+        },
+        {
+          "channel": 13,
+          "label": "BLUE OUTER LED’S 0% - 100% "
+        },
+        {
+          "channel": 14,
+          "label": "WHITE OUTER LED’S 0% - 100%"
+        },
+        {
+          "channel": 15,
+          "label": "AMBER OUTER LED’S 0% - 100%"
+        },
+        {
+          "channel": 16,
+          "label": "UV OUTER LED’S 0% - 100%"
+        },
+        {
+          "channel": 17,
+          "label": "COLOR MACROS"
+        },
+        {
+          "channel": 18,
+          "label": "SHUTTER/STROBE",
+          "default": 255,
+          "ranges": [
+            {
+              "range": [0, 31],
+              "label": "LED OFF"
+            },
+            {
+              "range": [32, 63],
+              "label": "LED ON"
+            },
+            {
+              "range": [64, 95],
+              "label": "STROBING SLOW - FAST"
+            },
+            {
+              "range": [96, 127],
+              "label": "LED ON"
+            },
+            {
+              "range": [128, 159],
+              "label": "STROBE PULSE SLOW - FAST"
+            },
+            {
+              "range": [160, 191],
+              "label": "LED ON"
+            },
+            {
+              "range": [192, 223],
+              "label": "RANDOM STROBE SLOW - FAST"
+            },
+            {
+              "range": [224, 255],
+              "label": "LED ON"
+            }
+          ]
+        },
+        {
+          "channel": 19,
+          "label": "MASTER DIMMER",
+          "default": 255
+        },
+        {
+          "channel": 20,
+          "label": "DIMMER FINE"
+        },
+        {
+          "channel": 21,
+          "label": "ZOOM 7° - 58°"
+        }
+      ]
+    }
+  ]
+}

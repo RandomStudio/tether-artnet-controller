@@ -126,6 +126,24 @@
           "channel": 21,
           "label": "ZOOM 7° - 58°"
         }
+      ],
+      "groups": [
+        {
+          "label": "red",
+          "channels": [5, 11]
+        },
+        {
+          "label": "green",
+          "channels": [6, 12]
+        },
+        {
+          "label": "blue",
+          "channels": [7, 13]
+        },
+        {
+          "label": "white",
+          "channels": [8, 14]
+        }
       ]
     }
   ]

@@ -3,7 +3,7 @@ use egui::{Grid, ScrollArea, Slider, Ui};
 use crate::{model::Model, settings::CHANNELS_PER_UNIVERSE};
 
 pub fn render_sliders(model: &mut Model, ui: &mut Ui) {
-    ui.heading("Basic Slider Controls");
+    ui.heading("Global Slider Controls");
     ScrollArea::vertical()
         .auto_shrink([false, false])
         .show(ui, |ui| {
@@ -29,6 +29,9 @@ pub fn render_fixture_controls(model: &mut Model, ui: &mut Ui) {
                     ui.group(|ui| {
                         ui.heading(&fixture.name);
                         let current_mode = &fixture.modes[f.mode];
+
+                        ui.heading("Mappings");
+
                         Grid::new("mappings").num_columns(2).show(ui, |ui| {
                             for m in &current_mode.mappings {
                                 ui.label(&m.label)
@@ -38,6 +41,15 @@ pub fn render_fixture_controls(model: &mut Model, ui: &mut Ui) {
                                     0..=255,
                                 ));
                                 ui.end_row();
+                            }
+                        });
+
+                        ui.separator();
+
+                        ui.heading("Groups");
+                        Grid::new("mappings").num_columns(2).show(ui, |ui| {
+                            for g in &current_mode.groups {
+                                ui.label(&g.label);
                             }
                         });
                     });

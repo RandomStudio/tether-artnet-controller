@@ -57,8 +57,6 @@ fn main() {
             }
         }
     }
-    for c in channels_state.iter_mut() {}
-
     let mut model = Model {
         tether_agent,
         channels_state,

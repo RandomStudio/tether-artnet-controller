@@ -8,4 +8,10 @@ edition = "2021"
 [dependencies]
 tether-agent = "0.12.1"
 artnet_protocol = "0.4.1"
+midi-msg = "0.4.0"
+midir = "0.9.1"
 rand = "0.8.5"
+clap = { version = "4.1.1", features = ["derive"] }
+env_logger = "0.10.0"
+log = "0.4.18"
+

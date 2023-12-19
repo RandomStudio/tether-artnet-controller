@@ -5,12 +5,19 @@ use clap::Parser;
 const UNICAST_SRC: std::net::IpAddr = IpAddr::V4(Ipv4Addr::new(10, 0, 0, 102));
 const UNICAST_DST: std::net::IpAddr = IpAddr::V4(Ipv4Addr::new(10, 0, 0, 1));
 
-const DEFAULT_ARTNET_HERTZ: u64 = 44;
+pub const DEFAULT_ARTNET_HERTZ: u64 = 44;
 
-#[derive(Parser, Debug)]
+pub const CHANNELS_PER_UNIVERSE: u16 = 512;
+
+#[derive(Parser, Debug, Clone)]
 #[command(version, about, long_about = "Tether Artnet Controller")]
 pub struct Cli {
-  #[arg(long = "loglevel",default_value_t=String::from("info"))]
+    /// Flag to enable headless (no GUI) mode, suitable for server-type
+    /// process
+    #[arg(long = "headless")]
+    pub headless_mode: bool,
+
+    #[arg(long = "loglevel",default_value_t=String::from("info"))]
     pub log_level: String,
 
     /// IP address for ArtNet source interface (ignored if broadcast enabled)
@@ -26,7 +33,6 @@ pub struct Cli {
     pub artnet_update_frequency: u64,
 
     // TODO: split tasks/commands such as "auto" into separate Clap Command
-    
     #[arg(long = "auto.zero")]
     pub auto_zero: bool,
 

@@ -1,8 +1,35 @@
+use std::net::{IpAddr, Ipv4Addr};
+
 use clap::Parser;
+
+const UNICAST_SRC: std::net::IpAddr = IpAddr::V4(Ipv4Addr::new(10, 0, 0, 102));
+const UNICAST_DST: std::net::IpAddr = IpAddr::V4(Ipv4Addr::new(10, 0, 0, 1));
+
+const DEFAULT_ARTNET_HERTZ: u64 = 44;
 
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = "Tether Artnet Controller")]
 pub struct Cli {
   #[arg(long = "loglevel",default_value_t=String::from("info"))]
     pub log_level: String,
+
+    /// IP address for ArtNet source interface (ignored if broadcast enabled)
+    #[arg(long = "artnet.interface", default_value_t=UNICAST_SRC)]
+    pub unicast_src: std::net::IpAddr,
+
+    /// IP address for ArtNet destination node (ignored if broadcast enabled)
+    #[arg(long = "artnet.destination", default_value_t=UNICAST_DST)]
+    pub unicast_dst: std::net::IpAddr,
+
+    /// Update frequency, in Hertz, for sending ArtNet data (gets converted to ms)
+    #[arg(long = "artnet.freq", default_value_t=DEFAULT_ARTNET_HERTZ)]
+    pub artnet_update_frequency: u64,
+
+    // TODO: split tasks/commands such as "auto" into separate Clap Command
+    
+    #[arg(long = "auto.zero")]
+    pub auto_zero: bool,
+
+    #[arg(long = "auto.random")]
+    pub auto_random: bool,
 }

@@ -127,7 +127,7 @@
           "label": "ZOOM 7° - 58°"
         }
       ],
-      "groups": [
+      "macros": [
         {
           "label": "red",
           "channels": [5, 11]

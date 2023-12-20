@@ -28,7 +28,7 @@ pub struct Fixture {
 pub struct ControlMode {
     pub name: String,
     pub mappings: Vec<Mapping>,
-    pub groups: Vec<Group>,
+    pub macros: Vec<ControlMacro>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -40,9 +40,11 @@ pub struct Mapping {
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct Group {
+pub struct ControlMacro {
     pub label: String,
     pub channels: Vec<u16>,
+    #[serde(skip)]
+    pub current_value: u8,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]

@@ -1,6 +1,5 @@
-use std::net::{SocketAddr, ToSocketAddrs, UdpSocket};
+use std::net::{SocketAddr, UdpSocket};
 
-use eframe::App;
 use env_logger::Env;
 use log::{debug, info};
 use tether_agent::{PlugOptionsBuilder, TetherAgentOptionsBuilder};

@@ -10,9 +10,9 @@ use serde::{Deserialize, Serialize};
 use tether_agent::{PlugDefinition, TetherAgent};
 
 use crate::{
-    project::Project,
+    project::{ControlMacro, Project},
     settings::{Cli, CHANNELS_PER_UNIVERSE},
-    ui::{render_fixture_controls, render_sliders},
+    ui::{render_fixture_controls, render_macro_controls, render_sliders},
 };
 
 pub struct ArtNetInterface {
@@ -25,6 +25,11 @@ pub struct TetherControlChangePayload {
     pub channel: u8,
     pub controller: u8,
     pub value: u8,
+}
+
+pub struct MacroState {
+    pub control_macro: ControlMacro,
+    pub current_value: u8,
 }
 
 pub struct Model {
@@ -40,12 +45,16 @@ impl eframe::App for Model {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         ctx.request_repaint();
 
-        egui::SidePanel::right("Fixtures").show(ctx, |ui| {
-            render_fixture_controls(self, ui);
+        egui::SidePanel::left("LeftPanel").show(ctx, |ui| {
+            render_sliders(self, ui);
+        });
+
+        egui::SidePanel::right("RightPanel").show(ctx, |ui| {
+            render_macro_controls(self, ui);
         });
 
         egui::CentralPanel::default().show(ctx, |ui| {
-            render_sliders(self, ui);
+            render_fixture_controls(self, ui);
         });
 
         self.update();

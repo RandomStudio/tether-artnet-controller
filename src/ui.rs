@@ -103,6 +103,9 @@ pub fn render_macro_controls(model: &mut Model, ui: &mut Ui) {
             for (i, f) in model.project.fixtures.iter_mut().enumerate() {
                 if let Some(fixture) = &mut f.fixture {
                     ui.group(|ui| {
+                        if ui.button("Select").clicked() {
+                            model.selected_macro_group_index = i;
+                        }
                         ui.heading(RichText::new(&f.label).color(
                             if i == model.selected_macro_group_index {
                                 Color32::GREEN

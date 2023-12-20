@@ -90,8 +90,10 @@ pub fn render_macro_controls(model: &mut Model, ui: &mut Ui) {
         model.channels_state = [0].repeat(CHANNELS_PER_UNIVERSE as usize);
     }
     if ui.button("DEFAULTS").clicked() {
+        // First zero all...
+        model.channels_state = [0].repeat(CHANNELS_PER_UNIVERSE as usize);
+        // Then apply defaults...
         apply_defaults(&model.project.fixtures.clone(), &mut model.channels_state)
-        // model.channels_state = [0].repeat(CHANNELS_PER_UNIVERSE as usize);
     }
 
     ui.separator();

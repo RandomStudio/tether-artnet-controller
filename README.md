@@ -13,6 +13,7 @@ cargo run -- --artnet.interface 10.112.10.187 --artnet.destination 10.112.10.187
 ## TODO
 - [x] Add labels for which channels are already "taken"/assigned in master slider list
 - [ ] Add indications of "range values" for channels where this applies (under fixture section)
+- [ ] Allow macros to be (temporarily) disabled so Fixture>Mapping values can be adjusted directly without being overridden
 - [ ] Add the missing macros/auto sections with range values for both fixture types (left out this detail)
 - [ ] Remote control for macros
 - [ ] MIDI (Tether, remote) control

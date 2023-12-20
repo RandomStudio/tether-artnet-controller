@@ -7,7 +7,8 @@
       "mappings": [
         {
           "channel": 1,
-          "label": "PAN MOVEMENT 8bit (540° or 630°)"
+          "label": "PAN MOVEMENT 8bit",
+          "notes": "(540° or 630°)"
         },
         {
           "channel": 2,
@@ -24,51 +25,63 @@
         },
         {
           "channel": 5,
-          "label": "RED CENTER LED 0% - 100%"
+          "label": "RED CENTER LED",
+          "notes": "0% - 100%"
         },
         {
           "channel": 6,
-          "label": "GREEN CENTER LED 0% - 100%"
+          "label": "GREEN CENTER LED",
+          "notes": "0% - 100%"
         },
         {
           "channel": 7,
-          "label": "BLUE CENTER LED 0% - 100%"
+          "label": "BLUE CENTER LED",
+          "notes": "0% - 100%"
         },
         {
           "channel": 8,
-          "label": "WHITE CENTER LED 0% - 100%"
+          "label": "WHITE CENTER LED",
+          "notes": "0% - 100%"
         },
         {
           "channel": 9,
-          "label": "AMBER CENTER LED 0% - 100%"
+          "label": "AMBER CENTER LED",
+          "notes": "0% - 100%"
         },
         {
           "channel": 10,
-          "label": "UV CENTER LED 0% - 100%"
+          "label": "UV CENTER LED",
+          "notes": "0% - 100%"
         },
         {
           "channel": 11,
-          "label": "RED OUTER LED’S 0% - 100%"
+          "label": "RED OUTER LEDs",
+          "notes": "0% - 100%"
         },
         {
           "channel": 12,
-          "label": "GREEN OUTER LED’S 0% - 100%"
+          "label": "GREEN OUTER LEDs",
+          "notes": "0% - 100%"
         },
         {
           "channel": 13,
-          "label": "BLUE OUTER LED’S 0% - 100% "
+          "label": "BLUE OUTER LEDs",
+          "notes": "0% - 100%"
         },
         {
           "channel": 14,
-          "label": "WHITE OUTER LED’S 0% - 100%"
+          "label": "WHITE OUTER LEDs",
+          "notes": "0% - 100%"
         },
         {
           "channel": 15,
-          "label": "AMBER OUTER LED’S 0% - 100%"
+          "label": "AMBER OUTER LEDs",
+          "notes": "0% - 100%"
         },
         {
           "channel": 16,
-          "label": "UV OUTER LED’S 0% - 100%"
+          "label": "UV OUTER LEDs",
+          "notes": "0% - 100%"
         },
         {
           "channel": 17,
@@ -89,7 +102,8 @@
             },
             {
               "range": [64, 95],
-              "label": "STROBING SLOW - FAST"
+              "label": "STROBING SPEED",
+              "notes": "SLOW - FAST"
             },
             {
               "range": [96, 127],
@@ -97,7 +111,8 @@
             },
             {
               "range": [128, 159],
-              "label": "STROBE PULSE SLOW - FAST"
+              "label": "STROBE PULSE SPEED",
+              "notes": "SLOW - FAST"
             },
             {
               "range": [160, 191],
@@ -105,7 +120,8 @@
             },
             {
               "range": [192, 223],
-              "label": "RANDOM STROBE SLOW - FAST"
+              "label": "RANDOM STROBE SPEED",
+              "notes": "SLOW - FAST"
             },
             {
               "range": [224, 255],
@@ -124,7 +140,8 @@
         },
         {
           "channel": 21,
-          "label": "ZOOM 7° - 58°"
+          "label": "ZOOM",
+          "notes": "7° - 58°"
         }
       ],
       "macros": [

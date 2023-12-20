@@ -10,7 +10,7 @@ use serde::{Deserialize, Serialize};
 use tether_agent::{PlugDefinition, TetherAgent};
 
 use crate::{
-    project::{ControlMacro, Project},
+    project::Project,
     settings::{Cli, CHANNELS_PER_UNIVERSE},
     ui::{render_fixture_controls, render_macro_controls, render_sliders},
 };
@@ -25,11 +25,6 @@ pub struct TetherControlChangePayload {
     pub channel: u8,
     pub controller: u8,
     pub value: u8,
-}
-
-pub struct MacroState {
-    pub control_macro: ControlMacro,
-    pub current_value: u8,
 }
 
 pub struct Model {
@@ -72,7 +67,7 @@ impl Model {
                 let m = rmp_serde::from_slice::<TetherControlChangePayload>(&message.payload())
                     .unwrap();
                 let TetherControlChangePayload {
-                    channel,
+                    channel: _,
                     controller,
                     value,
                 } = m;

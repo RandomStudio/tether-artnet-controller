@@ -1,5 +1,4 @@
 use egui::{Color32, Grid, RichText, ScrollArea, Slider, Ui};
-use log::{debug, warn};
 
 use crate::{model::Model, settings::CHANNELS_PER_UNIVERSE};
 
@@ -34,28 +33,48 @@ pub fn render_fixture_controls(model: &mut Model, ui: &mut Ui) {
         .show(ui, |ui| {
             for (i, f) in model.project.fixtures.iter().enumerate() {
                 if let Some(fixture) = &f.fixture {
-                    ui.group(|ui| {
-                        ui.heading(format!("{} +{}", &fixture.name, f.offset_channels));
-                        ui.hyperlink_to("Reference/manual", &fixture.reference);
-                        let current_mode = &fixture.modes[f.mode];
+                    // ui.group(|ui| {
+                    ui.heading(format!("{} +{}", &f.label, f.offset_channels));
+                    ui.label(format!("{}", &fixture.name));
+                    ui.hyperlink_to("Reference/manual", &fixture.reference);
+                    let current_mode = &fixture.modes[f.mode];
 
-                        ui.heading("Mappings");
+                    ui.heading("Mappings");
 
-                        Grid::new(format!("mappings_{}", i))
-                            .num_columns(2)
-                            .show(ui, |ui| {
-                                for m in &current_mode.mappings {
-                                    let channel_index = m.channel + f.offset_channels - 1;
-                                    ui.label(&m.label)
-                                        .on_hover_text(format!("#Channel {}", channel_index + 1));
-                                    ui.add(Slider::new(
-                                        &mut model.channels_state[(channel_index) as usize],
-                                        0..=255,
-                                    ));
-                                    ui.end_row();
+                    Grid::new(format!("mappings_{}", i))
+                        .num_columns(3)
+                        .show(ui, |ui| {
+                            for m in &current_mode.mappings {
+                                let channel_index = m.channel + f.offset_channels - 1;
+                                ui.label(&m.label).on_hover_text(format!(
+                                    "#Channel {}: {}",
+                                    channel_index + 1,
+                                    &m.notes.as_deref().unwrap_or_default()
+                                ));
+                                let mut value = model.channels_state[(channel_index) as usize];
+                                ui.add(Slider::new(&mut value, 0..=255));
+                                if let Some(range_sections) = &m.ranges {
+                                    ui.label("Mode/Programme:");
+                                    let current_range = range_sections.iter().find(|x| {
+                                        let [start, end] = x.range;
+                                        value >= start && value <= end
+                                    });
+                                    match current_range {
+                                        Some(r) => {
+                                            ui.label(&r.label);
+                                        }
+                                        None => {
+                                            ui.label("Invalid range");
+                                        }
+                                    }
+                                } else {
+                                    ui.label("");
                                 }
-                            });
-                    });
+                                ui.end_row();
+                            }
+                        });
+                    ui.separator();
+                    // });
                 }
             }
         });

@@ -7,7 +7,8 @@
       "mappings": [
         {
           "channel": 1,
-          "label": "Rotation (pan) (0° up to the maximum value of the Pan area. (middle position: 128)"
+          "label": "Rotation (pan)",
+          "notes": "(0° up to the maximum value of the Pan area. middle position: 128)"
         },
         {
           "channel": 2,
@@ -15,7 +16,8 @@
         },
         {
           "channel": 3,
-          "label": "Inclination (tilt) (0° up to the maximum value of the Tilt area. (middle position: 128)",
+          "label": "Inclination (tilt) ",
+          "notes": "(0° up to the maximum value of the Tilt area. middle position: 128)",
           "default": 128
         },
         {
@@ -24,11 +26,13 @@
         },
         {
           "channel": 5,
-          "label": "Speed of rotation (pan) and inclination (tilt), fast (0) to slow (255)"
+          "label": "Rotation/Tilt speed",
+          "notes": "Speed of rotation (pan) and inclination (tilt) fast (0) to slow (255)"
         },
         {
           "channel": 6,
-          "label": "Dimmer intensity from dark (0) to bright (255)",
+          "label": "Dimmer intensity",
+          "notes": "from dark (0) to bright (255)",
           "default": 128
         },
         {
@@ -42,7 +46,8 @@
             },
             {
               "range": [10, 250],
-              "label": "Stroboscope, increasing speed (0 … 20 Hz)"
+              "label": "Stroboscope",
+              "notes": "increasing speed (0 … 20 Hz)"
             },
             {
               "range": [251, 255],
@@ -52,23 +57,28 @@
         },
         {
           "channel": 8,
-          "label": "Intensity red (0 % to 100 %)"
+          "label": "Intensity red",
+          "notes": "(0 % to 100 %)"
         },
         {
           "channel": 9,
-          "label": "Intensity green (0 % to 100 %)"
+          "label": "Intensity green",
+          "notes": "(0 % to 100 %)"
         },
         {
           "channel": 10,
-          "label": "Intensity blue (0 % to 100 %)"
+          "label": "Intensity blue",
+          "notes": "(0 % to 100 %)"
         },
         {
           "channel": 11,
-          "label": "Intensity white (0 % to 100 %)"
+          "label": "Intensity white",
+          "notes": "(0 % to 100 %)"
         },
         {
           "channel": 12,
-          "label": "Colour temperature (0 % to 100 %)"
+          "label": "Colour temperature",
+          "notes": "(0 % to 100 %)"
         },
         {
           "channel": 13,

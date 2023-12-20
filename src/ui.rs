@@ -51,13 +51,17 @@ pub fn render_fixture_controls(model: &mut Model, ui: &mut Ui) {
                                     channel_index + 1,
                                     &m.notes.as_deref().unwrap_or_default()
                                 ));
-                                let mut value = model.channels_state[(channel_index) as usize];
-                                ui.add(Slider::new(&mut value, 0..=255));
+                                // let mut value = ;
+                                ui.add(Slider::new(
+                                    &mut model.channels_state[(channel_index) as usize],
+                                    0..=255,
+                                ));
                                 if let Some(range_sections) = &m.ranges {
                                     ui.label("Mode/Programme:");
                                     let current_range = range_sections.iter().find(|x| {
                                         let [start, end] = x.range;
-                                        value >= start && value <= end
+                                        model.channels_state[(channel_index) as usize] >= start
+                                            && model.channels_state[(channel_index) as usize] <= end
                                     });
                                     match current_range {
                                         Some(r) => {

@@ -103,14 +103,20 @@ pub fn render_macro_controls(model: &mut Model, ui: &mut Ui) {
             for (i, f) in model.project.fixtures.iter_mut().enumerate() {
                 if let Some(fixture) = &mut f.fixture {
                     ui.group(|ui| {
-                        ui.heading(&f.label);
+                        ui.heading(RichText::new(&f.label).color(
+                            if i == model.selected_macro_group_index {
+                                Color32::GREEN
+                            } else {
+                                Color32::GRAY
+                            },
+                        ));
                         ui.label(&fixture.name);
                         let current_mode = &mut fixture.modes[f.mode];
 
                         Grid::new(format!("macros_{}", i))
                             .num_columns(2)
                             .show(ui, |ui| {
-                                for m in current_mode.macros.iter_mut() {
+                                for (i, m) in current_mode.macros.iter_mut().enumerate() {
                                     ui.label(&m.label);
                                     if ui.add(Slider::new(&mut m.current_value, 0..=255)).changed()
                                     {

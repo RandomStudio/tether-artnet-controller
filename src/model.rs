@@ -13,7 +13,7 @@ use tether_agent::{PlugDefinition, TetherAgent};
 use crate::{
     project::{FixtureConfig, Project},
     settings::{Cli, CHANNELS_PER_UNIVERSE},
-    tether_interface::{TetherControlChangePayload, TetherMidiMessage},
+    tether_interface::{TetherControlChangePayload, TetherMidiMessage, TetherNotePayload},
     ui::{render_fixture_controls, render_macro_controls, render_sliders},
 };
 
@@ -89,6 +89,7 @@ impl Model {
     }
 
     pub fn update(&mut self) {
+        let mut work_done = false;
         let mut rng = rand::thread_rng();
 
         for _i in 0..CHANNELS_PER_UNIVERSE {
@@ -102,10 +103,21 @@ impl Model {
             }
         }
 
-        if let Ok(m) = self.tether_rx.try_recv() {
+        while let Ok(m) = self.tether_rx.try_recv() {
+            work_done = true;
             match m {
                 TetherMidiMessage::Raw(_) => todo!(),
-                TetherMidiMessage::NoteOn(_) => todo!(),
+                TetherMidiMessage::NoteOn(note) => {
+                    let TetherNotePayload {
+                        note,
+                        channel: _,
+                        velocity: _,
+                    } = note;
+                    let start_note = 48;
+                    let index = note - start_note;
+                    debug!("Note {} => macro group index {}", note, index);
+                    self.selected_macro_group_index = index as usize;
+                }
                 TetherMidiMessage::NoteOff(_) => todo!(),
                 TetherMidiMessage::ControlChange(cc) => {
                     let TetherControlChangePayload {
@@ -134,6 +146,7 @@ impl Model {
                         if self.selected_macro_group_index as usize == i {
                             debug!("Adjust for macros {:?}", m);
                             let target_macro_index = controller - controller_start;
+                            debug!("Controller {} => {}", controller, target_macro_index);
                             match m.get(target_macro_index as usize) {
                                 Some(macro_control) => {
                                     let value = value * 2;
@@ -152,7 +165,6 @@ impl Model {
                             }
                         }
                     }
-                    debug!("Let's set some DMX channels!");
                 }
             }
         }
@@ -172,7 +184,9 @@ impl Model {
         if self.settings.auto_random || self.settings.auto_zero {
             std::thread::sleep(Duration::from_secs(1));
         } else {
-            std::thread::sleep(Duration::from_millis(self.settings.artnet_update_frequency));
+            if !work_done {
+                std::thread::sleep(Duration::from_millis(self.settings.artnet_update_frequency));
+            }
         }
     }
 

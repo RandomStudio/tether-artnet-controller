@@ -1,6 +1,7 @@
 use std::{
     sync::mpsc::{Receiver, Sender},
-    thread::{spawn, JoinHandle},
+    thread::{sleep, spawn, JoinHandle},
+    time::Duration,
 };
 
 use log::debug;
@@ -39,6 +40,10 @@ pub fn start_tether_thread(tx: Sender<TetherMidiMessage>) -> JoinHandle<()> {
         .build(&tether_agent)
         .expect("failed to create Input Plug");
 
+    let input_midi_notes = PlugOptionsBuilder::create_input("notesOn")
+        .build(&tether_agent)
+        .expect("failed to create Input Plug");
+
     spawn(move || loop {
         while let Some((topic, message)) = tether_agent.check_messages() {
             if input_midi_cc.matches(&topic) {
@@ -48,6 +53,13 @@ pub fn start_tether_thread(tx: Sender<TetherMidiMessage>) -> JoinHandle<()> {
                 tx.send(TetherMidiMessage::ControlChange(m))
                     .expect("failed to send")
             }
+            if input_midi_notes.matches(&topic) {
+                debug!("MIDI Note");
+                let m = rmp_serde::from_slice::<TetherNotePayload>(&message.payload()).unwrap();
+                tx.send(TetherMidiMessage::NoteOn(m))
+                    .expect("failed to send")
+            }
         }
+        sleep(Duration::from_millis(1));
     })
 }

@@ -33,7 +33,7 @@
           "channel": 6,
           "label": "Dimmer intensity",
           "notes": "from dark (0) to bright (255)",
-          "default": 128
+          "default": 255
         },
         {
           "channel": 7,

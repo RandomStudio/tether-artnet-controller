@@ -90,11 +90,79 @@
         },
         {
           "channel": 15,
-          "label": "Beam effects"
+          "label": "Beam effects",
+          "ranges": [
+            {
+              "range": [0, 100],
+              "label": "Closed to open (0°…90°)"
+            },
+            {
+              "range": [101, 133],
+              "label": "Yo-yo effect, increasing speed"
+            },
+            {
+              "range": [134, 194],
+              "label": "Gobo wheel rotation clockwise, decreasing speed"
+            },
+            {
+              "range": [195, 255],
+              "label": "Rotation clockwise, increasing speed"
+            }
+          ]
         },
         {
           "channel": 16,
-          "label": "Auto programmes"
+          "label": "Auto programmes",
+          "ranges": [
+            {
+              "range": [0, 10],
+              "label": "No function"
+            },
+            {
+              "range": [11, 20],
+              "label": "Preprogrammed automatic show 1"
+            },
+            {
+              "range": [21, 30],
+              "label": "Preprogrammed automatic show 2"
+            },
+            {
+              "range": [31, 30],
+              "label": "Preprogrammed automatic show 3"
+            },
+            {
+              "range": [41, 50],
+              "label": "Preprogrammed automatic show 4"
+            },
+            {
+              "range": [51, 60],
+              "label": "Preprogrammed automatic show t"
+            },
+            {
+              "range": [61, 70],
+              "label": "Preprogrammed automatic show 6"
+            },
+            {
+              "range": [71, 80],
+              "label": "Preprogrammed automatic show 7"
+            },
+            {
+              "range": [81, 90],
+              "label": "Preprogrammed automatic show 8"
+            },
+            {
+              "range": [91, 230],
+              "label": "Sound control, from sound control off to high microphone sensitivity"
+            },
+            {
+              "range": [231, 240],
+              "label": "Reset, if the value is transmitted for at least 3 seconds"
+            },
+            {
+              "range": [241, 255],
+              "label": "No function"
+            }
+          ]
         }
       ],
       "macros": [

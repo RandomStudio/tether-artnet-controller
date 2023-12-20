@@ -3,7 +3,7 @@
   "reference": "http://adjmedia.s3-website-eu-west-1.amazonaws.com/manuals/ADJ%20Vizi%20Hex%20Wash7%20User%20Manual.pdf",
   "modes": [
     {
-      "name": "27 Channel DMX Mode (up to #21)",
+      "name": "27 Channel DMX Mode",
       "mappings": [
         {
           "channel": 1,
@@ -142,6 +142,189 @@
           "channel": 21,
           "label": "ZOOM",
           "notes": "7° - 58°"
+        },
+        {
+          "channel": 22,
+          "label": "AUTO PROGRAMS",
+          "ranges": [
+            {
+              "range": [0, 0],
+              "label": "OFF"
+            },
+            {
+              "range": [1, 20],
+              "label": "PROGRAM 1"
+            },
+            {
+              "range": [1, 20],
+              "label": "PROGRAM 2"
+            },
+            {
+              "range": [21, 40],
+              "label": "PROGRAM 3"
+            },
+            {
+              "range": [61, 80],
+              "label": "PROGRAM 4"
+            },
+            {
+              "range": [81, 100],
+              "label": "PROGRAM 5"
+            },
+            {
+              "range": [101, 120],
+              "label": "PROGRAM 6"
+            },
+            {
+              "range": [121, 140],
+              "label": "PROGRAM 7"
+            },
+            {
+              "range": [141, 160],
+              "label": "PROGRAM 8"
+            },
+            {
+              "range": [161, 180],
+              "label": "PROGRAM 9"
+            },
+            {
+              "range": [181, 200],
+              "label": "PROGRAM 10"
+            },
+            {
+              "range": [201, 220],
+              "label": "PROGRAM 11"
+            },
+            {
+              "range": [221, 240],
+              "label": "PROGRAM 12"
+            },
+            {
+              "range": [241, 250],
+              "label": "PROGRAM 13"
+            },
+            {
+              "range": [251, 255],
+              "label": "PROGRAM 14"
+            }
+          ]
+        },
+        {
+          "channel": 23,
+          "label": "PROGRAM SPEED",
+          "notes": "SLOW - FAST"
+        },
+        {
+          "channel": 24,
+          "label": "AUTO PROGRAM FADE",
+          "ranges": [
+            {
+              "range": [0, 0],
+              "label": "NORMAL"
+            },
+            {
+              "range": [1, 255],
+              "label": "SLOW - FAST"
+            }
+          ]
+        },
+        {
+          "channel": 25,
+          "label": "DIMMER MODE",
+          "ranges": [
+            {
+              "range": [0, 20],
+              "label": "STANDARD"
+            },
+            {
+              "range": [21, 40],
+              "label": "STAGE"
+            },
+            {
+              "range": [41, 60],
+              "label": "TV"
+            },
+            {
+              "range": [61, 80],
+              "label": "ARCHITECTRUAL"
+            },
+            {
+              "range": [81, 100],
+              "label": "THEATRE"
+            },
+            {
+              "range": [100, 255],
+              "label": "DEFAULT DIMMER SETTING"
+            }
+          ]
+        },
+        {
+          "channel": 26,
+          "label": "PAN/TILT SPEED",
+          "ranges": [
+            {
+              "range": [0, 225],
+              "label": "FAST - SLOW"
+            },
+            {
+              "range": [226, 235],
+              "label": "BLACKOUT BY MOVEMENT"
+            },
+            {
+              "range": [236, 255],
+              "label": "NO FUNCTION"
+            }
+          ]
+        },
+        {
+          "channel": 27,
+          "label": "AUTO PROGRAMS",
+          "ranges": [
+            {
+              "range": [0, 79],
+              "label": "NORMAL"
+            },
+            {
+              "range": [80, 84],
+              "label": "ALL MOTOR RESET"
+            },
+            {
+              "range": [85, 99],
+              "label": "NO FUNCTION"
+            },
+            {
+              "range": [101, 119],
+              "label": "INTERNAL PROGRAM 1"
+            },
+            {
+              "range": [120, 139],
+              "label": "INTERNAL PROGRAM 2"
+            },
+            {
+              "range": [130, 159],
+              "label": "INTERNAL PROGRAM 3"
+            },
+            {
+              "range": [160, 179],
+              "label": "INTERNAL PROGRAM 4"
+            },
+            {
+              "range": [180, 199],
+              "label": "INTERNAL PROGRAM 5"
+            },
+            {
+              "range": [200, 219],
+              "label": "INTERNAL PROGRAM 6"
+            },
+            {
+              "range": [220, 239],
+              "label": "INTERNAL PROGRAM 7"
+            },
+            {
+              "range": [240, 255],
+              "label": "NO FUNCTION"
+            }
+          ]
         }
       ],
       "macros": [

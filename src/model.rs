@@ -5,7 +5,7 @@ use std::{
 };
 
 use artnet_protocol::{ArtCommand, Output};
-use log::debug;
+use log::{debug, error};
 use rand::Rng;
 use serde::{Deserialize, Serialize};
 use tether_agent::{PlugDefinition, TetherAgent};
@@ -113,9 +113,46 @@ impl Model {
                         controller,
                         value,
                     } = cc;
-                    let macro_index = 0;
+
+                    let active_macros = self
+                        .project
+                        .fixtures
+                        .iter()
+                        .map(|fc| {
+                            if let Some(fixture) = &fc.fixture {
+                                let macros = fixture.modes[0].macros.clone();
+                                return Some((fc.clone(), macros));
+                            } else {
+                                return None;
+                            }
+                        })
+                        .filter_map(|x| x);
+
+                    let controller_start = 48;
+
+                    for (i, (fixture_config, m)) in active_macros.enumerate() {
+                        if self.selected_macro_group_index as usize == i {
+                            debug!("Adjust for macros {:?}", m);
+                            let target_macro_index = controller - controller_start;
+                            match m.get(target_macro_index as usize) {
+                                Some(macro_control) => {
+                                    let value = value * 2;
+                                    debug!("Adjust {:?} to {}", macro_control, value);
+                                    // macro_control.current_value = value * 2;
+                                    for c in &macro_control.channels {
+                                        let channel_index =
+                                            (*c - 1 + fixture_config.offset_channels) as usize;
+                                        debug!("Set channel {} to value {}", channel_index, value);
+                                        self.channels_state[channel_index] = value;
+                                    }
+                                }
+                                None => {
+                                    error!("Failed to match macro control");
+                                }
+                            }
+                        }
+                    }
                     debug!("Let's set some DMX channels!");
-                    // self.channels_state[controller as usize] = value * 2; // MIDI channels go [0..=127]
                 }
             }
         }

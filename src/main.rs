@@ -77,7 +77,7 @@ fn main() {
     } else {
         info!("Running graphics mode; close the window to quit");
         let options = eframe::NativeOptions {
-            initial_window_size: Some(egui::vec2(1000.0, 1000.)),
+            initial_window_size: Some(egui::vec2(1280.0, 900.)),
             ..Default::default()
         };
         eframe::run_native(

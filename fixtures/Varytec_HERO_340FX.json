@@ -7,7 +7,7 @@
       "mappings": [
         {
           "channel": 1,
-          "label": "Rotation (pan) (0° up to the maximum value of the Pan area. middle position: 128)"
+          "label": "Rotation (pan) (0° up to the maximum value of the Pan area. (middle position: 128)"
         },
         {
           "channel": 2,
@@ -15,7 +15,7 @@
         },
         {
           "channel": 3,
-          "label": "Inclination (tilt) (0° up to the maximum value of the Tilt area. middle position: 128)",
+          "label": "Inclination (tilt) (0° up to the maximum value of the Tilt area. (middle position: 128)",
           "default": 128
         },
         {

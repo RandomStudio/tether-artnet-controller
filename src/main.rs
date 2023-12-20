@@ -51,7 +51,8 @@ fn main() {
             let current_mode = &fixture.modes[fc.mode];
             for m in &current_mode.mappings {
                 if let Some(default_value) = m.default {
-                    channels_state[(m.channel - 1) as usize] = default_value;
+                    let channel_index = m.channel + fc.offset_channels - 1;
+                    channels_state[channel_index as usize] = default_value;
                 }
             }
         }
@@ -76,7 +77,7 @@ fn main() {
     } else {
         info!("Running graphics mode; close the window to quit");
         let options = eframe::NativeOptions {
-            initial_window_size: Some(egui::vec2(1280.0, 550.)),
+            initial_window_size: Some(egui::vec2(1000.0, 1000.)),
             ..Default::default()
         };
         eframe::run_native(

@@ -85,6 +85,13 @@ pub fn render_fixture_controls(model: &mut Model, ui: &mut Ui) {
 }
 
 pub fn render_macro_controls(model: &mut Model, ui: &mut Ui) {
+    ui.heading("All");
+    if ui.button("ZERO").clicked() {
+        model.channels_state = [0].repeat(CHANNELS_PER_UNIVERSE as usize);
+    }
+
+    ui.separator();
+
     ui.heading("Macros");
 
     ScrollArea::vertical()

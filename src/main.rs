@@ -44,9 +44,12 @@ fn main() {
 
     let project = Project::load("./project.json").expect("failed to load project");
 
-    let mut channels_state = Vec::with_capacity(CHANNELS_PER_UNIVERSE as usize);
-    channels_state = [0].repeat(CHANNELS_PER_UNIVERSE as usize); // init zeroes
-    for fc in project.clone().fixtures.iter() {
+    let mut channels_state = [0].repeat(CHANNELS_PER_UNIVERSE as usize); // init zeroes
+
+    let fixtures_clone = project.clone().fixtures;
+
+    // Init any channels to default values, if found
+    for fc in fixtures_clone.iter() {
         if let Some(fixture) = &fc.fixture {
             let current_mode = &fixture.modes[fc.mode];
             for m in &current_mode.mappings {
@@ -57,9 +60,22 @@ fn main() {
             }
         }
     }
+
+    let mut channels_assigned: Vec<bool> = [false].repeat(CHANNELS_PER_UNIVERSE as usize);
+    for fc in fixtures_clone.iter() {
+        if let Some(fixture) = &fc.fixture {
+            let current_mode = &fixture.modes[fc.mode];
+            for m in &current_mode.mappings {
+                let channel_index = m.channel + fc.offset_channels - 1;
+                channels_assigned[channel_index as usize] = true;
+            }
+        }
+    }
+
     let mut model = Model {
         tether_agent,
         channels_state,
+        channels_assigned,
         input_midi_cc,
         settings: cli.clone(),
         artnet: ArtNetInterface {

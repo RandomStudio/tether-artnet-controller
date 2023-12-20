@@ -34,6 +34,7 @@ pub struct MacroState {
 
 pub struct Model {
     pub channels_state: Vec<u8>,
+    pub channels_assigned: Vec<bool>,
     pub tether_agent: TetherAgent,
     pub input_midi_cc: PlugDefinition,
     pub settings: Cli,

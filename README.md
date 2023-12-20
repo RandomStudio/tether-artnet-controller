@@ -11,8 +11,11 @@ cargo run -- --artnet.interface 10.112.10.187 --artnet.destination 10.112.10.187
 ```
 
 ## TODO
-- [ ] Add labels for which channels are already "taken"/assigned in master slider list
+- [x] Add labels for which channels are already "taken"/assigned in master slider list
 - [ ] With macros, add some visual indicators of state, e.g. Colour, Brightness and Pan/Tilt 
 - [ ] Add indications of "range values" for channels where this applies (under fixture section)
 - [ ] Add the missing macros/auto sections with range values for both fixture types (left out this detail)
+- [ ] Remote control for macros
+- [ ] MIDI (Tether, remote) control
+- [ ] Macro Animations
 - [ ] Add 16-bit control, at least for macros (single slider adjusts the two channels as split between first and second 8-bit digits)

@@ -1,17 +1,24 @@
-use egui::{Grid, ScrollArea, Slider, Ui};
+use egui::{Color32, Grid, RichText, ScrollArea, Slider, Ui};
 use log::{debug, warn};
 
 use crate::{model::Model, settings::CHANNELS_PER_UNIVERSE};
 
 pub fn render_sliders(model: &mut Model, ui: &mut Ui) {
     ui.heading("Global Slider Controls");
+
     ScrollArea::vertical()
         .auto_shrink([false, false])
         .show(ui, |ui| {
             Grid::new("sliders").num_columns(2).show(ui, |ui| {
                 for i in 0..CHANNELS_PER_UNIVERSE {
                     // ui.horizontal(|ui| {
-                    ui.label(format!("Channel #{}", i + 1));
+                    let text = format!("Channel #{}", i + 1);
+                    let is_assigned = model.channels_assigned[i as usize];
+                    ui.label(RichText::new(text).color(if is_assigned {
+                        Color32::GREEN
+                    } else {
+                        Color32::GRAY
+                    }));
                     ui.add(Slider::new(&mut model.channels_state[i as usize], 0..=255));
                     // });
                     ui.end_row();

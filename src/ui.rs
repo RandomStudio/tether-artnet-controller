@@ -1,6 +1,6 @@
 use egui::{Color32, Grid, RichText, ScrollArea, Slider, Ui};
 
-use crate::{model::Model, settings::CHANNELS_PER_UNIVERSE};
+use crate::{apply_defaults, model::Model, settings::CHANNELS_PER_UNIVERSE};
 
 pub fn render_sliders(model: &mut Model, ui: &mut Ui) {
     ui.heading("Global Slider Controls");
@@ -88,6 +88,10 @@ pub fn render_macro_controls(model: &mut Model, ui: &mut Ui) {
     ui.heading("All");
     if ui.button("ZERO").clicked() {
         model.channels_state = [0].repeat(CHANNELS_PER_UNIVERSE as usize);
+    }
+    if ui.button("DEFAULTS").clicked() {
+        apply_defaults(&model.project.fixtures.clone(), &mut model.channels_state)
+        // model.channels_state = [0].repeat(CHANNELS_PER_UNIVERSE as usize);
     }
 
     ui.separator();

@@ -49,17 +49,7 @@ fn main() {
     let fixtures_clone = project.clone().fixtures;
 
     // Init any channels to default values, if found
-    for fc in fixtures_clone.iter() {
-        if let Some(fixture) = &fc.fixture {
-            let current_mode = &fixture.modes[fc.mode];
-            for m in &current_mode.mappings {
-                if let Some(default_value) = m.default {
-                    let channel_index = m.channel + fc.offset_channels - 1;
-                    channels_state[channel_index as usize] = default_value;
-                }
-            }
-        }
-    }
+    apply_defaults(&fixtures_clone, &mut channels_state);
 
     let mut channels_assigned: Vec<bool> = [false].repeat(CHANNELS_PER_UNIVERSE as usize);
     for fc in fixtures_clone.iter() {
@@ -104,5 +94,19 @@ fn main() {
         .expect("Failed to launch GUI");
         info!("GUI ended; exit now...");
         std::process::exit(0);
+    }
+}
+
+fn apply_defaults(fixtures_clone: &Vec<project::FixtureConfig>, channels_state: &mut Vec<u8>) {
+    for fc in fixtures_clone.iter() {
+        if let Some(fixture) = &fc.fixture {
+            let current_mode = &fixture.modes[fc.mode];
+            for m in &current_mode.mappings {
+                if let Some(default_value) = m.default {
+                    let channel_index = m.channel + fc.offset_channels - 1;
+                    channels_state[channel_index as usize] = default_value;
+                }
+            }
+        }
     }
 }

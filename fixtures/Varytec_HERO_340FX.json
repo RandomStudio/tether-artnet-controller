@@ -1,0 +1,122 @@
+{
+  "name": "Varytec HERO 340FX",
+  "reference": "https://images.thomann.de/pics/atg/atgdata/document/manual/449224_c_449223_v2_en_online.pdf",
+  "modes": [
+    {
+      "name": "16-channel mode",
+      "mappings": [
+        {
+          "channel": 1,
+          "label": "Rotation (pan) (0° up to the maximum value of the Pan area. middle position: 128)"
+        },
+        {
+          "channel": 2,
+          "label": "Fine adjustment rotation (pan) 16 bit"
+        },
+        {
+          "channel": 3,
+          "label": "Inclination (tilt) (0° up to the maximum value of the Tilt area. middle position: 128)",
+          "default": 128
+        },
+        {
+          "channel": 4,
+          "label": "Fine adjustment inclination (pan) 16 bit"
+        },
+        {
+          "channel": 5,
+          "label": "Speed of rotation (pan) and inclination (tilt), fast (0) to slow (255)"
+        },
+        {
+          "channel": 6,
+          "label": "Dimmer intensity from dark (0) to bright (255)",
+          "default": 128
+        },
+        {
+          "channel": 7,
+          "label": "Shutter",
+          "default": 255,
+          "ranges": [
+            {
+              "range": [0, 9],
+              "label": "Open"
+            },
+            {
+              "range": [10, 250],
+              "label": "Stroboscope, increasing speed (0 … 20 Hz)"
+            },
+            {
+              "range": [251, 255],
+              "label": "Open"
+            }
+          ]
+        },
+        {
+          "channel": 8,
+          "label": "Intensity red (0 % to 100 %)"
+        },
+        {
+          "channel": 9,
+          "label": "Intensity green (0 % to 100 %)"
+        },
+        {
+          "channel": 10,
+          "label": "Intensity blue (0 % to 100 %)"
+        },
+        {
+          "channel": 11,
+          "label": "Intensity white (0 % to 100 %)"
+        },
+        {
+          "channel": 12,
+          "label": "Colour temperature (0 % to 100 %)"
+        },
+        {
+          "channel": 13,
+          "label": "Colour macros"
+        },
+        {
+          "channel": 14,
+          "label": "Gradual zooming, increasing"
+        },
+        {
+          "channel": 15,
+          "label": "Beam effects"
+        },
+        {
+          "channel": 16,
+          "label": "Auto programmes"
+        }
+      ],
+      "macros": [
+        {
+          "label": "red",
+          "channels": [8]
+        },
+        {
+          "label": "green",
+          "channels": [9]
+        },
+        {
+          "label": "blue",
+          "channels": [10]
+        },
+        {
+          "label": "white",
+          "channels": [11]
+        },
+        {
+          "label": "pan",
+          "channels": [1]
+        },
+        {
+          "label": "tilt",
+          "channels": [3]
+        },
+        {
+          "label": "zoom",
+          "channels": [14]
+        }
+      ]
+    }
+  ]
+}

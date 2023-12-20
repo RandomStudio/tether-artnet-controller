@@ -63,7 +63,8 @@ pub fn render_macro_controls(model: &mut Model, ui: &mut Ui) {
             for (i, f) in model.project.fixtures.iter_mut().enumerate() {
                 if let Some(fixture) = &mut f.fixture {
                     ui.group(|ui| {
-                        ui.heading(&fixture.name);
+                        ui.heading(&f.label);
+                        ui.label(&fixture.name);
                         let current_mode = &mut fixture.modes[f.mode];
 
                         Grid::new(format!("macros_{}", i))

@@ -11,6 +11,7 @@ pub struct Project {
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct FixtureConfig {
+    pub label: String,
     pub path: String,
     pub fixture: Option<Fixture>,
     pub offset_channels: u16,

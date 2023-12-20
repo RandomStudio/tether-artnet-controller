@@ -1,5 +1,6 @@
 use std::{
     net::{SocketAddr, UdpSocket},
+    sync::mpsc::Receiver,
     time::Duration,
 };
 
@@ -10,8 +11,9 @@ use serde::{Deserialize, Serialize};
 use tether_agent::{PlugDefinition, TetherAgent};
 
 use crate::{
-    project::Project,
+    project::{FixtureConfig, Project},
     settings::{Cli, CHANNELS_PER_UNIVERSE},
+    tether_interface::{TetherControlChangePayload, TetherMidiMessage},
     ui::{render_fixture_controls, render_macro_controls, render_sliders},
 };
 
@@ -20,21 +22,14 @@ pub struct ArtNetInterface {
     pub destination: SocketAddr,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
-pub struct TetherControlChangePayload {
-    pub channel: u8,
-    pub controller: u8,
-    pub value: u8,
-}
-
 pub struct Model {
     pub channels_state: Vec<u8>,
     pub channels_assigned: Vec<bool>,
-    pub tether_agent: TetherAgent,
-    pub input_midi_cc: PlugDefinition,
+    pub tether_rx: Receiver<TetherMidiMessage>,
     pub settings: Cli,
     pub artnet: ArtNetInterface,
     pub project: Project,
+    pub selected_macro_group_index: usize,
 }
 
 impl eframe::App for Model {
@@ -58,22 +53,43 @@ impl eframe::App for Model {
 }
 
 impl Model {
-    pub fn update(&mut self) {
-        let mut rng = rand::thread_rng();
+    pub fn new(
+        tether_rx: Receiver<TetherMidiMessage>,
+        settings: Cli,
+        artnet: ArtNetInterface,
+    ) -> Model {
+        let project = Project::load("./project.json").expect("failed to load project");
 
-        while let Some((topic, message)) = self.tether_agent.check_messages() {
-            debug!("Received message on {:?}", &topic);
-            if self.input_midi_cc.matches(&topic) {
-                let m = rmp_serde::from_slice::<TetherControlChangePayload>(&message.payload())
-                    .unwrap();
-                let TetherControlChangePayload {
-                    channel: _,
-                    controller,
-                    value,
-                } = m;
-                self.channels_state[controller as usize] = value * 2; // MIDI channels go [0..=127]
+        let fixtures_clone = project.clone().fixtures;
+
+        let mut channels_assigned: Vec<bool> = [false].repeat(CHANNELS_PER_UNIVERSE as usize);
+        for fc in fixtures_clone.iter() {
+            if let Some(fixture) = &fc.fixture {
+                let current_mode = &fixture.modes[fc.mode];
+                for m in &current_mode.mappings {
+                    let channel_index = m.channel + fc.offset_channels - 1;
+                    channels_assigned[channel_index as usize] = true;
+                }
             }
         }
+
+        let mut model = Model {
+            tether_rx,
+            channels_state: Vec::new(),
+            channels_assigned,
+            settings,
+            artnet,
+            project,
+            selected_macro_group_index: 0,
+        };
+
+        model.apply_channel_defaults();
+
+        model
+    }
+
+    pub fn update(&mut self) {
+        let mut rng = rand::thread_rng();
 
         for _i in 0..CHANNELS_PER_UNIVERSE {
             if self.settings.auto_random {
@@ -83,6 +99,24 @@ impl Model {
             }
             if self.settings.auto_zero {
                 self.channels_state = [0].repeat(CHANNELS_PER_UNIVERSE as usize);
+            }
+        }
+
+        if let Ok(m) = self.tether_rx.try_recv() {
+            match m {
+                TetherMidiMessage::Raw(_) => todo!(),
+                TetherMidiMessage::NoteOn(_) => todo!(),
+                TetherMidiMessage::NoteOff(_) => todo!(),
+                TetherMidiMessage::ControlChange(cc) => {
+                    let TetherControlChangePayload {
+                        channel: _,
+                        controller,
+                        value,
+                    } = cc;
+                    let macro_index = 0;
+                    debug!("Let's set some DMX channels!");
+                    // self.channels_state[controller as usize] = value * 2; // MIDI channels go [0..=127]
+                }
             }
         }
 
@@ -102,6 +136,23 @@ impl Model {
             std::thread::sleep(Duration::from_secs(1));
         } else {
             std::thread::sleep(Duration::from_millis(self.settings.artnet_update_frequency));
+        }
+    }
+
+    pub fn apply_channel_defaults(&mut self) {
+        self.channels_state = [0].repeat(CHANNELS_PER_UNIVERSE as usize); // init zeroes
+
+        let fixtures_clone = self.project.fixtures.clone();
+        for fc in fixtures_clone.iter() {
+            if let Some(fixture) = &fc.fixture {
+                let current_mode = &fixture.modes[fc.mode];
+                for m in &current_mode.mappings {
+                    if let Some(default_value) = m.default {
+                        let channel_index = m.channel + fc.offset_channels - 1;
+                        self.channels_state[channel_index as usize] = default_value;
+                    }
+                }
+            }
         }
     }
 }

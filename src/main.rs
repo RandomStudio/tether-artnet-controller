@@ -1,4 +1,7 @@
-use std::net::{SocketAddr, UdpSocket};
+use std::{
+    net::{SocketAddr, UdpSocket},
+    sync::mpsc,
+};
 
 use env_logger::Env;
 use log::{debug, info};
@@ -10,11 +13,13 @@ use crate::{
     model::{ArtNetInterface, Model},
     project::Project,
     settings::{Cli, CHANNELS_PER_UNIVERSE},
+    tether_interface::start_tether_thread,
 };
 
 mod model;
 mod project;
 mod settings;
+mod tether_interface;
 mod ui;
 
 fn main() {
@@ -29,51 +34,24 @@ fn main() {
 
     debug!("Started with settings: {:?}", cli);
 
-    let tether_agent = TetherAgentOptionsBuilder::new("ArtnetController")
-        .build()
-        .expect("failed to init Tether Agent");
-
-    let input_midi_cc = PlugOptionsBuilder::create_input("controlChange")
-        .build(&tether_agent)
-        .expect("failed to create Input Plug");
-
     let src = SocketAddr::from((cli.unicast_src, 6453));
     let dst = SocketAddr::from((cli.unicast_dst, 6454));
 
     let socket = UdpSocket::bind(src).unwrap();
 
-    let project = Project::load("./project.json").expect("failed to load project");
+    let mut handles = Vec::new();
 
-    let mut channels_state = [0].repeat(CHANNELS_PER_UNIVERSE as usize); // init zeroes
+    let (tether_tx, tether_rx) = mpsc::channel();
+    let tether_handle = start_tether_thread(tether_tx);
 
-    let fixtures_clone = project.clone().fixtures;
+    handles.push(tether_handle);
 
-    // Init any channels to default values, if found
-    apply_defaults(&fixtures_clone, &mut channels_state);
-
-    let mut channels_assigned: Vec<bool> = [false].repeat(CHANNELS_PER_UNIVERSE as usize);
-    for fc in fixtures_clone.iter() {
-        if let Some(fixture) = &fc.fixture {
-            let current_mode = &fixture.modes[fc.mode];
-            for m in &current_mode.mappings {
-                let channel_index = m.channel + fc.offset_channels - 1;
-                channels_assigned[channel_index as usize] = true;
-            }
-        }
-    }
-
-    let mut model = Model {
-        tether_agent,
-        channels_state,
-        channels_assigned,
-        input_midi_cc,
-        settings: cli.clone(),
-        artnet: ArtNetInterface {
-            socket,
-            destination: dst,
-        },
-        project,
+    let artnet = ArtNetInterface {
+        socket,
+        destination: dst,
     };
+
+    let mut model = Model::new(tether_rx, cli.clone(), artnet);
 
     if cli.headless_mode {
         info!("Running in headless mode; Ctrl+C to quit");
@@ -94,19 +72,5 @@ fn main() {
         .expect("Failed to launch GUI");
         info!("GUI ended; exit now...");
         std::process::exit(0);
-    }
-}
-
-fn apply_defaults(fixtures_clone: &Vec<project::FixtureConfig>, channels_state: &mut Vec<u8>) {
-    for fc in fixtures_clone.iter() {
-        if let Some(fixture) = &fc.fixture {
-            let current_mode = &fixture.modes[fc.mode];
-            for m in &current_mode.mappings {
-                if let Some(default_value) = m.default {
-                    let channel_index = m.channel + fc.offset_channels - 1;
-                    channels_state[channel_index as usize] = default_value;
-                }
-            }
-        }
     }
 }

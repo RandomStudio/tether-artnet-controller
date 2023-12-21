@@ -95,12 +95,15 @@ pub fn render_fixture_controls(model: &mut Model, ui: &mut Ui) {
 pub fn render_macro_controls(model: &mut Model, ui: &mut Ui) {
     ui.heading("All");
     if ui.button("DEFAULTS").clicked() {
+        model.apply_macros = false;
         model.apply_channel_defaults();
     }
     if ui.button("ZERO").clicked() {
+        model.apply_macros = false;
         zero(&mut model.channels_state);
     }
     if ui.button("RANDOM").clicked() {
+        model.apply_macros = false;
         random(&mut model.channels_state);
     }
 
@@ -109,9 +112,9 @@ pub fn render_macro_controls(model: &mut Model, ui: &mut Ui) {
     ui.horizontal(|ui| {
         ui.heading("Macros");
         ui.label(if model.apply_macros {
-            "active"
+            RichText::new("active").color(Color32::DARK_GREEN)
         } else {
-            "inactive"
+            RichText::new("inactive").color(Color32::GRAY)
         });
     });
 

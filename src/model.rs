@@ -32,11 +32,11 @@ impl eframe::App for Model {
         ctx.request_repaint();
 
         egui::SidePanel::left("LeftPanel").show(ctx, |ui| {
-            render_sliders(self, ui);
+            render_macro_controls(self, ui);
         });
 
         egui::SidePanel::right("RightPanel").show(ctx, |ui| {
-            render_macro_controls(self, ui);
+            render_sliders(self, ui);
         });
 
         egui::CentralPanel::default().show(ctx, |ui| {

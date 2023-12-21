@@ -1,5 +1,5 @@
 use std::{
-    sync::mpsc::{Receiver, Sender},
+    sync::mpsc::Sender,
     thread::{sleep, spawn, JoinHandle},
     time::Duration,
 };

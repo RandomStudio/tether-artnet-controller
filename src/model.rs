@@ -1,26 +1,14 @@
-use std::{
-    net::{SocketAddr, UdpSocket},
-    sync::mpsc::Receiver,
-    time::Duration,
-};
+use std::{sync::mpsc::Receiver, time::Duration};
 
-use artnet_protocol::{ArtCommand, Output};
 use log::{debug, error};
-use rand::Rng;
-use serde::{Deserialize, Serialize};
-use tether_agent::{PlugDefinition, TetherAgent};
 
 use crate::{
-    project::{FixtureConfig, Project},
+    artnet::{random, zero, ArtNetInterface},
+    project::Project,
     settings::{Cli, CHANNELS_PER_UNIVERSE},
     tether_interface::{TetherControlChangePayload, TetherMidiMessage, TetherNotePayload},
     ui::{render_fixture_controls, render_macro_controls, render_sliders},
 };
-
-pub struct ArtNetInterface {
-    pub socket: UdpSocket,
-    pub destination: SocketAddr,
-}
 
 pub struct Model {
     pub channels_state: Vec<u8>,
@@ -90,18 +78,6 @@ impl Model {
 
     pub fn update(&mut self) {
         let mut work_done = false;
-        let mut rng = rand::thread_rng();
-
-        for _i in 0..CHANNELS_PER_UNIVERSE {
-            if self.settings.auto_random {
-                for c in self.channels_state.iter_mut() {
-                    *c = rng.gen::<u8>();
-                }
-            }
-            if self.settings.auto_zero {
-                self.channels_state = [0].repeat(CHANNELS_PER_UNIVERSE as usize);
-            }
-        }
 
         while let Ok(m) = self.tether_rx.try_recv() {
             work_done = true;
@@ -169,17 +145,13 @@ impl Model {
             }
         }
 
-        let command = ArtCommand::Output(Output {
-            port_address: 0.into(),
-            data: self.channels_state.clone().into(),
-            ..Output::default()
-        });
-
-        let buff = command.write_to_buffer().unwrap();
-        self.artnet
-            .socket
-            .send_to(&buff, self.artnet.destination)
-            .unwrap();
+        if self.settings.auto_random {
+            random(&mut self.channels_state);
+        } else if self.settings.auto_zero {
+            zero(&mut self.channels_state);
+        } else {
+            self.artnet.update(&self.channels_state);
+        }
 
         if self.settings.auto_random || self.settings.auto_zero {
             std::thread::sleep(Duration::from_secs(1));

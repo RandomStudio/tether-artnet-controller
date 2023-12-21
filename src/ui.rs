@@ -1,6 +1,10 @@
 use egui::{Color32, Grid, RichText, ScrollArea, Slider, Ui};
 
-use crate::{model::Model, settings::CHANNELS_PER_UNIVERSE};
+use crate::{
+    artnet::{random, zero},
+    model::Model,
+    settings::CHANNELS_PER_UNIVERSE,
+};
 
 pub fn render_sliders(model: &mut Model, ui: &mut Ui) {
     ui.heading("Global Slider Controls");
@@ -86,11 +90,14 @@ pub fn render_fixture_controls(model: &mut Model, ui: &mut Ui) {
 
 pub fn render_macro_controls(model: &mut Model, ui: &mut Ui) {
     ui.heading("All");
-    if ui.button("ZERO").clicked() {
-        model.channels_state = [0].repeat(CHANNELS_PER_UNIVERSE as usize);
-    }
     if ui.button("DEFAULTS").clicked() {
         model.apply_channel_defaults();
+    }
+    if ui.button("ZERO").clicked() {
+        zero(&mut model.channels_state);
+    }
+    if ui.button("RANDOM").clicked() {
+        random(&mut model.channels_state);
     }
 
     ui.separator();

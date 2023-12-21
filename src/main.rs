@@ -1,21 +1,18 @@
-use std::{
-    net::{SocketAddr, UdpSocket},
-    sync::mpsc,
-};
+use std::{net::SocketAddr, sync::mpsc};
 
 use env_logger::Env;
 use log::{debug, info};
-use tether_agent::{PlugOptionsBuilder, TetherAgentOptionsBuilder};
 
 use clap::Parser;
 
 use crate::{
-    model::{ArtNetInterface, Model},
-    project::Project,
-    settings::{Cli, CHANNELS_PER_UNIVERSE},
+    artnet::{ArtNetInterface, ArtNetMode},
+    model::Model,
+    settings::Cli,
     tether_interface::start_tether_thread,
 };
 
+mod artnet;
 mod model;
 mod project;
 mod settings;
@@ -34,11 +31,6 @@ fn main() {
 
     debug!("Started with settings: {:?}", cli);
 
-    let src = SocketAddr::from((cli.unicast_src, 6453));
-    let dst = SocketAddr::from((cli.unicast_dst, 6454));
-
-    let socket = UdpSocket::bind(src).unwrap();
-
     let mut handles = Vec::new();
 
     let (tether_tx, tether_rx) = mpsc::channel();
@@ -46,9 +38,15 @@ fn main() {
 
     handles.push(tether_handle);
 
-    let artnet = ArtNetInterface {
-        socket,
-        destination: dst,
+    let artnet = {
+        if cli.artnet_broadcast {
+            ArtNetInterface::new(ArtNetMode::Broadcast)
+        } else {
+            ArtNetInterface::new(ArtNetMode::Unicast(
+                SocketAddr::from((cli.unicast_src, 6453)),
+                SocketAddr::from((cli.unicast_dst, 6454)),
+            ))
+        }
     };
 
     let mut model = Model::new(tether_rx, cli.clone(), artnet);

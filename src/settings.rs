@@ -20,6 +20,10 @@ pub struct Cli {
     #[arg(long = "loglevel",default_value_t=String::from("info"))]
     pub log_level: String,
 
+    /// Flag to enable ArtNet broadcast mode (good for development)
+    #[arg(long = "artnet.broadcast")]
+    pub artnet_broadcast: bool,
+
     /// IP address for ArtNet source interface (ignored if broadcast enabled)
     #[arg(long = "artnet.interface", default_value_t=UNICAST_SRC)]
     pub unicast_src: std::net::IpAddr,

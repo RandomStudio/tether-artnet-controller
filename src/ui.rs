@@ -130,20 +130,14 @@ pub fn render_macro_controls(model: &mut Model, ui: &mut Ui) {
                     {
                         model.selected_macro_group_index = i;
                     }
-                    ui.heading(RichText::new(&fixture.label).color(
-                        if i == model.selected_macro_group_index {
-                            Color32::GREEN
-                        } else {
-                            Color32::GRAY
-                        },
-                    ));
+                    ui.heading(&fixture.label);
                     ui.label(&fixture.config.name);
                     let current_mode = &mut fixture.config.active_mode;
 
                     Grid::new(format!("macros_{}", i))
-                        .num_columns(2)
+                        .num_columns(3)
                         .show(ui, |ui| {
-                            for (_i, m) in current_mode.macros.iter_mut().enumerate() {
+                            for m in current_mode.macros.iter_mut() {
                                 let remapped_channels: Vec<u16> = m
                                     .channels
                                     .iter()
@@ -152,9 +146,28 @@ pub fn render_macro_controls(model: &mut Model, ui: &mut Ui) {
                                 let channel_list =
                                     format!("{:?} => {:?}", &m.channels, remapped_channels);
                                 ui.label(&m.label).on_hover_text(channel_list);
-                                if ui.add(Slider::new(&mut m.current_value, 0..=255)).changed() {
+                                if ui
+                                    .add_enabled(
+                                        m.animation.is_none(),
+                                        Slider::new(&mut m.current_value, 0..=255),
+                                    )
+                                    .changed()
+                                {
                                     model.apply_macros = true;
                                 };
+
+                                if let Some(animation) = &mut m.animation {
+                                    ui.label(
+                                        RichText::new(format!(
+                                            "{}%",
+                                            (animation.get_progress() * 100.) as u8
+                                        ))
+                                        .color(Color32::GREEN)
+                                        .small(),
+                                    );
+                                } else {
+                                    ui.label("");
+                                }
 
                                 ui.end_row();
                             }

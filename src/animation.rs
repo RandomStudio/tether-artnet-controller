@@ -25,15 +25,18 @@ impl Animation {
         }
     }
 
-    /// Update the animation using delta time, get the progress in the range `[0,1]`
-    pub fn get_progress(&mut self) -> f32 {
+    /// Update the animation using delta time, get the value in the range `[0,1]`
+    pub fn get_value(&mut self) -> f32 {
         let elapsed = self.start_time.elapsed().unwrap().as_millis() as usize;
 
-        let progress = self.tweener.move_to(elapsed);
-        progress
+        self.tweener.move_to(elapsed)
     }
 
-    pub fn get_progress_and_done(&mut self) -> (f32, bool) {
-        (self.get_progress(), self.tweener.is_finished())
+    pub fn get_progress(&self) -> f32 {
+        self.tweener.current_time as f32 / self.tweener.duration as f32
+    }
+
+    pub fn get_value_and_done(&mut self) -> (f32, bool) {
+        (self.get_value(), self.tweener.is_finished())
     }
 }

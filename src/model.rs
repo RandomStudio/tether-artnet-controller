@@ -130,7 +130,7 @@ impl Model {
         for fixture in self.project.fixtures.iter_mut() {
             for m in fixture.config.active_mode.macros.iter_mut() {
                 if let Some(animation) = &mut m.animation {
-                    let (value, is_done) = animation.get_progress_and_done();
+                    let (value, is_done) = animation.get_value_and_done();
                     let dmx_value = (value * 255.0) as u8;
                     m.current_value = dmx_value;
 

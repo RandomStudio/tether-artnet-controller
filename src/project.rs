@@ -3,12 +3,14 @@ use std::fs;
 use log::{error, info, warn};
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, Debug, Clone)]
+use crate::animation::Animation;
+
+#[derive(Serialize, Deserialize, Clone)]
 pub struct Project {
     pub fixtures: Vec<FixtureInstance>,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct FixtureInstance {
     pub label: String,
@@ -21,7 +23,7 @@ pub struct FixtureInstance {
     pub config: FixtureConfig,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+#[derive(Serialize, Deserialize, Clone, Default)]
 pub struct FixtureConfig {
     pub name: String,
     pub reference: String,
@@ -31,14 +33,14 @@ pub struct FixtureConfig {
     pub active_mode: ControlMode,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+#[derive(Serialize, Deserialize, Clone, Default)]
 pub struct ControlMode {
     pub name: String,
     pub mappings: Vec<Mapping>,
     pub macros: Vec<ControlMacro>,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Clone)]
 pub struct Mapping {
     pub channel: u16,
     pub label: String,
@@ -47,15 +49,29 @@ pub struct Mapping {
     pub ranges: Option<Vec<RangeDescription>>,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize)]
 pub struct ControlMacro {
     pub label: String,
     pub channels: Vec<u16>,
     #[serde(skip)]
     pub current_value: u8,
+    #[serde(skip)]
+    pub animation: Option<Animation>,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone)]
+// Cloning an Animation is tricky, and we don't need it anyway
+impl Clone for ControlMacro {
+    fn clone(&self) -> Self {
+        Self {
+            label: self.label.clone(),
+            channels: self.channels.clone(),
+            current_value: self.current_value.clone(),
+            animation: None, // Just ignore
+        }
+    }
+}
+
+#[derive(Serialize, Deserialize, Clone)]
 pub struct RangeDescription {
     pub range: [u8; 2],
     pub label: String,

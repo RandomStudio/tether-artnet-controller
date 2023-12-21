@@ -31,6 +31,18 @@ pub struct TetherMacroMessage {
     pub value: u8,
 }
 
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct TetherAnimationMessage {
+    /// If no fixture specified, assume all
+    pub fixture_label: Option<String>,
+    pub macro_label: String,
+    /// Start value will be "whatever the current value is";
+    /// so `target_value` is the End value
+    pub target_value: u8,
+    /// Animation duration in ms
+    pub duration: u64,
+}
 #[derive(Debug)]
 pub enum TetherMidiMessage {
     /// Already-encoded payload
@@ -43,6 +55,7 @@ pub enum TetherMidiMessage {
 pub enum RemoteControlMessage {
     Midi(TetherMidiMessage),
     MacroDirect(TetherMacroMessage),
+    MacroAnimation(TetherAnimationMessage),
 }
 
 pub fn start_tether_thread(tx: Sender<RemoteControlMessage>) -> JoinHandle<()> {
@@ -59,6 +72,10 @@ pub fn start_tether_thread(tx: Sender<RemoteControlMessage>) -> JoinHandle<()> {
         .expect("failed to create Input Plug");
 
     let input_macros = PlugOptionsBuilder::create_input("macros")
+        .build(&tether_agent)
+        .expect("failed to create Input Plug");
+
+    let input_animations = PlugOptionsBuilder::create_input("animations")
         .build(&tether_agent)
         .expect("failed to create Input Plug");
 
@@ -83,6 +100,13 @@ pub fn start_tether_thread(tx: Sender<RemoteControlMessage>) -> JoinHandle<()> {
                 debug!("Macro (direct) control message");
                 let m = rmp_serde::from_slice::<TetherMacroMessage>(&message.payload()).unwrap();
                 tx.send(RemoteControlMessage::MacroDirect(m))
+                    .expect("failed to send");
+            }
+            if input_animations.matches(&topic) {
+                debug!("Macro Animation control message");
+                let m =
+                    rmp_serde::from_slice::<TetherAnimationMessage>(&message.payload()).unwrap();
+                tx.send(RemoteControlMessage::MacroAnimation(m))
                     .expect("failed to send");
             }
         }

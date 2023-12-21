@@ -12,6 +12,7 @@ use crate::{
     tether_interface::start_tether_thread,
 };
 
+mod animation;
 mod artnet;
 mod model;
 mod project;

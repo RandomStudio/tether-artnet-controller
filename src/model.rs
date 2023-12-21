@@ -7,8 +7,8 @@ use crate::{
     project::Project,
     settings::{Cli, CHANNELS_PER_UNIVERSE},
     tether_interface::{
-        RemoteControlMessage, TetherControlChangePayload, TetherMacroMessage, TetherMidiMessage,
-        TetherNotePayload,
+        RemoteControlMessage, TetherAnimationMessage, TetherControlChangePayload,
+        TetherMacroMessage, TetherMidiMessage, TetherNotePayload,
     },
     ui::{render_fixture_controls, render_macro_controls, render_sliders},
 };
@@ -86,11 +86,14 @@ impl Model {
         while let Ok(m) = self.tether_rx.try_recv() {
             work_done = true;
             match m {
-                RemoteControlMessage::Midi(midi) => {
-                    self.handle_midi_message(midi);
+                RemoteControlMessage::Midi(midi_msg) => {
+                    self.handle_midi_message(midi_msg);
                 }
-                RemoteControlMessage::MacroDirect(macro_message) => {
-                    self.handle_macro_message(macro_message);
+                RemoteControlMessage::MacroDirect(macro_msg) => {
+                    self.handle_macro_message(macro_msg);
+                }
+                RemoteControlMessage::MacroAnimation(animation_msg) => {
+                    self.handle_animation_message(animation_msg);
                 }
             }
         }
@@ -213,6 +216,15 @@ impl Model {
                 }
             }
         }
+    }
+
+    pub fn handle_animation_message(&mut self, msg: TetherAnimationMessage) {
+        todo!();
+        // Use target_fixtures (index) approach as above (or even make a reusable fn)
+        // Create a new animation with the appropriate Tween Style
+        // Set macro.animation - Some(animation)
+        // ...
+        // Update macros as per any current animation, every tick/loop
     }
 
     pub fn apply_channel_defaults(&mut self) {

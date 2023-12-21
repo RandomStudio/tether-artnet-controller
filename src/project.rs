@@ -5,27 +5,32 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Project {
-    pub fixtures: Vec<FixtureConfig>,
+    pub fixtures: Vec<FixtureInstance>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all = "camelCase")]
-pub struct FixtureConfig {
+pub struct FixtureInstance {
     pub label: String,
     pub path: String,
-    pub fixture: Option<Fixture>,
     pub offset_channels: u16,
-    pub mode: usize,
+    #[serde(default)]
+    pub mode_index: usize,
+    #[serde(skip)]
+    /// The actual configuration, once loaded via the path
+    pub config: FixtureConfig,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct Fixture {
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+pub struct FixtureConfig {
     pub name: String,
     pub reference: String,
     pub modes: Vec<ControlMode>,
+    #[serde(skip)]
+    pub active_mode: ControlMode,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct ControlMode {
     pub name: String,
     pub mappings: Vec<Mapping>,
@@ -72,9 +77,11 @@ impl Project {
                     match fs::read_to_string(&fixture.path) {
                         Ok(d) => {
                             info!("Loaded fixture data from {}; parsing...", &fixture.path);
-                            let parsed = serde_json::from_str::<Fixture>(&d)
+                            let parsed = serde_json::from_str::<FixtureConfig>(&d)
                                 .expect("failed to parse Fixture data file");
-                            fixture.fixture = Some(parsed);
+                            fixture.config = parsed;
+                            fixture.config.active_mode =
+                                fixture.config.modes[fixture.mode_index].clone();
                         }
                         Err(e) => {
                             error!("Failed to load fixture: {}", e);

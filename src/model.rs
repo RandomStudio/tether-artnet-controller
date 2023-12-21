@@ -17,6 +17,7 @@ pub struct Model {
     pub settings: Cli,
     pub artnet: ArtNetInterface,
     pub project: Project,
+    /// Determines which macros are adjusted via MIDI
     pub selected_macro_group_index: usize,
 }
 
@@ -51,13 +52,11 @@ impl Model {
         let fixtures_clone = project.clone().fixtures;
 
         let mut channels_assigned: Vec<bool> = [false].repeat(CHANNELS_PER_UNIVERSE as usize);
-        for fc in fixtures_clone.iter() {
-            if let Some(fixture) = &fc.fixture {
-                let current_mode = &fixture.modes[fc.mode];
-                for m in &current_mode.mappings {
-                    let channel_index = m.channel + fc.offset_channels - 1;
-                    channels_assigned[channel_index as usize] = true;
-                }
+        for fixture in fixtures_clone.iter() {
+            let current_mode = &fixture.config.modes[0];
+            for m in &current_mode.mappings {
+                let channel_index = m.channel + fixture.offset_channels - 1;
+                channels_assigned[channel_index as usize] = true;
             }
         }
 
@@ -102,45 +101,47 @@ impl Model {
                         value,
                     } = cc;
 
-                    let active_macros = self
-                        .project
-                        .fixtures
-                        .iter()
-                        .map(|fc| {
-                            if let Some(fixture) = &fc.fixture {
-                                let macros = fixture.modes[0].macros.clone();
-                                return Some((fc.clone(), macros));
-                            } else {
-                                return None;
-                            }
-                        })
-                        .filter_map(|x| x);
+                    // TODO: reimplement remote via Tether-MIDI
 
-                    let controller_start = 48;
+                    // let active_macros = self
+                    //     .project
+                    //     .fixtures
+                    //     .iter()
+                    //     .map(|fc| {
+                    //         if let Some(fixture) = &fc.fixture {
+                    //             let macros = fixture.modes[0].macros.clone();
+                    //             return Some((fc.clone(), macros));
+                    //         } else {
+                    //             return None;
+                    //         }
+                    //     })
+                    //     .filter_map(|x| x);
 
-                    for (i, (fixture_config, m)) in active_macros.enumerate() {
-                        if self.selected_macro_group_index as usize == i {
-                            debug!("Adjust for macros {:?}", m);
-                            let target_macro_index = controller - controller_start;
-                            debug!("Controller {} => {}", controller, target_macro_index);
-                            match m.get(target_macro_index as usize) {
-                                Some(macro_control) => {
-                                    let value = value * 2;
-                                    debug!("Adjust {:?} to {}", macro_control, value);
-                                    // macro_control.current_value = value * 2;
-                                    for c in &macro_control.channels {
-                                        let channel_index =
-                                            (*c - 1 + fixture_config.offset_channels) as usize;
-                                        debug!("Set channel {} to value {}", channel_index, value);
-                                        self.channels_state[channel_index] = value;
-                                    }
-                                }
-                                None => {
-                                    error!("Failed to match macro control");
-                                }
-                            }
-                        }
-                    }
+                    // let controller_start = 48;
+
+                    // for (i, (fixture_config, m)) in active_macros.enumerate() {
+                    //     if self.selected_macro_group_index as usize == i {
+                    //         debug!("Adjust for macros {:?}", m);
+                    //         let target_macro_index = controller - controller_start;
+                    //         debug!("Controller {} => {}", controller, target_macro_index);
+                    //         match m.get(target_macro_index as usize) {
+                    //             Some(macro_control) => {
+                    //                 let value = value * 2;
+                    //                 debug!("Adjust {:?} to {}", macro_control, value);
+                    //                 // macro_control.current_value = value * 2;
+                    //                 for c in &macro_control.channels {
+                    //                     let channel_index =
+                    //                         (*c - 1 + fixture_config.offset_channels) as usize;
+                    //                     debug!("Set channel {} to value {}", channel_index, value);
+                    //                     self.channels_state[channel_index] = value;
+                    //                 }
+                    //             }
+                    //             None => {
+                    //                 error!("Failed to match macro control");
+                    //             }
+                    //         }
+                    //     }
+                    // }
                 }
             }
         }
@@ -166,14 +167,12 @@ impl Model {
         self.channels_state = [0].repeat(CHANNELS_PER_UNIVERSE as usize); // init zeroes
 
         let fixtures_clone = self.project.fixtures.clone();
-        for fc in fixtures_clone.iter() {
-            if let Some(fixture) = &fc.fixture {
-                let current_mode = &fixture.modes[fc.mode];
-                for m in &current_mode.mappings {
-                    if let Some(default_value) = m.default {
-                        let channel_index = m.channel + fc.offset_channels - 1;
-                        self.channels_state[channel_index as usize] = default_value;
-                    }
+        for fixture in fixtures_clone.iter() {
+            let current_mode = &fixture.config.modes[fixture.mode_index];
+            for m in &current_mode.mappings {
+                if let Some(default_value) = m.default {
+                    let channel_index = m.channel + fixture.offset_channels - 1;
+                    self.channels_state[channel_index as usize] = default_value;
                 }
             }
         }

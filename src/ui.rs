@@ -35,55 +35,54 @@ pub fn render_fixture_controls(model: &mut Model, ui: &mut Ui) {
     ScrollArea::vertical()
         .auto_shrink([false, false])
         .show(ui, |ui| {
-            for (i, f) in model.project.fixtures.iter().enumerate() {
-                if let Some(fixture) = &f.fixture {
-                    // ui.group(|ui| {
-                    ui.heading(format!("{} +{}", &f.label, f.offset_channels));
-                    ui.label(format!("{}", &fixture.name));
-                    ui.hyperlink_to("Reference/manual", &fixture.reference);
-                    let current_mode = &fixture.modes[f.mode];
+            for (i, fixture) in model.project.fixtures.iter().enumerate() {
+                let config = &fixture.config;
+                // ui.group(|ui| {
+                ui.heading(format!("{} +{}", &fixture.label, fixture.offset_channels));
+                ui.label(format!("{}", &config.name));
+                ui.hyperlink_to("Reference/manual", &config.reference);
+                let current_mode = &config.modes[fixture.mode_index];
 
-                    ui.heading("Mappings");
+                ui.heading("Mappings");
 
-                    Grid::new(format!("mappings_{}", i))
-                        .num_columns(3)
-                        .show(ui, |ui| {
-                            for m in &current_mode.mappings {
-                                let channel_index = m.channel + f.offset_channels - 1;
-                                ui.label(&m.label).on_hover_text(format!(
-                                    "#Channel {}: {}",
-                                    channel_index + 1,
-                                    &m.notes.as_deref().unwrap_or_default()
-                                ));
-                                // let mut value = ;
-                                ui.add(Slider::new(
-                                    &mut model.channels_state[(channel_index) as usize],
-                                    0..=255,
-                                ));
-                                if let Some(range_sections) = &m.ranges {
-                                    ui.label("Mode/Programme:");
-                                    let current_range = range_sections.iter().find(|x| {
-                                        let [start, end] = x.range;
-                                        model.channels_state[(channel_index) as usize] >= start
-                                            && model.channels_state[(channel_index) as usize] <= end
-                                    });
-                                    match current_range {
-                                        Some(r) => {
-                                            ui.label(&r.label);
-                                        }
-                                        None => {
-                                            ui.label("Invalid range");
-                                        }
+                Grid::new(format!("mappings_{}", i))
+                    .num_columns(3)
+                    .show(ui, |ui| {
+                        for m in &current_mode.mappings {
+                            let channel_index = m.channel + fixture.offset_channels - 1;
+                            ui.label(&m.label).on_hover_text(format!(
+                                "#Channel {}: {}",
+                                channel_index + 1,
+                                &m.notes.as_deref().unwrap_or_default()
+                            ));
+                            // let mut value = ;
+                            ui.add(Slider::new(
+                                &mut model.channels_state[(channel_index) as usize],
+                                0..=255,
+                            ));
+                            if let Some(range_sections) = &m.ranges {
+                                ui.label("Mode/Programme:");
+                                let current_range = range_sections.iter().find(|x| {
+                                    let [start, end] = x.range;
+                                    model.channels_state[(channel_index) as usize] >= start
+                                        && model.channels_state[(channel_index) as usize] <= end
+                                });
+                                match current_range {
+                                    Some(r) => {
+                                        ui.label(&r.label);
                                     }
-                                } else {
-                                    ui.label("");
+                                    None => {
+                                        ui.label("Invalid range");
+                                    }
                                 }
-                                ui.end_row();
+                            } else {
+                                ui.label("");
                             }
-                        });
-                    ui.separator();
-                    // });
-                }
+                            ui.end_row();
+                        }
+                    });
+                ui.separator();
+                // });
             }
         });
 }
@@ -107,41 +106,38 @@ pub fn render_macro_controls(model: &mut Model, ui: &mut Ui) {
     ScrollArea::vertical()
         .auto_shrink([false, false])
         .show(ui, |ui| {
-            for (i, f) in model.project.fixtures.iter_mut().enumerate() {
-                if let Some(fixture) = &mut f.fixture {
-                    ui.group(|ui| {
-                        if ui.button("Select").clicked() {
-                            model.selected_macro_group_index = i;
-                        }
-                        ui.heading(RichText::new(&f.label).color(
-                            if i == model.selected_macro_group_index {
-                                Color32::GREEN
-                            } else {
-                                Color32::GRAY
-                            },
-                        ));
-                        ui.label(&fixture.name);
-                        let current_mode = &mut fixture.modes[f.mode];
+            for (i, fixture) in model.project.fixtures.iter_mut().enumerate() {
+                ui.group(|ui| {
+                    if ui.button("Select").clicked() {
+                        model.selected_macro_group_index = i;
+                    }
+                    ui.heading(RichText::new(&fixture.label).color(
+                        if i == model.selected_macro_group_index {
+                            Color32::GREEN
+                        } else {
+                            Color32::GRAY
+                        },
+                    ));
+                    ui.label(&fixture.config.name);
+                    let current_mode = &mut fixture.config.active_mode;
 
-                        Grid::new(format!("macros_{}", i))
-                            .num_columns(2)
-                            .show(ui, |ui| {
-                                for (i, m) in current_mode.macros.iter_mut().enumerate() {
-                                    ui.label(&m.label);
-                                    if ui.add(Slider::new(&mut m.current_value, 0..=255)).changed()
-                                    {
-                                        for c in &m.channels {
-                                            model.channels_state
-                                                [(*c - 1 + f.offset_channels) as usize] =
-                                                m.current_value;
-                                        }
+                    Grid::new(format!("macros_{}", i))
+                        .num_columns(2)
+                        .show(ui, |ui| {
+                            for (_i, m) in current_mode.macros.iter_mut().enumerate() {
+                                ui.label(&m.label);
+                                if ui.add(Slider::new(&mut m.current_value, 0..=255)).changed() {
+                                    for c in &m.channels {
+                                        model.channels_state
+                                            [(*c - 1 + fixture.offset_channels) as usize] =
+                                            m.current_value;
                                     }
-
-                                    ui.end_row();
                                 }
-                            });
-                    });
-                }
+
+                                ui.end_row();
+                            }
+                        });
+                });
             }
         });
 }

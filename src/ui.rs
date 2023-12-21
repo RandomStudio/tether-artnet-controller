@@ -106,7 +106,14 @@ pub fn render_macro_controls(model: &mut Model, ui: &mut Ui) {
 
     ui.separator();
 
-    ui.heading("Macros");
+    ui.horizontal(|ui| {
+        ui.heading("Macros");
+        ui.label(if model.apply_macros {
+            "active"
+        } else {
+            "inactive"
+        });
+    });
 
     ScrollArea::vertical()
         .auto_shrink([false, false])

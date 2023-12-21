@@ -1,10 +1,12 @@
 use std::{sync::mpsc::Receiver, time::Duration};
 
-use log::{debug, error};
+use log::debug;
+use tween::SineInOut;
 
 use crate::{
+    animation::Animation,
     artnet::{random, zero, ArtNetInterface},
-    project::Project,
+    project::{FixtureInstance, Project},
     settings::{Cli, CHANNELS_PER_UNIVERSE},
     tether_interface::{
         RemoteControlMessage, TetherAnimationMessage, TetherControlChangePayload,
@@ -85,6 +87,7 @@ impl Model {
 
         while let Ok(m) = self.tether_rx.try_recv() {
             work_done = true;
+            self.apply_macros = true;
             match m {
                 RemoteControlMessage::Midi(midi_msg) => {
                     self.handle_midi_message(midi_msg);
@@ -109,6 +112,7 @@ impl Model {
                 self.apply_macros,
             );
             if self.apply_macros {
+                self.animate_macros();
                 self.channels_state = self.artnet.get_state().to_vec();
             }
         }
@@ -118,6 +122,23 @@ impl Model {
         } else {
             if !work_done {
                 std::thread::sleep(Duration::from_millis(self.settings.artnet_update_frequency));
+            }
+        }
+    }
+
+    fn animate_macros(&mut self) {
+        for fixture in self.project.fixtures.iter_mut() {
+            for m in fixture.config.active_mode.macros.iter_mut() {
+                if let Some(animation) = &mut m.animation {
+                    let (value, is_done) = animation.get_progress_and_done();
+                    let dmx_value = (value * 255.0) as u8;
+                    m.current_value = dmx_value;
+
+                    // Check if done AFTER applying value
+                    if is_done {
+                        m.animation = None;
+                    }
+                }
             }
         }
     }
@@ -190,20 +211,7 @@ impl Model {
     }
 
     fn handle_macro_message(&mut self, msg: TetherMacroMessage) {
-        let target_fixtures: Vec<usize> = self
-            .project
-            .fixtures
-            .iter()
-            .enumerate()
-            .filter(|(i, f)| {
-                if let Some(label) = &msg.fixture_label {
-                    f.label.eq_ignore_ascii_case(&label)
-                } else {
-                    true // match all
-                }
-            })
-            .filter_map(|(i, _f)| Some(i))
-            .collect();
+        let target_fixtures = get_target_fixtures_list(&self.project.fixtures, &msg.fixture_label);
 
         for (i, fixture) in self.project.fixtures.iter_mut().enumerate() {
             if target_fixtures.contains(&i) {
@@ -219,12 +227,40 @@ impl Model {
     }
 
     pub fn handle_animation_message(&mut self, msg: TetherAnimationMessage) {
-        todo!();
-        // Use target_fixtures (index) approach as above (or even make a reusable fn)
-        // Create a new animation with the appropriate Tween Style
-        // Set macro.animation - Some(animation)
-        // ...
-        // Update macros as per any current animation, every tick/loop
+        let target_fixtures = get_target_fixtures_list(&self.project.fixtures, &msg.fixture_label);
+
+        debug!(
+            "Applying animation message to {} fixtures...",
+            target_fixtures.len()
+        );
+
+        for (i, fixture) in self.project.fixtures.iter_mut().enumerate() {
+            if target_fixtures.contains(&i) {
+                if let Some(target_macro) = fixture.config.active_mode.macros.iter_mut().find(
+                    |m: &&mut crate::project::ControlMacro| {
+                        m.label.eq_ignore_ascii_case(&msg.macro_label)
+                    },
+                ) {
+                    let start_value = target_macro.current_value as f32 / 255.0;
+                    let end_value = msg.target_value as f32 / 255.0;
+                    let duration = Duration::from_millis(msg.duration);
+
+                    target_macro.animation = Some(Animation::new(
+                        duration,
+                        start_value,
+                        end_value,
+                        Box::new(SineInOut),
+                    ));
+
+                    debug!(
+                        "Added animation with duration {}ms, {} -> {}",
+                        duration.as_millis(),
+                        start_value,
+                        end_value
+                    );
+                }
+            }
+        }
     }
 
     pub fn apply_channel_defaults(&mut self) {
@@ -241,4 +277,22 @@ impl Model {
             }
         }
     }
+}
+
+fn get_target_fixtures_list(
+    fixtures: &[FixtureInstance],
+    label_search_string: &Option<String>,
+) -> Vec<usize> {
+    fixtures
+        .iter()
+        .enumerate()
+        .filter(|(i, f)| {
+            if let Some(label) = label_search_string {
+                f.label.eq_ignore_ascii_case(&label)
+            } else {
+                true // match all
+            }
+        })
+        .filter_map(|(i, _f)| Some(i))
+        .collect()
 }

@@ -3,7 +3,7 @@
     {
       "generic": {
         "common": {
-          "name": "All White",
+          "name": "Direct Control ALL",
           "description": "Any generic data, in JSON format",
           "plug": {
             "OutputPlug": {
@@ -16,13 +16,38 @@
                   "full_topic": "gui/any/macros"
                 }
               },
+              "qos": 1,
+              "retain": false
+            }
+          },
+          "midiMapping": null
+        },
+        "value": "{\"macroLabel\":\"white\", \"value\": 0}"
+      }
+    },
+    {
+      "generic": {
+        "common": {
+          "name": "Animations ALL",
+          "description": "Any generic data, in JSON format",
+          "plug": {
+            "OutputPlug": {
+              "name": "animations",
+              "topic": {
+                "Tether": {
+                  "role": "gui",
+                  "id": "any",
+                  "plug_name": "animations",
+                  "full_topic": "gui/any/animations"
+                }
+              },
               "qos": 0,
               "retain": false
             }
           },
           "midiMapping": null
         },
-        "value": "{\"macroLabel\":\"white\", \"value\": 255}"
+        "value": "{\"macroLabel\":\"white\", \"targetValue\": 0, \"duration\": 3000}"
       }
     }
   ],

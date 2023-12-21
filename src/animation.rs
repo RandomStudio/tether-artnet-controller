@@ -33,7 +33,7 @@ impl Animation {
         progress
     }
 
-    pub fn get_progress_and_done(&mut self, delta_time: usize) -> (f32, bool) {
+    pub fn get_progress_and_done(&mut self) -> (f32, bool) {
         (self.get_progress(), self.tweener.is_finished())
     }
 }

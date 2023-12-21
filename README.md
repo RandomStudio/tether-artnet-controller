@@ -26,7 +26,7 @@ cargo run -- --artnet.interface 10.112.10.187 --artnet.destination 10.112.10.187
 - [x] Allow macro "current values" to be updated remotely via Tether
 - [x] Macro Animations on remote messages via Tether
 - [ ] Project JSON should save ArtNet configuration (but can override via CLI args)
-- [ ] Provide simple/advanced views (e.g. "macros only" vs "the kitchen sink")
+- [x] Provide simple/advanced views (e.g. "macros only" vs "the kitchen sink")
 - [ ] ArtNet on separate thread, with more precise timing; this might require some messaging back and forth and/or mutex
 - [ ] With macros, add some visual indicators of state, e.g. Colour, Brightness and Pan/Tilt 
 - [ ] Need to resolve "conflict" between values that have defaults but ALSO have Macros attached

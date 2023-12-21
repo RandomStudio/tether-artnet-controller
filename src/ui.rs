@@ -1,10 +1,36 @@
-use egui::{Color32, Grid, RichText, ScrollArea, Slider, Ui};
+use egui::{Color32, Grid, RichText, ScrollArea, Slider, Ui, Vec2};
 
 use crate::{
     artnet::{random, zero},
-    model::Model,
+    model::{Model, ViewMode},
     settings::CHANNELS_PER_UNIVERSE,
 };
+
+pub const SIMPLE_WIN_SIZE: Vec2 = Vec2::new(400., 1024.0);
+pub const ADVANCED_WIN_SIZE: Vec2 = Vec2::new(1280., 900.);
+
+pub fn render_mode_switcher(model: &mut Model, ctx: &egui::Context, frame: &mut eframe::Frame) {
+    egui::TopBottomPanel::top("Tabs")
+        .min_height(32.)
+        .show(ctx, |ui| {
+            ui.horizontal(|ui| {
+                ui.heading("🗖");
+                if ui
+                    .selectable_value(&mut model.view_mode, ViewMode::Simple, "Simple")
+                    .clicked()
+                {
+                    frame.set_window_size(SIMPLE_WIN_SIZE);
+                };
+                if ui
+                    .selectable_value(&mut model.view_mode, ViewMode::Advanced, "Advanced")
+                    .clicked()
+                {
+                    frame.set_window_size(ADVANCED_WIN_SIZE);
+                    frame.set_window_pos([0., 0.].into())
+                }
+            });
+        });
+}
 
 pub fn render_sliders(model: &mut Model, ui: &mut Ui) {
     ui.heading("Global Slider Controls");

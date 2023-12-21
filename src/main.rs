@@ -10,6 +10,7 @@ use crate::{
     model::Model,
     settings::Cli,
     tether_interface::start_tether_thread,
+    ui::SIMPLE_WIN_SIZE,
 };
 
 mod animation;
@@ -60,7 +61,7 @@ fn main() {
     } else {
         info!("Running graphics mode; close the window to quit");
         let options = eframe::NativeOptions {
-            initial_window_size: Some(egui::vec2(1280.0, 900.)),
+            initial_window_size: Some(SIMPLE_WIN_SIZE),
             ..Default::default()
         };
         eframe::run_native(

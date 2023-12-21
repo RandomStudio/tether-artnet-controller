@@ -12,8 +12,14 @@ use crate::{
         RemoteControlMessage, TetherAnimationMessage, TetherControlChangePayload,
         TetherMacroMessage, TetherMidiMessage, TetherNotePayload,
     },
-    ui::{render_fixture_controls, render_macro_controls, render_sliders},
+    ui::{render_fixture_controls, render_macro_controls, render_mode_switcher, render_sliders},
 };
+
+#[derive(PartialEq)]
+pub enum ViewMode {
+    Simple,
+    Advanced,
+}
 
 pub struct Model {
     pub channels_state: Vec<u8>,
@@ -22,26 +28,39 @@ pub struct Model {
     pub settings: Cli,
     pub artnet: ArtNetInterface,
     pub project: Project,
+    /// Whether macros should currently be applied
     pub apply_macros: bool,
     /// Determines which macros are adjusted via MIDI
     pub selected_macro_group_index: usize,
+    pub view_mode: ViewMode,
 }
 
 impl eframe::App for Model {
-    fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
+    fn update(&mut self, ctx: &egui::Context, frame: &mut eframe::Frame) {
         ctx.request_repaint();
 
-        egui::SidePanel::left("LeftPanel").show(ctx, |ui| {
-            render_macro_controls(self, ui);
-        });
+        render_mode_switcher(self, ctx, frame);
 
-        egui::SidePanel::right("RightPanel").show(ctx, |ui| {
-            render_sliders(self, ui);
-        });
+        match self.view_mode {
+            ViewMode::Advanced => {
+                egui::SidePanel::left("LeftPanel").show(ctx, |ui| {
+                    render_macro_controls(self, ui);
+                });
 
-        egui::CentralPanel::default().show(ctx, |ui| {
-            render_fixture_controls(self, ui);
-        });
+                egui::SidePanel::right("RightPanel").show(ctx, |ui| {
+                    render_sliders(self, ui);
+                });
+
+                egui::CentralPanel::default().show(ctx, |ui| {
+                    render_fixture_controls(self, ui);
+                });
+            }
+            ViewMode::Simple => {
+                egui::CentralPanel::default().show(ctx, |ui| {
+                    render_macro_controls(self, ui);
+                });
+            }
+        }
 
         self.update();
     }
@@ -75,6 +94,7 @@ impl Model {
             project,
             selected_macro_group_index: 0,
             apply_macros: false,
+            view_mode: ViewMode::Simple,
         };
 
         model.apply_channel_defaults();

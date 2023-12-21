@@ -134,7 +134,14 @@ pub fn render_macro_controls(model: &mut Model, ui: &mut Ui) {
                         .num_columns(2)
                         .show(ui, |ui| {
                             for (_i, m) in current_mode.macros.iter_mut().enumerate() {
-                                ui.label(&m.label);
+                                let remapped_channels: Vec<u16> = m
+                                    .channels
+                                    .iter()
+                                    .map(|c| c + fixture.offset_channels)
+                                    .collect();
+                                let channel_list =
+                                    format!("{:?} => {:?}", &m.channels, remapped_channels);
+                                ui.label(&m.label).on_hover_text(channel_list);
                                 if ui.add(Slider::new(&mut m.current_value, 0..=255)).changed() {
                                     model.apply_macros = true;
                                 };

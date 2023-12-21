@@ -82,7 +82,8 @@ pub fn start_tether_thread(tx: Sender<RemoteControlMessage>) -> JoinHandle<()> {
             if input_macros.matches(&topic) {
                 debug!("Macro (direct) control message");
                 let m = rmp_serde::from_slice::<TetherMacroMessage>(&message.payload()).unwrap();
-                tx.send(RemoteControlMessage::MacroDirect(m));
+                tx.send(RemoteControlMessage::MacroDirect(m))
+                    .expect("failed to send");
             }
         }
         sleep(Duration::from_millis(1));

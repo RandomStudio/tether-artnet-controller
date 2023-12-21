@@ -58,7 +58,7 @@ impl ArtNetInterface {
         fixtures: &[FixtureInstance],
         apply_macros: bool,
     ) {
-        zero(&mut self.channels);
+        // zero(&mut self.channels);
         self.channels = channels_state.into(); // copy slice contents into Vec
 
         if apply_macros {

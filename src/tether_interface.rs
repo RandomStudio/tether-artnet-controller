@@ -22,6 +22,15 @@ pub struct TetherControlChangePayload {
     pub value: u8,
 }
 
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct TetherMacroMessage {
+    /// If no fixture specified, assume all
+    pub fixture_label: Option<String>,
+    pub macro_label: String,
+    pub value: u8,
+}
+
 #[derive(Debug)]
 pub enum TetherMidiMessage {
     /// Already-encoded payload
@@ -31,7 +40,12 @@ pub enum TetherMidiMessage {
     ControlChange(TetherControlChangePayload),
 }
 
-pub fn start_tether_thread(tx: Sender<TetherMidiMessage>) -> JoinHandle<()> {
+pub enum RemoteControlMessage {
+    Midi(TetherMidiMessage),
+    MacroDirect(TetherMacroMessage),
+}
+
+pub fn start_tether_thread(tx: Sender<RemoteControlMessage>) -> JoinHandle<()> {
     let tether_agent = TetherAgentOptionsBuilder::new("ArtnetController")
         .build()
         .expect("failed to init Tether Agent");
@@ -44,20 +58,31 @@ pub fn start_tether_thread(tx: Sender<TetherMidiMessage>) -> JoinHandle<()> {
         .build(&tether_agent)
         .expect("failed to create Input Plug");
 
+    let input_macros = PlugOptionsBuilder::create_input("macros")
+        .build(&tether_agent)
+        .expect("failed to create Input Plug");
+
     spawn(move || loop {
         while let Some((topic, message)) = tether_agent.check_messages() {
             if input_midi_cc.matches(&topic) {
                 debug!("MIDI CC");
                 let m = rmp_serde::from_slice::<TetherControlChangePayload>(&message.payload())
                     .unwrap();
-                tx.send(TetherMidiMessage::ControlChange(m))
-                    .expect("failed to send")
+                tx.send(RemoteControlMessage::Midi(
+                    TetherMidiMessage::ControlChange(m),
+                ))
+                .expect("failed to send")
             }
             if input_midi_notes.matches(&topic) {
                 debug!("MIDI Note");
                 let m = rmp_serde::from_slice::<TetherNotePayload>(&message.payload()).unwrap();
-                tx.send(TetherMidiMessage::NoteOn(m))
+                tx.send(RemoteControlMessage::Midi(TetherMidiMessage::NoteOn(m)))
                     .expect("failed to send")
+            }
+            if input_macros.matches(&topic) {
+                debug!("Macro (direct) control message");
+                let m = rmp_serde::from_slice::<TetherMacroMessage>(&message.payload()).unwrap();
+                tx.send(RemoteControlMessage::MacroDirect(m));
             }
         }
         sleep(Duration::from_millis(1));

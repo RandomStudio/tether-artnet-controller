@@ -16,9 +16,11 @@ cargo run -- --artnet.interface 10.112.10.187 --artnet.destination 10.112.10.187
 - [x] Allow macros to be (temporarily) disabled so Fixture>Mapping values can be adjusted directly without being overridden
 - [x] Add the missing macros/auto sections with range values for both fixture types (left out this detail)
 - [x] MIDI (Tether, remote) control
-- [ ] Allow macro "current values" to be updated when using MIDI (or any other remote-control messages!)
+- [ ] Need to resolve "conflict" between values that have defaults but ALSO have Macros attached
+- [ ] Allow macro "current values" to be updated remotely via Tether
+- [ ] Macro Animations on remote messages via Tether
+- [ ] ArtNet on separate thread, with more precise timing; this might require some messaging back and forth and/or mutex
 - [ ] Remote control for macros
 - [ ] With macros, add some visual indicators of state, e.g. Colour, Brightness and Pan/Tilt 
-- [ ] Macro Animations
 - [ ] Multi-Macro "cues" (kind of like keyframes: multiple values) should be easy to save. Just hit a button to save the current cue (state of all macros/channels), for example.
 - [ ] Add 16-bit control, at least for macros (single slider adjusts the two channels as split between first and second 8-bit digits)

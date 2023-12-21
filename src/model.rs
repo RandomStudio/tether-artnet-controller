@@ -6,14 +6,17 @@ use crate::{
     artnet::{random, zero, ArtNetInterface},
     project::Project,
     settings::{Cli, CHANNELS_PER_UNIVERSE},
-    tether_interface::{TetherControlChangePayload, TetherMidiMessage, TetherNotePayload},
+    tether_interface::{
+        RemoteControlMessage, TetherControlChangePayload, TetherMacroMessage, TetherMidiMessage,
+        TetherNotePayload,
+    },
     ui::{render_fixture_controls, render_macro_controls, render_sliders},
 };
 
 pub struct Model {
     pub channels_state: Vec<u8>,
     pub channels_assigned: Vec<bool>,
-    pub tether_rx: Receiver<TetherMidiMessage>,
+    pub tether_rx: Receiver<RemoteControlMessage>,
     pub settings: Cli,
     pub artnet: ArtNetInterface,
     pub project: Project,
@@ -44,7 +47,7 @@ impl eframe::App for Model {
 
 impl Model {
     pub fn new(
-        tether_rx: Receiver<TetherMidiMessage>,
+        tether_rx: Receiver<RemoteControlMessage>,
         settings: Cli,
         artnet: ArtNetInterface,
     ) -> Model {
@@ -69,7 +72,7 @@ impl Model {
             artnet,
             project,
             selected_macro_group_index: 0,
-            apply_macros: true,
+            apply_macros: false,
         };
 
         model.apply_channel_defaults();
@@ -83,67 +86,11 @@ impl Model {
         while let Ok(m) = self.tether_rx.try_recv() {
             work_done = true;
             match m {
-                TetherMidiMessage::Raw(_) => todo!(),
-                TetherMidiMessage::NoteOn(note) => {
-                    let TetherNotePayload {
-                        note,
-                        channel: _,
-                        velocity: _,
-                    } = note;
-                    let start_note = 48;
-                    let index = note - start_note;
-                    debug!("Note {} => macro group index {}", note, index);
-                    self.selected_macro_group_index = index as usize;
+                RemoteControlMessage::Midi(midi) => {
+                    self.handle_midi_message(midi);
                 }
-                TetherMidiMessage::NoteOff(_) => todo!(),
-                TetherMidiMessage::ControlChange(cc) => {
-                    let TetherControlChangePayload {
-                        channel: _,
-                        controller,
-                        value,
-                    } = cc;
-
-                    // TODO: reimplement remote via Tether-MIDI
-
-                    // let active_macros = self
-                    //     .project
-                    //     .fixtures
-                    //     .iter()
-                    //     .map(|fc| {
-                    //         if let Some(fixture) = &fc.fixture {
-                    //             let macros = fixture.modes[0].macros.clone();
-                    //             return Some((fc.clone(), macros));
-                    //         } else {
-                    //             return None;
-                    //         }
-                    //     })
-                    //     .filter_map(|x| x);
-
-                    // let controller_start = 48;
-
-                    // for (i, (fixture_config, m)) in active_macros.enumerate() {
-                    //     if self.selected_macro_group_index as usize == i {
-                    //         debug!("Adjust for macros {:?}", m);
-                    //         let target_macro_index = controller - controller_start;
-                    //         debug!("Controller {} => {}", controller, target_macro_index);
-                    //         match m.get(target_macro_index as usize) {
-                    //             Some(macro_control) => {
-                    //                 let value = value * 2;
-                    //                 debug!("Adjust {:?} to {}", macro_control, value);
-                    //                 // macro_control.current_value = value * 2;
-                    //                 for c in &macro_control.channels {
-                    //                     let channel_index =
-                    //                         (*c - 1 + fixture_config.offset_channels) as usize;
-                    //                     debug!("Set channel {} to value {}", channel_index, value);
-                    //                     self.channels_state[channel_index] = value;
-                    //                 }
-                    //             }
-                    //             None => {
-                    //                 error!("Failed to match macro control");
-                    //             }
-                    //         }
-                    //     }
-                    // }
+                RemoteControlMessage::MacroDirect(macro_message) => {
+                    self.handle_macro_message(macro_message);
                 }
             }
         }
@@ -172,12 +119,108 @@ impl Model {
         }
     }
 
+    fn handle_midi_message(&mut self, m: TetherMidiMessage) {
+        match m {
+            TetherMidiMessage::Raw(_) => todo!(),
+            TetherMidiMessage::NoteOn(note) => {
+                let TetherNotePayload {
+                    note,
+                    channel: _,
+                    velocity: _,
+                } = note;
+                let start_note = 48;
+                let index = note - start_note;
+                debug!("Note {} => macro group index {}", note, index);
+                self.selected_macro_group_index = index as usize;
+            }
+            TetherMidiMessage::NoteOff(_) => todo!(),
+            TetherMidiMessage::ControlChange(cc) => {
+                let TetherControlChangePayload {
+                    channel: _,
+                    controller,
+                    value,
+                } = cc;
+
+                // TODO: reimplement remote via Tether-MIDI
+
+                // let active_macros = self
+                //     .project
+                //     .fixtures
+                //     .iter()
+                //     .map(|fc| {
+                //         if let Some(fixture) = &fc.fixture {
+                //             let macros = fixture.modes[0].macros.clone();
+                //             return Some((fc.clone(), macros));
+                //         } else {
+                //             return None;
+                //         }
+                //     })
+                //     .filter_map(|x| x);
+
+                // let controller_start = 48;
+
+                // for (i, (fixture_config, m)) in active_macros.enumerate() {
+                //     if self.selected_macro_group_index as usize == i {
+                //         debug!("Adjust for macros {:?}", m);
+                //         let target_macro_index = controller - controller_start;
+                //         debug!("Controller {} => {}", controller, target_macro_index);
+                //         match m.get(target_macro_index as usize) {
+                //             Some(macro_control) => {
+                //                 let value = value * 2;
+                //                 debug!("Adjust {:?} to {}", macro_control, value);
+                //                 // macro_control.current_value = value * 2;
+                //                 for c in &macro_control.channels {
+                //                     let channel_index =
+                //                         (*c - 1 + fixture_config.offset_channels) as usize;
+                //                     debug!("Set channel {} to value {}", channel_index, value);
+                //                     self.channels_state[channel_index] = value;
+                //                 }
+                //             }
+                //             None => {
+                //                 error!("Failed to match macro control");
+                //             }
+                //         }
+                //     }
+                // }
+            }
+        }
+    }
+
+    fn handle_macro_message(&mut self, msg: TetherMacroMessage) {
+        let target_fixtures: Vec<usize> = self
+            .project
+            .fixtures
+            .iter()
+            .enumerate()
+            .filter(|(i, f)| {
+                if let Some(label) = &msg.fixture_label {
+                    f.label.eq_ignore_ascii_case(&label)
+                } else {
+                    true // match all
+                }
+            })
+            .filter_map(|(i, _f)| Some(i))
+            .collect();
+
+        for (i, fixture) in self.project.fixtures.iter_mut().enumerate() {
+            if target_fixtures.contains(&i) {
+                if let Some(target_macro) = fixture.config.active_mode.macros.iter_mut().find(
+                    |m: &&mut crate::project::ControlMacro| {
+                        m.label.eq_ignore_ascii_case(&msg.macro_label)
+                    },
+                ) {
+                    target_macro.current_value = msg.value;
+                }
+            }
+        }
+    }
+
     pub fn apply_channel_defaults(&mut self) {
         self.channels_state = [0].repeat(CHANNELS_PER_UNIVERSE as usize); // init zeroes
 
         let fixtures_clone = self.project.fixtures.clone();
         for fixture in fixtures_clone.iter() {
-            let current_mode = &fixture.config.modes[fixture.mode_index];
+            let current_mode = &fixture.config.active_mode;
             for m in &current_mode.mappings {
                 if let Some(default_value) = m.default {
                     let channel_index = m.channel + fixture.offset_channels - 1;

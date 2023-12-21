@@ -14,7 +14,6 @@ pub fn render_sliders(model: &mut Model, ui: &mut Ui) {
         .show(ui, |ui| {
             Grid::new("sliders").num_columns(2).show(ui, |ui| {
                 for i in 0..CHANNELS_PER_UNIVERSE {
-                    // ui.horizontal(|ui| {
                     let text = format!("Channel #{}", i + 1);
                     let is_assigned = model.channels_assigned[i as usize];
                     ui.label(RichText::new(text).color(if is_assigned {
@@ -22,8 +21,12 @@ pub fn render_sliders(model: &mut Model, ui: &mut Ui) {
                     } else {
                         Color32::GRAY
                     }));
-                    ui.add(Slider::new(&mut model.channels_state[i as usize], 0..=255));
-                    // });
+                    if ui
+                        .add(Slider::new(&mut model.channels_state[i as usize], 0..=255))
+                        .changed()
+                    {
+                        model.apply_macros = false;
+                    };
                     ui.end_row();
                 }
             });
@@ -37,7 +40,6 @@ pub fn render_fixture_controls(model: &mut Model, ui: &mut Ui) {
         .show(ui, |ui| {
             for (i, fixture) in model.project.fixtures.iter().enumerate() {
                 let config = &fixture.config;
-                // ui.group(|ui| {
                 ui.heading(format!("{} +{}", &fixture.label, fixture.offset_channels));
                 ui.label(format!("{}", &config.name));
                 ui.hyperlink_to("Reference/manual", &config.reference);
@@ -86,7 +88,6 @@ pub fn render_fixture_controls(model: &mut Model, ui: &mut Ui) {
                         }
                     });
                 ui.separator();
-                // });
             }
         });
 }
@@ -112,7 +113,11 @@ pub fn render_macro_controls(model: &mut Model, ui: &mut Ui) {
         .show(ui, |ui| {
             for (i, fixture) in model.project.fixtures.iter_mut().enumerate() {
                 ui.group(|ui| {
-                    if ui.button("Select").clicked() {
+                    let mut this_selected = model.selected_macro_group_index == i;
+                    if ui
+                        .toggle_value(&mut this_selected, "MIDI Control Target")
+                        .clicked()
+                    {
                         model.selected_macro_group_index = i;
                     }
                     ui.heading(RichText::new(&fixture.label).color(

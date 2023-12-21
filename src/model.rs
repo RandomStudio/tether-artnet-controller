@@ -17,6 +17,7 @@ pub struct Model {
     pub settings: Cli,
     pub artnet: ArtNetInterface,
     pub project: Project,
+    pub apply_macros: bool,
     /// Determines which macros are adjusted via MIDI
     pub selected_macro_group_index: usize,
 }
@@ -68,6 +69,7 @@ impl Model {
             artnet,
             project,
             selected_macro_group_index: 0,
+            apply_macros: true,
         };
 
         model.apply_channel_defaults();
@@ -151,7 +153,14 @@ impl Model {
         } else if self.settings.auto_zero {
             zero(&mut self.channels_state);
         } else {
-            self.artnet.update(&self.channels_state);
+            self.artnet.update(
+                &self.channels_state,
+                &self.project.fixtures,
+                self.apply_macros,
+            );
+            if self.apply_macros {
+                self.channels_state = self.artnet.get_state().to_vec();
+            }
         }
 
         if self.settings.auto_random || self.settings.auto_zero {

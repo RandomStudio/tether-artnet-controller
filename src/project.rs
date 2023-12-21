@@ -27,6 +27,7 @@ pub struct FixtureConfig {
     pub reference: String,
     pub modes: Vec<ControlMode>,
     #[serde(skip)]
+    /// The active mode actually in use, copied from the list on loading
     pub active_mode: ControlMode,
 }
 

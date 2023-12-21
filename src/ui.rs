@@ -55,11 +55,15 @@ pub fn render_fixture_controls(model: &mut Model, ui: &mut Ui) {
                                 channel_index + 1,
                                 &m.notes.as_deref().unwrap_or_default()
                             ));
-                            // let mut value = ;
-                            ui.add(Slider::new(
-                                &mut model.channels_state[(channel_index) as usize],
-                                0..=255,
-                            ));
+                            if ui
+                                .add(Slider::new(
+                                    &mut model.channels_state[(channel_index) as usize],
+                                    0..=255,
+                                ))
+                                .changed()
+                            {
+                                model.apply_macros = false;
+                            };
                             if let Some(range_sections) = &m.ranges {
                                 ui.label("Mode/Programme:");
                                 let current_range = range_sections.iter().find(|x| {
@@ -127,12 +131,8 @@ pub fn render_macro_controls(model: &mut Model, ui: &mut Ui) {
                             for (_i, m) in current_mode.macros.iter_mut().enumerate() {
                                 ui.label(&m.label);
                                 if ui.add(Slider::new(&mut m.current_value, 0..=255)).changed() {
-                                    for c in &m.channels {
-                                        model.channels_state
-                                            [(*c - 1 + fixture.offset_channels) as usize] =
-                                            m.current_value;
-                                    }
-                                }
+                                    model.apply_macros = true;
+                                };
 
                                 ui.end_row();
                             }

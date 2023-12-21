@@ -3,7 +3,10 @@ use std::net::{SocketAddr, ToSocketAddrs, UdpSocket};
 use artnet_protocol::{ArtCommand, Output};
 use rand::{rngs::ThreadRng, Rng};
 
-use crate::settings::CHANNELS_PER_UNIVERSE;
+use crate::{
+    project::{ControlMacro, FixtureInstance},
+    settings::CHANNELS_PER_UNIVERSE,
+};
 
 pub struct ArtNetInterface {
     socket: UdpSocket,
@@ -49,9 +52,25 @@ impl ArtNetInterface {
         }
     }
 
-    pub fn update(&mut self, channels_state: &[u8]) {
+    pub fn update(
+        &mut self,
+        channels_state: &[u8],
+        fixtures: &[FixtureInstance],
+        apply_macros: bool,
+    ) {
         zero(&mut self.channels);
         self.channels = channels_state.into(); // copy slice contents into Vec
+
+        if apply_macros {
+            for f in fixtures {
+                for m in &f.config.active_mode.macros {
+                    for c in &m.channels {
+                        self.channels[(*c - 1 + f.offset_channels) as usize] = m.current_value;
+                    }
+                }
+            }
+        }
+
         let command = ArtCommand::Output(Output {
             port_address: 0.into(),
             data: self.channels.clone().into(), // make temp copy of self channel state (?)
@@ -60,6 +79,10 @@ impl ArtNetInterface {
 
         let buff = command.write_to_buffer().unwrap();
         self.socket.send_to(&buff, self.destination).unwrap();
+    }
+
+    pub fn get_state(&self) -> &[u8] {
+        &self.channels
     }
 }
 

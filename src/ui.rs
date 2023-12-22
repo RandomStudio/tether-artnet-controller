@@ -1,8 +1,10 @@
 use egui::{Color32, Grid, RichText, ScrollArea, Slider, Ui, Vec2};
+use log::{error, info, warn};
 
 use crate::{
     artnet::{random, zero},
     model::{Model, ViewMode},
+    project::Project,
     settings::CHANNELS_PER_UNIVERSE,
 };
 
@@ -27,6 +29,44 @@ pub fn render_mode_switcher(model: &mut Model, ctx: &egui::Context, frame: &mut 
                 {
                     frame.set_window_size(ADVANCED_WIN_SIZE);
                     frame.set_window_pos([0., 0.].into())
+                }
+                ui.label("|");
+                if ui.button("New").clicked() {
+                    // TODO: ask for confirmation first!
+                    warn!("Clearing current project from memory");
+                    model.project = Project::new();
+                }
+                if ui.button("Save").clicked() {
+                    if let Some(path) = rfd::FileDialog::new()
+                        .add_filter("text", &["json"])
+                        .save_file()
+                    {
+                        match Project::save(&path.display().to_string(), &model.project) {
+                            Ok(()) => {
+                                info!("Saved OK!");
+                            }
+                            Err(e) => {
+                                error!("Error saving project: {:?}", e);
+                            }
+                        }
+                    }
+                }
+                if ui.button("Load").clicked() {
+                    if let Some(path) = rfd::FileDialog::new()
+                        .add_filter("text", &["json"])
+                        .pick_file()
+                    {
+                        match Project::load(&path.display().to_string()) {
+                            Ok(p) => model.project = p,
+                            Err(e) => {
+                                error!(
+                                    "Failed to load project from path \"{}\"; {:?}",
+                                    &path.display(),
+                                    e
+                                );
+                            }
+                        }
+                    }
                 }
             });
         });

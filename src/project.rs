@@ -1,6 +1,7 @@
 use std::fs;
 
-use log::{error, info, warn};
+use egui::epaint::ahash::HashMap;
+use log::{debug, error, info, warn};
 use serde::{Deserialize, Serialize};
 
 use crate::animation::Animation;
@@ -8,6 +9,7 @@ use crate::animation::Animation;
 #[derive(Serialize, Deserialize, Clone)]
 pub struct Project {
     pub fixtures: Vec<FixtureInstance>,
+    pub scenes: Vec<Scene>,
 }
 
 #[derive(Serialize, Deserialize, Clone)]
@@ -77,7 +79,27 @@ pub struct RangeDescription {
     pub label: String,
 }
 
+#[derive(Serialize, Deserialize, Clone)]
+pub struct SceneState {
+    macro_label: String,
+    macro_target_value: u8,
+}
+
+#[derive(Serialize, Deserialize, Clone)]
+pub struct Scene {
+    pub label: String,
+    /// Key: fixture label, Value: macro label each with target value
+    pub state: HashMap<String, SceneState>,
+}
+
 impl Project {
+    pub fn new() -> Project {
+        Project {
+            fixtures: Vec::new(),
+            scenes: Vec::new(),
+        }
+    }
+
     pub fn load(path: &str) -> anyhow::Result<Project> {
         let text = fs::read_to_string(path);
         match text {
@@ -113,5 +135,16 @@ impl Project {
                 Err(e.into())
             }
         }
+    }
+
+    pub fn save(path: &str, project: &Project) -> anyhow::Result<()> {
+        let json = serde_json::to_string_pretty(&project)?;
+        debug!("{}", json);
+
+        fs::write(&path, json)?;
+
+        info!("Saved Project JSON to \"{}\" OK", &path);
+
+        Ok(())
     }
 }

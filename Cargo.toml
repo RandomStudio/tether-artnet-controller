@@ -19,5 +19,6 @@ rmp-serde = "1.1.1"
 eframe = "0.22.0"
 egui = "0.22.0"
 anyhow = "1.0.75"
+rfd = "0.12.1"
 
 

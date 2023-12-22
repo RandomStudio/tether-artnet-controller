@@ -1,6 +1,6 @@
 use std::{sync::mpsc::Receiver, time::Duration};
 
-use log::debug;
+use log::{debug, error, info};
 use tween::SineInOut;
 
 use crate::{
@@ -72,7 +72,17 @@ impl Model {
         settings: Cli,
         artnet: ArtNetInterface,
     ) -> Model {
-        let project = Project::load("./project.json").expect("failed to load project");
+        let project = match Project::load(&settings.project_path) {
+            Ok(p) => p,
+            Err(e) => {
+                error!(
+                    "Failed to load project from path \"{}\"; {:?}",
+                    &settings.project_path, e
+                );
+                info!("Blank project will be loaded instead.");
+                Project::new()
+            }
+        };
 
         let fixtures_clone = project.clone().fixtures;
 

@@ -303,33 +303,35 @@ fn render_scenes(model: &mut Model, ui: &mut Ui) {
 
     let mut go_scenes = Vec::new();
 
-    for (scene_index, scene) in model.project.scenes.iter_mut().enumerate() {
-        ui.group(|ui| {
-            ui.heading(&scene.label);
-            ui.horizontal(|ui| {
-                if ui.button("Go").clicked() {
-                    go_scenes.push(scene_index)
-                    // model.apply_scene(scene_index);
-                };
-            });
+    ScrollArea::new([false, true]).show(ui, |ui| {
+        for (scene_index, scene) in model.project.scenes.iter_mut().enumerate() {
+            ui.group(|ui| {
+                ui.heading(&scene.label);
+                ui.horizontal(|ui| {
+                    if ui.button("Go").clicked() {
+                        go_scenes.push(scene_index)
+                        // model.apply_scene(scene_index);
+                    };
+                });
 
-            for (fixture_index, s) in scene.state.iter_mut().enumerate() {
-                let (fixture_label, states) = s;
-                ui.label(fixture_label);
-                Grid::new(format!("scene-{}-state-{}", scene_index, fixture_index))
-                    .num_columns(2)
-                    .show(ui, |ui| {
-                        for m in states.iter_mut() {
-                            let (macro_label, value) = m;
-                            ui.label(macro_label);
-                            ui.add(Slider::new(value, 0..=255));
-                            ui.end_row();
-                        }
-                    });
-                ui.separator();
-            }
-        });
-    }
+                for (fixture_index, s) in scene.state.iter_mut().enumerate() {
+                    let (fixture_label, states) = s;
+                    ui.label(fixture_label);
+                    Grid::new(format!("scene-{}-state-{}", scene_index, fixture_index))
+                        .num_columns(2)
+                        .show(ui, |ui| {
+                            for m in states.iter_mut() {
+                                let (macro_label, value) = m;
+                                ui.label(macro_label);
+                                ui.add(Slider::new(value, 0..=255));
+                                ui.end_row();
+                            }
+                        });
+                    ui.separator();
+                }
+            });
+        }
+    });
 
     for scene_index in go_scenes {
         model.apply_scene(scene_index);

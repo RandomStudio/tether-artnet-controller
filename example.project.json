@@ -21,5 +21,88 @@
       "offsetChannels": 27
     }
   ],
-  "scenes": []
+  "scenes": [
+    {
+      "label": "white down",
+      "state": {
+        "Hero South": {
+          "red": 0,
+          "green": 0,
+          "blue": 0,
+          "white": 255,
+          "pan": 0,
+          "tilt": 128,
+          "zoom": 128
+        },
+        "Hero North": {
+          "red": 0,
+          "green": 0,
+          "blue": 0,
+          "white": 255,
+          "pan": 0,
+          "tilt": 128,
+          "zoom": 128
+        },
+        "Hex East": {
+          "red": 0,
+          "green": 0,
+          "blue": 0,
+          "white": 255,
+          "pan": 0,
+          "tilt": 128,
+          "zoom": 128
+        },
+        "Hex West": {
+          "red": 0,
+          "green": 0,
+          "blue": 0,
+          "white": 255,
+          "pan": 0,
+          "tilt": 128,
+          "zoom": 128
+        }
+      }
+    },
+    {
+      "label": "multi-coloured",
+      "state": {
+        "Hero South": {
+          "red": 255,
+          "green": 0,
+          "blue": 0,
+          "white": 0,
+          "pan": 64,
+          "tilt": 8,
+          "zoom": 255
+        },
+        "Hero North": {
+          "red": 0,
+          "green": 255,
+          "blue": 0,
+          "white": 0,
+          "pan": 64,
+          "tilt": 8,
+          "zoom": 255
+        },
+        "Hex East": {
+          "red": 255,
+          "green": 0,
+          "blue": 255,
+          "white": 0,
+          "pan": 64,
+          "tilt": 8,
+          "zoom": 255
+        },
+        "Hex West": {
+          "red": 0,
+          "green": 0,
+          "blue": 0,
+          "white": 255,
+          "pan": 64,
+          "tilt": 8,
+          "zoom": 255
+        }
+      }
+    }
+  ]
 }

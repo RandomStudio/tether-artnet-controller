@@ -1,4 +1,4 @@
-use std::{sync::mpsc::Receiver, time::Duration};
+use std::{ops::Deref, sync::mpsc::Receiver, time::Duration};
 
 use log::{debug, error, info};
 use tween::SineInOut;
@@ -6,20 +6,17 @@ use tween::SineInOut;
 use crate::{
     animation::Animation,
     artnet::{random, zero, ArtNetInterface},
-    project::{FixtureInstance, Project},
+    project::{FixtureInstance, Project, Scene},
     settings::{Cli, CHANNELS_PER_UNIVERSE},
     tether_interface::{
         RemoteControlMessage, TetherAnimationMessage, TetherControlChangePayload,
         TetherMacroMessage, TetherMidiMessage, TetherNotePayload,
     },
-    ui::{render_fixture_controls, render_macro_controls, render_mode_switcher, render_sliders},
+    ui::{
+        render_fixture_controls, render_gui, render_macro_controls, render_mode_switcher,
+        render_sliders, ViewMode,
+    },
 };
-
-#[derive(PartialEq)]
-pub enum ViewMode {
-    Simple,
-    Advanced,
-}
 
 pub struct Model {
     pub channels_state: Vec<u8>,
@@ -37,32 +34,7 @@ pub struct Model {
 
 impl eframe::App for Model {
     fn update(&mut self, ctx: &egui::Context, frame: &mut eframe::Frame) {
-        ctx.request_repaint();
-
-        render_mode_switcher(self, ctx, frame);
-
-        match self.view_mode {
-            ViewMode::Advanced => {
-                egui::SidePanel::left("LeftPanel").show(ctx, |ui| {
-                    render_macro_controls(self, ui);
-                });
-
-                egui::SidePanel::right("RightPanel").show(ctx, |ui| {
-                    render_sliders(self, ui);
-                });
-
-                egui::CentralPanel::default().show(ctx, |ui| {
-                    render_fixture_controls(self, ui);
-                });
-            }
-            ViewMode::Simple => {
-                egui::CentralPanel::default().show(ctx, |ui| {
-                    render_macro_controls(self, ui);
-                });
-            }
-        }
-
-        self.update();
+        render_gui(self, ctx, frame);
     }
 }
 
@@ -289,6 +261,31 @@ impl Model {
                         end_value
                     );
                 }
+            }
+        }
+    }
+
+    pub fn apply_scene(&mut self, scene_index: usize) {
+        match self.project.scenes.get(scene_index) {
+            Some(scene) => {
+                debug!("Match scene {:?}", &scene.label);
+                for fixture in self.project.fixtures.iter_mut() {
+                    for (fixture_label, states) in scene.state.iter() {
+                        if fixture_label.eq_ignore_ascii_case(&fixture.label) {
+                            debug!("Scene has match for {}:{}", &fixture.label, fixture_label);
+                            for m in fixture.config.active_mode.macros.iter_mut() {
+                                if let Some(value_in_scene_macro) = states.get(&m.label) {
+                                    debug!("Scene sets {} to {}", &m.label, value_in_scene_macro);
+                                    m.current_value = *value_in_scene_macro;
+                                }
+                            }
+                        }
+                    }
+                }
+                self.apply_macros = true;
+            }
+            None => {
+                error!("Failed to find scene with index {}", scene_index);
             }
         }
     }

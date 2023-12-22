@@ -1,6 +1,5 @@
-use std::fs;
+use std::{collections::HashMap, fs};
 
-use egui::epaint::ahash::HashMap;
 use log::{debug, error, info, warn};
 use serde::{Deserialize, Serialize};
 
@@ -79,16 +78,13 @@ pub struct RangeDescription {
     pub label: String,
 }
 
-#[derive(Serialize, Deserialize, Clone)]
-pub struct SceneState {
-    macro_label: String,
-    macro_target_value: u8,
-}
+/// "Macro label": value
+type SceneState = HashMap<String, u8>;
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct Scene {
     pub label: String,
-    /// Key: fixture label, Value: macro label each with target value
+    /// "Fixture instance label": { "macro label": value } }
     pub state: HashMap<String, SceneState>,
 }
 
@@ -116,8 +112,8 @@ impl Project {
                     match fs::read_to_string(&fixture.path) {
                         Ok(d) => {
                             info!("Loaded fixture data from {}; parsing...", &fixture.path);
-                            let parsed = serde_json::from_str::<FixtureConfig>(&d)
-                                .expect("failed to parse Fixture data file");
+                            let parsed = serde_json::from_str::<FixtureConfig>(&d)?;
+                            info!("... Parsed fixture OK");
                             fixture.config = parsed;
                             fixture.config.active_mode =
                                 fixture.config.modes[fixture.mode_index].clone();

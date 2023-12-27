@@ -31,9 +31,9 @@ If you have Tether Egui installed (`cargo install tether-egui`) then the easiest
 - [x] Macro Animations on remote messages via Tether
 - [ ] Project JSON should save ArtNet configuration (but can override via CLI args)
 - [x] Provide simple/advanced views (e.g. "macros only" vs "the kitchen sink")
-- [ ] Scenes should be triggered by Tether messages
-- [ ] Multi-Macro "cues" (kind of like keyframes: multiple values) should be easy to save. Just hit a button to save the current cue (state of all macros/channels), for example.
-- [ ] ArtNet on separate thread, with more precise timing; this might require some messaging back and forth and/or mutex
+- [x] Scenes should be triggered by Tether messages
+- [ ] Hit a button to save the current state of all macros to a new Scene
 - [ ] With macros, add some visual indicators of state, e.g. Colour, Brightness and Pan/Tilt 
-- [ ] Need to resolve "conflict" between values that have defaults but ALSO have Macros attached
+- [ ] At the moment, macros simply get "inactive" when something further downstream is applied (fixture controls, individual channels); it would be nice to propagate any live changes applied back "up" to the macro values as well.
 - [ ] Add 16-bit control, at least for macros (single slider adjusts the two channels as split between first and second 8-bit digits)
+- [ ] ArtNet on separate thread, with more precise timing; this might require some messaging back and forth and/or mutex

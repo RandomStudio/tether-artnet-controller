@@ -56,6 +56,7 @@ pub enum TetherMidiMessage {
 #[serde(rename_all = "camelCase")]
 pub struct RemoteSceneMessage {
     pub scene_label: String,
+    pub ms: Option<u64>,
 }
 
 pub enum RemoteControlMessage {

@@ -279,12 +279,14 @@ impl Model {
             .enumerate()
             .find(|(_i, s)| s.label.eq_ignore_ascii_case(&msg.scene_label))
         {
-            Some((index, _scene)) => self.apply_scene(index),
+            Some((index, _scene)) => {
+                self.apply_scene(index, msg.ms);
+            }
             None => error!("Failed to find matching scene for \"{}\"", &msg.scene_label),
         }
     }
 
-    pub fn apply_scene(&mut self, scene_index: usize) {
+    pub fn apply_scene(&mut self, scene_index: usize, animation_ms: Option<u64>) {
         match self.project.scenes.get(scene_index) {
             Some(scene) => {
                 debug!("Match scene {:?}", &scene.label);
@@ -295,7 +297,27 @@ impl Model {
                             for m in fixture.config.active_mode.macros.iter_mut() {
                                 if let Some(value_in_scene_macro) = states.get(&m.label) {
                                     debug!("Scene sets {} to {}", &m.label, value_in_scene_macro);
-                                    m.current_value = *value_in_scene_macro;
+                                    match animation_ms {
+                                        Some(ms) => {
+                                            debug!("Apply animation with {}ms", ms);
+                                            let start_value = m.current_value as f32 / 255.0;
+                                            let end_value = *value_in_scene_macro as f32 / 255.0;
+                                            let duration = Duration::from_millis(ms);
+
+                                            m.animation = Some(Animation::new(
+                                                duration,
+                                                start_value,
+                                                end_value,
+                                                Box::new(SineInOut),
+                                            ))
+                                        }
+                                        None => {
+                                            debug!(
+                                                "No animation with scene; set value immediately"
+                                            );
+                                            m.current_value = *value_in_scene_macro;
+                                        }
+                                    }
                                 }
                             }
                         }

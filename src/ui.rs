@@ -334,6 +334,6 @@ fn render_scenes(model: &mut Model, ui: &mut Ui) {
     });
 
     for scene_index in go_scenes {
-        model.apply_scene(scene_index);
+        model.apply_scene(scene_index, None);
     }
 }

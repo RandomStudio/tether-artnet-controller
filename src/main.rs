@@ -1,7 +1,7 @@
 use std::{net::SocketAddr, sync::mpsc};
 
 use env_logger::Env;
-use log::{debug, info};
+use log::{debug, error, info};
 
 use clap::Parser;
 
@@ -42,12 +42,15 @@ fn main() {
 
     let artnet = {
         if cli.artnet_broadcast {
-            ArtNetInterface::new(ArtNetMode::Broadcast)
+            ArtNetInterface::new(ArtNetMode::Broadcast, cli.artnet_update_frequency)
         } else {
-            ArtNetInterface::new(ArtNetMode::Unicast(
-                SocketAddr::from((cli.unicast_src, 6453)),
-                SocketAddr::from((cli.unicast_dst, 6454)),
-            ))
+            ArtNetInterface::new(
+                ArtNetMode::Unicast(
+                    SocketAddr::from((cli.unicast_src, 6453)),
+                    SocketAddr::from((cli.unicast_dst, 6454)),
+                ),
+                cli.artnet_update_frequency,
+            )
         }
     };
 
@@ -71,6 +74,17 @@ fn main() {
         )
         .expect("Failed to launch GUI");
         info!("GUI ended; exit now...");
+        // TODO: need to tell each thread to stop (if it's looping)
+        // for h in handles {
+        //     match h.join() {
+        //         Ok(()) => {
+        //             debug!("Thread join OK");
+        //         }
+        //         Err(e) => {
+        //             error!("Thread joined with error, {:?}", e);
+        //         }
+        //     }
+        // }
         std::process::exit(0);
     }
 }

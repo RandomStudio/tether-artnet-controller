@@ -1,4 +1,7 @@
-use std::net::{SocketAddr, ToSocketAddrs, UdpSocket};
+use std::{
+    net::{SocketAddr, ToSocketAddrs, UdpSocket},
+    time::{Duration, SystemTime},
+};
 
 use artnet_protocol::{ArtCommand, Output};
 use rand::{rngs::ThreadRng, Rng};
@@ -12,6 +15,8 @@ pub struct ArtNetInterface {
     socket: UdpSocket,
     destination: SocketAddr,
     channels: Vec<u8>,
+    update_interval: Duration,
+    last_sent: Option<SystemTime>,
 }
 
 pub enum ArtNetMode {
@@ -21,8 +26,10 @@ pub enum ArtNetMode {
 }
 
 impl ArtNetInterface {
-    pub fn new(mode: ArtNetMode) -> Self {
+    pub fn new(mode: ArtNetMode, update_frequency: u64) -> Self {
         let channels = Vec::with_capacity(CHANNELS_PER_UNIVERSE as usize);
+
+        let update_interval = Duration::from_secs_f32(1.0 / update_frequency as f32);
 
         match mode {
             ArtNetMode::Broadcast => {
@@ -37,6 +44,8 @@ impl ArtNetInterface {
                     socket,
                     destination: broadcast_addr,
                     channels,
+                    update_interval,
+                    last_sent: None,
                 }
             }
             ArtNetMode::Unicast(src, destination) => {
@@ -47,6 +56,8 @@ impl ArtNetInterface {
                     socket,
                     destination,
                     channels,
+                    update_interval,
+                    last_sent: None,
                 }
             }
         }
@@ -57,7 +68,16 @@ impl ArtNetInterface {
         channels_state: &[u8],
         fixtures: &[FixtureInstance],
         apply_macros: bool,
-    ) {
+    ) -> bool {
+        match self.last_sent {
+            Some(t) => {
+                if t.elapsed().unwrap() < self.update_interval {
+                    return false; // early return; not ready to send
+                }
+            }
+            None => self.last_sent = Some(SystemTime::now()),
+        }
+
         // zero(&mut self.channels);
         self.channels = channels_state.into(); // copy slice contents into Vec
 
@@ -79,6 +99,8 @@ impl ArtNetInterface {
 
         let buff = command.write_to_buffer().unwrap();
         self.socket.send_to(&buff, self.destination).unwrap();
+
+        true
     }
 
     pub fn get_state(&self) -> &[u8] {

@@ -108,14 +108,16 @@ impl Model {
         } else if self.settings.auto_zero {
             zero(&mut self.channels_state);
         } else {
-            self.artnet.update(
+            if self.artnet.update(
                 &self.channels_state,
                 &self.project.fixtures,
                 self.apply_macros,
-            );
-            if self.apply_macros {
-                self.animate_macros();
-                self.channels_state = self.artnet.get_state().to_vec();
+            ) {
+                work_done = true;
+                if self.apply_macros {
+                    self.animate_macros();
+                    self.channels_state = self.artnet.get_state().to_vec();
+                }
             }
         }
 
@@ -123,7 +125,8 @@ impl Model {
             std::thread::sleep(Duration::from_secs(1));
         } else {
             if !work_done {
-                std::thread::sleep(Duration::from_millis(self.settings.artnet_update_frequency));
+                // std::thread::sleep(Duration::from_millis(self.settings.artnet_update_frequency));
+                std::thread::sleep(Duration::from_millis(1));
             }
         }
     }

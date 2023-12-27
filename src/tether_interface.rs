@@ -24,7 +24,7 @@ pub struct TetherControlChangePayload {
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub struct TetherMacroMessage {
+pub struct RemoteMacroMessage {
     /// If no fixture specified, assume all
     pub fixture_label: Option<String>,
     pub macro_label: String,
@@ -33,7 +33,7 @@ pub struct TetherMacroMessage {
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub struct TetherAnimationMessage {
+pub struct RemoteAnimationMessage {
     /// If no fixture specified, assume all
     pub fixture_label: Option<String>,
     pub macro_label: String,
@@ -52,10 +52,17 @@ pub enum TetherMidiMessage {
     ControlChange(TetherControlChangePayload),
 }
 
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct RemoteSceneMessage {
+    pub scene_label: String,
+}
+
 pub enum RemoteControlMessage {
     Midi(TetherMidiMessage),
-    MacroDirect(TetherMacroMessage),
-    MacroAnimation(TetherAnimationMessage),
+    MacroDirect(RemoteMacroMessage),
+    MacroAnimation(RemoteAnimationMessage),
+    SceneAnimation(RemoteSceneMessage),
 }
 
 pub fn start_tether_thread(tx: Sender<RemoteControlMessage>) -> JoinHandle<()> {
@@ -79,6 +86,10 @@ pub fn start_tether_thread(tx: Sender<RemoteControlMessage>) -> JoinHandle<()> {
         .build(&tether_agent)
         .expect("failed to create Input Plug");
 
+    let input_scenes = PlugOptionsBuilder::create_input("scenes")
+        .build(&tether_agent)
+        .expect("failed to create Input Plug");
+
     spawn(move || loop {
         while let Some((topic, message)) = tether_agent.check_messages() {
             if input_midi_cc.matches(&topic) {
@@ -88,26 +99,32 @@ pub fn start_tether_thread(tx: Sender<RemoteControlMessage>) -> JoinHandle<()> {
                 tx.send(RemoteControlMessage::Midi(
                     TetherMidiMessage::ControlChange(m),
                 ))
-                .expect("failed to send")
+                .expect("failed to send from Tether Interface thread")
             }
             if input_midi_notes.matches(&topic) {
                 debug!("MIDI Note");
                 let m = rmp_serde::from_slice::<TetherNotePayload>(&message.payload()).unwrap();
                 tx.send(RemoteControlMessage::Midi(TetherMidiMessage::NoteOn(m)))
-                    .expect("failed to send")
+                    .expect("failed to send from Tether Interface thread")
             }
             if input_macros.matches(&topic) {
                 debug!("Macro (direct) control message");
-                let m = rmp_serde::from_slice::<TetherMacroMessage>(&message.payload()).unwrap();
+                let m = rmp_serde::from_slice::<RemoteMacroMessage>(&message.payload()).unwrap();
                 tx.send(RemoteControlMessage::MacroDirect(m))
-                    .expect("failed to send");
+                    .expect("failed to send from Tether Interface thread");
             }
             if input_animations.matches(&topic) {
                 debug!("Macro Animation control message");
                 let m =
-                    rmp_serde::from_slice::<TetherAnimationMessage>(&message.payload()).unwrap();
+                    rmp_serde::from_slice::<RemoteAnimationMessage>(&message.payload()).unwrap();
                 tx.send(RemoteControlMessage::MacroAnimation(m))
-                    .expect("failed to send");
+                    .expect("failed to send from Tether Interface thread");
+            }
+            if input_scenes.matches(&topic) {
+                debug!("Remote Scene message");
+                let m = rmp_serde::from_slice::<RemoteSceneMessage>(&message.payload()).unwrap();
+                tx.send(RemoteControlMessage::SceneAnimation(m))
+                    .expect("failed to send from Tether Interface thread");
             }
         }
         sleep(Duration::from_millis(1));

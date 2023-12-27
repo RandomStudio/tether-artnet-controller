@@ -9,8 +9,8 @@ use crate::{
     project::{FixtureInstance, Project, Scene},
     settings::{Cli, CHANNELS_PER_UNIVERSE},
     tether_interface::{
-        RemoteControlMessage, TetherAnimationMessage, TetherControlChangePayload,
-        TetherMacroMessage, TetherMidiMessage, TetherNotePayload,
+        RemoteAnimationMessage, RemoteControlMessage, RemoteMacroMessage, RemoteSceneMessage,
+        TetherControlChangePayload, TetherMidiMessage, TetherNotePayload,
     },
     ui::{
         render_fixture_controls, render_gui, render_macro_controls, render_mode_switcher,
@@ -99,6 +99,9 @@ impl Model {
                 }
                 RemoteControlMessage::MacroAnimation(animation_msg) => {
                     self.handle_animation_message(animation_msg);
+                }
+                RemoteControlMessage::SceneAnimation(scene_msg) => {
+                    self.handle_scene_message(scene_msg);
                 }
             }
         }
@@ -215,7 +218,7 @@ impl Model {
         }
     }
 
-    fn handle_macro_message(&mut self, msg: TetherMacroMessage) {
+    fn handle_macro_message(&mut self, msg: RemoteMacroMessage) {
         let target_fixtures = get_target_fixtures_list(&self.project.fixtures, &msg.fixture_label);
 
         for (i, fixture) in self.project.fixtures.iter_mut().enumerate() {
@@ -231,7 +234,7 @@ impl Model {
         }
     }
 
-    pub fn handle_animation_message(&mut self, msg: TetherAnimationMessage) {
+    pub fn handle_animation_message(&mut self, msg: RemoteAnimationMessage) {
         let target_fixtures = get_target_fixtures_list(&self.project.fixtures, &msg.fixture_label);
 
         debug!(
@@ -265,6 +268,19 @@ impl Model {
                     );
                 }
             }
+        }
+    }
+
+    pub fn handle_scene_message(&mut self, msg: RemoteSceneMessage) {
+        match self
+            .project
+            .scenes
+            .iter()
+            .enumerate()
+            .find(|(_i, s)| s.label.eq_ignore_ascii_case(&msg.scene_label))
+        {
+            Some((index, _scene)) => self.apply_scene(index),
+            None => error!("Failed to find matching scene for \"{}\"", &msg.scene_label),
         }
     }
 

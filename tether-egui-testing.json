@@ -74,6 +74,31 @@
         },
         "value": "{\"fixtureLabel\": \"Hex East\",  \"macroLabel\":\"white\", \"targetValue\": 0, \"duration\": 3000}"
       }
+    },
+    {
+      "generic": {
+        "common": {
+          "name": "Scene commands",
+          "description": "Any generic data, in JSON format",
+          "plug": {
+            "OutputPlug": {
+              "name": "scenes",
+              "topic": {
+                "Tether": {
+                  "role": "gui",
+                  "id": "any",
+                  "plug_name": "scenes",
+                  "full_topic": "gui/any/scenes"
+                }
+              },
+              "qos": 0,
+              "retain": false
+            }
+          },
+          "midiMapping": null
+        },
+        "value": "{\"sceneLabel\":\"multi-coloured\"}"
+      }
     }
   ],
   "tetherSettings": null

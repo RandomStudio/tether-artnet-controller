@@ -13,6 +13,7 @@ pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
     ui.separator();
 
     let mut go_scene: Option<usize> = None;
+    let mut update_scene: Option<usize> = None;
     let mut delete_scene: Option<usize> = None;
     let mut add_scene: Option<Scene> = None;
 
@@ -57,20 +58,38 @@ pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
                     for (fixture_index, s) in scene.state.iter_mut().enumerate() {
                         let (fixture_label, states) = s;
                         ui.label(fixture_label);
-                        Grid::new(format!("scene-{}-state-{}", scene_index, fixture_index))
-                            .num_columns(2)
-                            .show(ui, |ui| {
-                                for m in states.iter_mut() {
-                                    let (macro_label, value) = m;
-                                    ui.label(macro_label);
-                                    if ui.add(Slider::new(value, 0..=255)).changed() {
-                                        go_scene = Some(scene_index);
-                                    };
-                                    ui.end_row();
-                                }
-                            });
+                        ui.add_enabled_ui(false, |ui| {
+                            Grid::new(format!("scene-{}-state-{}", scene_index, fixture_index))
+                                .num_columns(2)
+                                .show(ui, |ui| {
+                                    for m in states.iter_mut() {
+                                        let (macro_label, scene_value) = m;
+                                        ui.label(macro_label);
+                                        // ui.add(Slider::new(scene_value, 0..=255));
+                                        if let Some(matched_fixture) = model
+                                            .project
+                                            .fixtures
+                                            .iter()
+                                            .find(|x| x.label.eq(fixture_label))
+                                        {
+                                            if let Some(matched_macro) = matched_fixture
+                                                .config
+                                                .active_mode
+                                                .macros
+                                                .iter()
+                                                .find(|x| x.label.eq(macro_label))
+                                            {
+                                                let mut value = matched_macro.current_value;
+                                                ui.add(Slider::new(&mut value, 0..=255));
+                                            }
+                                        }
+                                        ui.end_row();
+                                    }
+                                });
+                        });
                     }
                     if ui.button("Update ✅").clicked() {
+                        update_scene = Some(scene_index);
                         scene.is_editing = false;
                     }
                 } else {
@@ -90,6 +109,19 @@ pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
 
     if let Some(scene_index) = go_scene {
         model.apply_scene(scene_index, None);
+    }
+
+    if let Some(scene_index) = update_scene {
+        let scene = &mut model.project.scenes[scene_index];
+        // scene.state.clear();
+
+        for fixture in model.project.fixtures.iter() {
+            let mut m_state = HashMap::new();
+            for m in fixture.config.active_mode.macros.iter() {
+                m_state.insert(String::from(&m.label), m.current_value);
+            }
+            scene.state.insert(String::from(&fixture.label), m_state);
+        }
     }
 
     if let Some(scene_index) = delete_scene {

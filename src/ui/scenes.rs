@@ -81,7 +81,10 @@ pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
                                             {
                                                 let mut value = matched_macro.current_value;
                                                 ui.add(Slider::new(&mut value, 0..=255));
+                                                ui.small("Adjust values in Macros panel");
                                             }
+                                        } else {
+                                            ui.label("Something went wrong matching fixture macros to scene macros!");
                                         }
                                         ui.end_row();
                                     }
@@ -96,6 +99,7 @@ pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
                     ui.horizontal(|ui| {
                         if ui.button("✏").clicked() {
                             scene.is_editing = true;
+                            go_scene = Some(scene_index);
                         }
                         if ui.button("🗑").clicked() {
                             delete_scene = Some(scene_index);
@@ -109,6 +113,11 @@ pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
 
     if let Some(scene_index) = go_scene {
         model.apply_scene(scene_index, None);
+        for (index, scene) in model.project.scenes.iter_mut().enumerate() {
+            if index != scene_index {
+                scene.is_editing = false;
+            }
+        }
     }
 
     if let Some(scene_index) = update_scene {

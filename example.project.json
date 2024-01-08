@@ -27,7 +27,7 @@
   ],
   "scenes": [
     {
-      "label": "white down",
+      "label": "White Spots Down",
       "state": {
         "Hero South": {
           "pan": 0,
@@ -68,7 +68,7 @@
       }
     },
     {
-      "label": "multi-coloured",
+      "label": "Colours Up",
       "state": {
         "Hex West": {
           "zoom": 255,

@@ -110,15 +110,6 @@ impl Project {
                     project.fixtures.len()
                 );
 
-                // // Order macros in scenes
-                // for scene in project.scenes.iter_mut() {
-                //     for (fixture, state) in scene.state.iter_mut() {
-                //         let mut macros: Vec<(&String, &u8)> = state.iter().collect();
-                //         macros.sort();
-                //         debug!("Sorted macros: {:?}", macros);
-                //     }
-                // }
-
                 for fixture in project.fixtures.iter_mut() {
                     match fs::read_to_string(&fixture.path) {
                         Ok(d) => {

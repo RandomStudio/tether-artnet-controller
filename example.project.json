@@ -3,22 +3,26 @@
     {
       "label": "Hex East",
       "path": "./fixtures/ADJ_Vizi_Hex_Wash7.json",
-      "offsetChannels": 0
+      "offsetChannels": 0,
+      "modeIndex": 0
     },
     {
       "label": "Hex West",
       "path": "./fixtures/ADJ_Vizi_Hex_Wash7.json",
-      "offsetChannels": 43
+      "offsetChannels": 43,
+      "modeIndex": 0
     },
     {
       "label": "Hero North",
       "path": "./fixtures/Varytec_HERO_340FX.json",
-      "offsetChannels": 70
+      "offsetChannels": 70,
+      "modeIndex": 0
     },
     {
       "label": "Hero South",
       "path": "./fixtures/Varytec_HERO_340FX.json",
-      "offsetChannels": 27
+      "offsetChannels": 27,
+      "modeIndex": 0
     }
   ],
   "scenes": [
@@ -26,81 +30,122 @@
       "label": "white down",
       "state": {
         "Hero South": {
-          "red": 0,
-          "green": 0,
-          "blue": 0,
-          "white": 255,
           "pan": 0,
-          "tilt": 128,
-          "zoom": 128
-        },
-        "Hero North": {
-          "red": 0,
-          "green": 0,
           "blue": 0,
-          "white": 255,
-          "pan": 0,
-          "tilt": 128,
-          "zoom": 128
-        },
-        "Hex East": {
           "red": 0,
-          "green": 0,
-          "blue": 0,
+          "zoom": 128,
           "white": 255,
-          "pan": 0,
           "tilt": 128,
-          "zoom": 128
+          "green": 0
         },
         "Hex West": {
-          "red": 0,
           "green": 0,
+          "pan": 0,
+          "white": 255,
+          "blue": 0,
+          "zoom": 128,
+          "tilt": 128,
+          "red": 0
+        },
+        "Hero North": {
           "blue": 0,
           "white": 255,
-          "pan": 0,
+          "green": 0,
           "tilt": 128,
-          "zoom": 128
+          "zoom": 128,
+          "red": 0,
+          "pan": 0
+        },
+        "Hex East": {
+          "zoom": 128,
+          "white": 255,
+          "pan": 0,
+          "green": 0,
+          "blue": 0,
+          "tilt": 128,
+          "red": 0
         }
       }
     },
     {
       "label": "multi-coloured",
       "state": {
-        "Hero South": {
-          "red": 255,
-          "green": 0,
-          "blue": 0,
-          "white": 0,
-          "pan": 64,
+        "Hex West": {
+          "zoom": 255,
+          "red": 0,
           "tilt": 8,
-          "zoom": 255
+          "pan": 82,
+          "green": 0,
+          "white": 255,
+          "blue": 0
         },
         "Hero North": {
-          "red": 0,
           "green": 255,
-          "blue": 0,
-          "white": 0,
-          "pan": 64,
+          "pan": 152,
           "tilt": 8,
-          "zoom": 255
-        },
-        "Hex East": {
-          "red": 255,
-          "green": 0,
-          "blue": 255,
-          "white": 0,
-          "pan": 64,
-          "tilt": 8,
-          "zoom": 255
-        },
-        "Hex West": {
-          "red": 0,
-          "green": 0,
           "blue": 0,
           "white": 255,
-          "pan": 64,
+          "zoom": 255,
+          "red": 0
+        },
+        "Hero South": {
+          "zoom": 255,
+          "tilt": 18,
+          "blue": 0,
+          "red": 255,
+          "pan": 158,
+          "green": 0,
+          "white": 255
+        },
+        "Hex East": {
+          "blue": 255,
+          "green": 255,
+          "pan": 155,
+          "zoom": 255,
           "tilt": 8,
-          "zoom": 255
+          "white": 255,
+          "red": 255
+        }
+      }
+    },
+    {
+      "label": "White wash",
+      "state": {
+        "Hex East": {
+          "red": 0,
+          "blue": 0,
+          "white": 255,
+          "tilt": 103,
+          "pan": 0,
+          "zoom": 255,
+          "green": 0
+        },
+        "Hero South": {
+          "red": 0,
+          "tilt": 85,
+          "zoom": 255,
+          "white": 255,
+          "pan": 0,
+          "green": 0,
+          "blue": 0
+        },
+        "Hero North": {
+          "tilt": 87,
+          "red": 0,
+          "zoom": 255,
+          "pan": 0,
+          "green": 0,
+          "white": 255,
+          "blue": 0
+        },
+        "Hex West": {
+          "blue": 0,
+          "green": 0,
+          "pan": 0,
+          "tilt": 178,
+          "zoom": 255,
+          "white": 255,
+          "red": 0
         }
       }
     }

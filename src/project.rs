@@ -87,7 +87,7 @@ pub struct Scene {
     /// "Fixture instance label": { "macro label": value } }
     pub state: HashMap<String, SceneState>,
     #[serde(skip)]
-    pub editing_label: bool,
+    pub is_editing: bool,
 }
 
 impl Project {

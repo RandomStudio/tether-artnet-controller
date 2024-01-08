@@ -8,6 +8,10 @@ use crate::{
     settings::CHANNELS_PER_UNIVERSE,
 };
 
+use self::scenes::render_scenes;
+
+mod scenes;
+
 pub const SIMPLE_WIN_SIZE: Vec2 = Vec2::new(400., 1024.0);
 pub const ADVANCED_WIN_SIZE: Vec2 = Vec2::new(1280., 900.);
 
@@ -294,46 +298,4 @@ pub fn render_macro_controls(model: &mut Model, ui: &mut Ui) {
                 });
             }
         });
-}
-
-fn render_scenes(model: &mut Model, ui: &mut Ui) {
-    ui.heading("Scenes");
-
-    ui.separator();
-
-    let mut go_scenes = Vec::new();
-
-    ScrollArea::new([false, true]).show(ui, |ui| {
-        for (scene_index, scene) in model.project.scenes.iter_mut().enumerate() {
-            ui.group(|ui| {
-                ui.heading(&scene.label);
-                ui.horizontal(|ui| {
-                    if ui.button("Go").clicked() {
-                        go_scenes.push(scene_index)
-                        // model.apply_scene(scene_index);
-                    };
-                });
-
-                for (fixture_index, s) in scene.state.iter_mut().enumerate() {
-                    let (fixture_label, states) = s;
-                    ui.label(fixture_label);
-                    Grid::new(format!("scene-{}-state-{}", scene_index, fixture_index))
-                        .num_columns(2)
-                        .show(ui, |ui| {
-                            for m in states.iter_mut() {
-                                let (macro_label, value) = m;
-                                ui.label(macro_label);
-                                ui.add(Slider::new(value, 0..=255));
-                                ui.end_row();
-                            }
-                        });
-                    ui.separator();
-                }
-            });
-        }
-    });
-
-    for scene_index in go_scenes {
-        model.apply_scene(scene_index, None);
-    }
 }

@@ -79,13 +79,15 @@ pub struct RangeDescription {
 }
 
 /// "Macro label": value
-type SceneState = HashMap<String, u8>;
+pub type SceneState = HashMap<String, u8>;
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct Scene {
     pub label: String,
     /// "Fixture instance label": { "macro label": value } }
     pub state: HashMap<String, SceneState>,
+    #[serde(skip)]
+    pub editing_label: bool,
 }
 
 impl Project {

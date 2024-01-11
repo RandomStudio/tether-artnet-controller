@@ -303,6 +303,9 @@ impl Model {
                 debug!("Match scene {:?}", &scene.label);
                 for fixture in self.project.fixtures.iter_mut() {
                     for (fixture_label_in_scene, states) in scene.state.iter() {
+                        // If there are fixtureFilters applied, check for matches against this list
+                        // as well as the name vs the key in the Scene. If no filters, just check
+                        // the name.
                         let is_target_fixture = if let Some(filters) = &fixture_filters {
                             filters.contains(fixture_label_in_scene)
                                 && fixture_label_in_scene.eq_ignore_ascii_case(&fixture.label)

@@ -1,6 +1,6 @@
 use std::{collections::HashMap, time::SystemTime};
 
-use egui::{Color32, Grid, ProgressBar, RichText, ScrollArea, Slider, Ui};
+use egui::{Grid, RichText, ScrollArea, Slider, Spinner, Ui};
 
 use crate::{
     model::Model,
@@ -56,7 +56,7 @@ pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
                         if let Some(t) = scene.last_active {
                             let progress = t.elapsed().unwrap().as_secs_f32() / 5.0;
                             if progress >= 1.0 { scene.last_active = None; }
-                            ui.add(ProgressBar::new(1.0 - progress));
+                            ui.add(Spinner::new());
                         }
                     });
                 }
@@ -119,7 +119,7 @@ pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
     });
 
     if let Some(scene_index) = go_scene {
-        model.apply_scene(scene_index, None);
+        model.apply_scene(scene_index, None, None);
 
         for (index, scene) in model.project.scenes.iter_mut().enumerate() {
             if index == scene_index {

@@ -57,6 +57,7 @@ pub enum TetherMidiMessage {
 pub struct RemoteSceneMessage {
     pub scene_label: String,
     pub ms: Option<u64>,
+    pub fixture_filters: Option<Vec<String>>,
 }
 
 pub enum RemoteControlMessage {

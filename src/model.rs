@@ -1,4 +1,8 @@
-use std::{ops::Deref, sync::mpsc::Receiver, time::Duration};
+use std::{
+    ops::Deref,
+    sync::mpsc::Receiver,
+    time::{Duration, SystemTime},
+};
 
 use log::{debug, error, info};
 use tween::SineInOut;
@@ -275,25 +279,44 @@ impl Model {
         match self
             .project
             .scenes
-            .iter()
+            .iter_mut()
             .enumerate()
             .find(|(_i, s)| s.label.eq_ignore_ascii_case(&msg.scene_label))
         {
-            Some((index, _scene)) => {
-                self.apply_scene(index, msg.ms);
+            Some((index, scene)) => {
+                debug!("Found scene \"{}\" at index {}", &scene.label, index);
+                scene.last_active = Some(SystemTime::now());
+                self.apply_scene(index, msg.ms, msg.fixture_filters);
             }
             None => error!("Failed to find matching scene for \"{}\"", &msg.scene_label),
         }
     }
 
-    pub fn apply_scene(&mut self, scene_index: usize, animation_ms: Option<u64>) {
+    pub fn apply_scene(
+        &mut self,
+        scene_index: usize,
+        animation_ms: Option<u64>,
+        fixture_filters: Option<Vec<String>>,
+    ) {
         match self.project.scenes.get(scene_index) {
             Some(scene) => {
                 debug!("Match scene {:?}", &scene.label);
                 for fixture in self.project.fixtures.iter_mut() {
-                    for (fixture_label, states) in scene.state.iter() {
-                        if fixture_label.eq_ignore_ascii_case(&fixture.label) {
-                            debug!("Scene has match for {}:{}", &fixture.label, fixture_label);
+                    for (fixture_label_in_scene, states) in scene.state.iter() {
+                        // If there are fixtureFilters applied, check for matches against this list
+                        // as well as the name vs the key in the Scene. If no filters, just check
+                        // the name.
+                        let is_target_fixture = if let Some(filters) = &fixture_filters {
+                            filters.contains(fixture_label_in_scene)
+                                && fixture_label_in_scene.eq_ignore_ascii_case(&fixture.label)
+                        } else {
+                            fixture_label_in_scene.eq_ignore_ascii_case(&fixture.label)
+                        };
+                        if is_target_fixture {
+                            debug!(
+                                "Scene has match for {}:{}",
+                                &fixture.label, fixture_label_in_scene
+                            );
                             for m in fixture.config.active_mode.macros.iter_mut() {
                                 if let Some(value_in_scene_macro) = states.get(&m.label) {
                                     debug!("Scene sets {} to {}", &m.label, value_in_scene_macro);

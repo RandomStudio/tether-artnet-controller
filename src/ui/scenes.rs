@@ -1,6 +1,6 @@
-use std::collections::HashMap;
+use std::{collections::HashMap, time::SystemTime};
 
-use egui::{Grid, RichText, ScrollArea, Slider, Ui};
+use egui::{Grid, RichText, ScrollArea, Slider, Spinner, Ui};
 
 use crate::{
     model::Model,
@@ -35,6 +35,7 @@ pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
                 label,
                 state,
                 is_editing: false,
+                last_active: None
             });
         }
 
@@ -45,13 +46,19 @@ pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
                 if scene.is_editing {
                     ui.text_edit_singleline(&mut scene.label);
                 } else {
-                    if ui
-                        .button(RichText::new(&scene.label).size(24.0))
-                        .on_hover_text("Click to GO")
-                        .clicked()
-                    {
-                        go_scene = Some(scene_index);
-                    };
+                    ui.horizontal(|ui| {
+                        if ui
+                            .button(RichText::new(&scene.label).size(24.0))
+                            .clicked()
+                        {
+                            go_scene = Some(scene_index);
+                        };
+                        if let Some(t) = scene.last_active {
+                            let progress = t.elapsed().unwrap().as_secs_f32() / 5.0;
+                            if progress >= 1.0 { scene.last_active = None; }
+                            ui.add(Spinner::new());
+                        }
+                    });
                 }
 
                 if scene.is_editing {
@@ -112,9 +119,14 @@ pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
     });
 
     if let Some(scene_index) = go_scene {
-        model.apply_scene(scene_index, None);
+        model.apply_scene(scene_index, None, None);
+
         for (index, scene) in model.project.scenes.iter_mut().enumerate() {
-            if index != scene_index {
+            if index == scene_index {
+                // This one
+                scene.last_active = Some(SystemTime::now());
+            } else {
+                // Others
                 scene.is_editing = false;
             }
         }

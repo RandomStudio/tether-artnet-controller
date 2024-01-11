@@ -1,4 +1,4 @@
-use std::{collections::HashMap, fs};
+use std::{collections::HashMap, fs, time::SystemTime};
 
 use log::{debug, error, info, warn};
 use serde::{Deserialize, Serialize};
@@ -88,6 +88,8 @@ pub struct Scene {
     pub state: HashMap<String, SceneState>,
     #[serde(skip)]
     pub is_editing: bool,
+    #[serde(skip)]
+    pub last_active: Option<SystemTime>,
 }
 
 impl Project {

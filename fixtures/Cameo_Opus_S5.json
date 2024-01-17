@@ -1,0 +1,114 @@
+{
+  "name": "Cameo Opus S5",
+  "reference": "https://www.cameolight.com/de/loesungen/dj-musiker/bewegtes-licht/moving-heads/25591/movo-beam-200#detail-description",
+  "modes": [
+    {
+      "name": "27H Mode Standard",
+      "mappings": [
+        {
+          "channel": 1,
+          "label": "Pan"
+        },
+        {
+          "channel": 2,
+          "label": "Pan fine"
+        },
+        {
+          "channel": 3,
+          "label": "Tilt"
+        },
+        {
+          "channel": 4,
+          "label": "Tilt fine"
+        },
+        {
+          "channel": 5,
+          "label": "Dimmer"
+        },
+        {
+          "channel": 6,
+          "label": "Dimmer fine"
+        },
+        {
+          "channel": 7,
+          "label": "Strobe Functions",
+          "notes": "Multifunctional Strobe",
+          "ranges": [
+            {
+              "range": [0, 5],
+              "label": "Strobe open"
+            },
+            {
+              "range": [6, 10],
+              "label": "Strobe closed"
+            },
+            {
+              "range": [11, 33],
+              "label": "Pulse Random, slow -> fast"
+            },
+            {
+              "range": [34, 56],
+              "label": "Ramp up Random, slow -> fast"
+            },
+            {
+              "range": [57, 79],
+              "label": "Ramp down Random, slow -> fast"
+            },
+            {
+              "range": [80, 102],
+              "label": "Random Strobe Effect, slow -> fast"
+            },
+            {
+              "range": [103, 127],
+              "label": "Strobe Break Effect, 5s -> 1s",
+              "notes": "(Short burst with break)"
+            },
+            {
+              "range": [128, 250],
+              "label": "Strobe slow -> fast <1Hz - 20Hz"
+            },
+            {
+              "range": [251, 255],
+              "label": "Strobe open"
+            }
+          ]
+        },
+        {
+          "channel": 8,
+          "label": "Cyan"
+        },
+        {
+          "channel": 9,
+          "label": "Magenta"
+        },
+        {
+          "channel": 10,
+          "label": "Yellow"
+        },
+        {
+          "channel": 11,
+          "label": "CTO",
+          "notes": "Colour Temperature Orange"
+        }
+      ],
+      "macros": [
+        {
+          "label": "cyan",
+          "channels": [8]
+        },
+        {
+          "label": "magenta",
+          "channels": [9]
+        },
+        {
+          "label": "yellow",
+          "channels": [10]
+        },
+        {
+          "label": "white",
+          "channels": [11]
+        }
+      ]
+    }
+  ]
+}

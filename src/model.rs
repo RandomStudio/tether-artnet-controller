@@ -16,10 +16,7 @@ use crate::{
         RemoteAnimationMessage, RemoteControlMessage, RemoteMacroMessage, RemoteSceneMessage,
         TetherControlChangePayload, TetherMidiMessage, TetherNotePayload,
     },
-    ui::{
-        render_fixture_controls, render_gui, render_macro_controls, render_mode_switcher,
-        render_sliders, ViewMode,
-    },
+    ui::{render_gui, ViewMode},
 };
 
 pub struct Model {

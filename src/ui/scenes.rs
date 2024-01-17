@@ -26,7 +26,7 @@ pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
             for fixture in model.project.fixtures.iter() {
                 let mut m_state = HashMap::new();
                 for m in fixture.config.active_mode.macros.iter() {
-                    m_state.insert(String::from(&m.label), m.current_value);
+                    // m_state.insert(String::from(&m.label), m.current_value);
                 }
                 state.insert(String::from(&fixture.label), m_state);
             }
@@ -79,17 +79,17 @@ pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
                                             .iter()
                                             .find(|x| x.label.eq(fixture_label))
                                         {
-                                            if let Some(matched_macro) = matched_fixture
-                                                .config
-                                                .active_mode
-                                                .macros
-                                                .iter()
-                                                .find(|x| x.label.eq(macro_label))
-                                            {
-                                                let mut value = matched_macro.current_value;
-                                                ui.add(Slider::new(&mut value, 0..=255));
-                                                ui.small("Adjust values in Macros panel");
-                                            }
+                                            // if let Some(matched_macro) = matched_fixture
+                                            //     .config
+                                            //     .active_mode
+                                            //     .macros
+                                            //     .iter()
+                                            //     .find(|x| x.label.eq(macro_label))
+                                            // {
+                                            //     let mut value = matched_macro.current_value;
+                                            //     ui.add(Slider::new(&mut value, 0..=255));
+                                            //     ui.small("Adjust values in Macros panel");
+                                            // }
                                         } else {
                                             ui.label("Something went wrong matching fixture macros to scene macros!");
                                         }
@@ -139,7 +139,7 @@ pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
         for fixture in model.project.fixtures.iter() {
             let mut m_state = HashMap::new();
             for m in fixture.config.active_mode.macros.iter() {
-                m_state.insert(String::from(&m.label), m.current_value);
+                // m_state.insert(String::from(&m.label), m.current_value);
             }
             scene.state.insert(String::from(&fixture.label), m_state);
         }

@@ -1,5 +1,6 @@
 use std::{collections::HashMap, fs, time::SystemTime};
 
+use egui::Color32;
 use log::{debug, error, info, warn};
 use serde::{Deserialize, Serialize};
 
@@ -38,7 +39,7 @@ pub struct FixtureConfig {
 pub struct ControlMode {
     pub name: String,
     pub mappings: Vec<Mapping>,
-    pub macros: Vec<ControlMacro>,
+    pub macros: Vec<FixtureMacro>,
 }
 
 #[derive(Serialize, Deserialize, Clone)]
@@ -51,7 +52,7 @@ pub struct Mapping {
 }
 
 #[derive(Serialize, Deserialize)]
-pub struct ControlMacro {
+pub struct ChannelMacro {
     pub label: String,
     pub channels: Vec<u16>,
     #[serde(skip)]
@@ -61,7 +62,7 @@ pub struct ControlMacro {
 }
 
 // Cloning an Animation is tricky, and we don't need it anyway
-impl Clone for ControlMacro {
+impl Clone for ChannelMacro {
     fn clone(&self) -> Self {
         Self {
             label: self.label.clone(),
@@ -70,6 +71,57 @@ impl Clone for ControlMacro {
             animation: None, // Just ignore
         }
     }
+}
+
+#[derive(Serialize, Deserialize, Clone)]
+pub struct RGBWChannels {
+    red: Vec<u16>,
+    green: Vec<u16>,
+    blue: Vec<u16>,
+    white: Vec<u16>,
+}
+
+#[derive(Serialize, Deserialize, Clone)]
+pub struct CMYChannels {
+    cyan: Vec<u16>,
+    magenta: Vec<u16>,
+    yellow: Vec<u16>,
+    white: Vec<u16>,
+}
+
+#[derive(Serialize, Deserialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub enum ChannelList {
+    Additive(RGBWChannels),
+    Substractive(CMYChannels),
+}
+
+#[derive(Serialize, Deserialize)]
+pub struct ColourMacro {
+    pub label: String,
+    pub channels: ChannelList,
+    #[serde(skip)]
+    pub current_value: Color32,
+    #[serde(skip)]
+    pub animation: Option<Animation>,
+}
+
+impl Clone for ColourMacro {
+    fn clone(&self) -> Self {
+        Self {
+            label: self.label.clone(),
+            channels: self.channels.clone(),
+            current_value: self.current_value.clone(),
+            animation: None,
+        }
+    }
+}
+
+#[derive(Serialize, Deserialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub enum FixtureMacro {
+    Control(ChannelMacro),
+    Colour(ColourMacro),
 }
 
 #[derive(Serialize, Deserialize, Clone)]

@@ -5,30 +5,6 @@
       "path": "./fixtures/ADJ_Vizi_Hex_Wash7.json",
       "offsetChannels": 0,
       "modeIndex": 0
-    },
-    {
-      "label": "Hex West",
-      "path": "./fixtures/ADJ_Vizi_Hex_Wash7.json",
-      "offsetChannels": 43,
-      "modeIndex": 0
-    },
-    {
-      "label": "Hero North",
-      "path": "./fixtures/Varytec_HERO_340FX.json",
-      "offsetChannels": 70,
-      "modeIndex": 0
-    },
-    {
-      "label": "Hero South",
-      "path": "./fixtures/Varytec_HERO_340FX.json",
-      "offsetChannels": 27,
-      "modeIndex": 0
-    },
-    {
-      "label": "X5 Test",
-      "path": "./fixtures/GLP_Impression_X5.json",
-      "offsetChannels": 100,
-      "modeIndex": 0
     }
   ],
   "scenes": [

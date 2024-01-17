@@ -329,32 +329,35 @@
       ],
       "macros": [
         {
-          "label": "red",
-          "channels": [5, 11]
+          "colour": {
+            "label": "colour",
+            "channels": {
+              "additive": {
+                "red": [5, 11],
+                "green": [6, 12],
+                "blue": [7, 13],
+                "white": [8, 14]
+              }
+            }
+          }
         },
         {
-          "label": "green",
-          "channels": [6, 12]
+          "control": {
+            "label": "pan",
+            "channels": [1]
+          }
         },
         {
-          "label": "blue",
-          "channels": [7, 13]
+          "control": {
+            "label": "tilt",
+            "channels": [3]
+          }
         },
         {
-          "label": "white",
-          "channels": [8, 14]
-        },
-        {
-          "label": "pan",
-          "channels": [1]
-        },
-        {
-          "label": "tilt",
-          "channels": [3]
-        },
-        {
-          "label": "zoom",
-          "channels": [21]
+          "control": {
+            "label": "zoom",
+            "channels": [21]
+          }
         }
       ]
     }

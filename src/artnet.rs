@@ -7,7 +7,7 @@ use artnet_protocol::{ArtCommand, Output};
 use rand::{rngs::ThreadRng, Rng};
 
 use crate::{
-    project::{ControlMacro, FixtureInstance},
+    project::{ChannelMacro, FixtureInstance},
     settings::CHANNELS_PER_UNIVERSE,
 };
 
@@ -84,8 +84,16 @@ impl ArtNetInterface {
         if apply_macros {
             for f in fixtures {
                 for m in &f.config.active_mode.macros {
-                    for c in &m.channels {
-                        self.channels[(*c - 1 + f.offset_channels) as usize] = m.current_value;
+                    match m {
+                        crate::project::FixtureMacro::Control(control_macro) => {
+                            for c in &control_macro.channels {
+                                self.channels[(*c - 1 + f.offset_channels) as usize] =
+                                    control_macro.current_value;
+                            }
+                        }
+                        crate::project::FixtureMacro::Colour(colour_macro) => {
+                            // todo
+                        }
                     }
                 }
             }

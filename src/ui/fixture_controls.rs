@@ -27,7 +27,7 @@ pub fn render_fixture_controls(model: &mut Model, ui: &mut Ui) {
                                     ui.label("ℹ").on_hover_text(format!(
                                         "#Channel {}: {}",
                                         channel_index + 1,
-                                        &m.notes.as_deref().unwrap_or_default()
+                                        notes
                                     ));
                                 }
                             });

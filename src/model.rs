@@ -138,16 +138,16 @@ impl Model {
     fn animate_macros(&mut self) {
         for fixture in self.project.fixtures.iter_mut() {
             for m in fixture.config.active_mode.macros.iter_mut() {
-                if let Some(animation) = &mut m.animation {
-                    let (value, is_done) = animation.get_value_and_done();
-                    let dmx_value = (value * 255.0) as u8;
-                    m.current_value = dmx_value;
+                // if let Some(animation) = &mut m.animation {
+                //     let (value, is_done) = animation.get_value_and_done();
+                //     let dmx_value = (value * 255.0) as u8;
+                //     // m.current_value = dmx_value;
 
-                    // Check if done AFTER applying value
-                    if is_done {
-                        m.animation = None;
-                    }
-                }
+                //     // Check if done AFTER applying value
+                //     if is_done {
+                //         // m.animation = None;
+                //     }
+                // }
             }
         }
     }
@@ -224,13 +224,13 @@ impl Model {
 
         for (i, fixture) in self.project.fixtures.iter_mut().enumerate() {
             if target_fixtures.contains(&i) {
-                if let Some(target_macro) = fixture.config.active_mode.macros.iter_mut().find(
-                    |m: &&mut crate::project::ControlMacro| {
-                        m.label.eq_ignore_ascii_case(&msg.macro_label)
-                    },
-                ) {
-                    target_macro.current_value = msg.value;
-                }
+                // if let Some(target_macro) = fixture.config.active_mode.macros.iter_mut().find(
+                //     |m: &&mut crate::project::ChannelMacro| {
+                //         m.label.eq_ignore_ascii_case(&msg.macro_label)
+                //     },
+                // ) {
+                //     target_macro.current_value = msg.value;
+                // }
             }
         }
     }
@@ -245,29 +245,29 @@ impl Model {
 
         for (i, fixture) in self.project.fixtures.iter_mut().enumerate() {
             if target_fixtures.contains(&i) {
-                if let Some(target_macro) = fixture.config.active_mode.macros.iter_mut().find(
-                    |m: &&mut crate::project::ControlMacro| {
-                        m.label.eq_ignore_ascii_case(&msg.macro_label)
-                    },
-                ) {
-                    let start_value = target_macro.current_value as f32 / 255.0;
-                    let end_value = msg.target_value as f32 / 255.0;
-                    let duration = Duration::from_millis(msg.duration);
+                // if let Some(target_macro) = fixture.config.active_mode.macros.iter_mut().find(
+                //     |m: &&mut crate::project::ChannelMacro| {
+                //         m.label.eq_ignore_ascii_case(&msg.macro_label)
+                //     },
+                // ) {
+                //     let start_value = target_macro.current_value as f32 / 255.0;
+                //     let end_value = msg.target_value as f32 / 255.0;
+                //     let duration = Duration::from_millis(msg.duration);
 
-                    target_macro.animation = Some(Animation::new(
-                        duration,
-                        start_value,
-                        end_value,
-                        Box::new(SineInOut),
-                    ));
+                //     target_macro.animation = Some(Animation::new(
+                //         duration,
+                //         start_value,
+                //         end_value,
+                //         Box::new(SineInOut),
+                //     ));
 
-                    debug!(
-                        "Added animation with duration {}ms, {} -> {}",
-                        duration.as_millis(),
-                        start_value,
-                        end_value
-                    );
-                }
+                //     debug!(
+                //         "Added animation with duration {}ms, {} -> {}",
+                //         duration.as_millis(),
+                //         start_value,
+                //         end_value
+                //     );
+                // }
             }
         }
     }
@@ -315,30 +315,30 @@ impl Model {
                                 &fixture.label, fixture_label_in_scene
                             );
                             for m in fixture.config.active_mode.macros.iter_mut() {
-                                if let Some(value_in_scene_macro) = states.get(&m.label) {
-                                    debug!("Scene sets {} to {}", &m.label, value_in_scene_macro);
-                                    match animation_ms {
-                                        Some(ms) => {
-                                            debug!("Apply animation with {}ms", ms);
-                                            let start_value = m.current_value as f32 / 255.0;
-                                            let end_value = *value_in_scene_macro as f32 / 255.0;
-                                            let duration = Duration::from_millis(ms);
+                                // if let Some(value_in_scene_macro) = states.get(&m.label) {
+                                //     debug!("Scene sets {} to {}", &m.label, value_in_scene_macro);
+                                //     match animation_ms {
+                                //         Some(ms) => {
+                                //             debug!("Apply animation with {}ms", ms);
+                                //             let start_value = m.current_value as f32 / 255.0;
+                                //             let end_value = *value_in_scene_macro as f32 / 255.0;
+                                //             let duration = Duration::from_millis(ms);
 
-                                            m.animation = Some(Animation::new(
-                                                duration,
-                                                start_value,
-                                                end_value,
-                                                Box::new(SineInOut),
-                                            ))
-                                        }
-                                        None => {
-                                            debug!(
-                                                "No animation with scene; set value immediately"
-                                            );
-                                            m.current_value = *value_in_scene_macro;
-                                        }
-                                    }
-                                }
+                                //             m.animation = Some(Animation::new(
+                                //                 duration,
+                                //                 start_value,
+                                //                 end_value,
+                                //                 Box::new(SineInOut),
+                                //             ))
+                                //         }
+                                //         None => {
+                                //             debug!(
+                                //                 "No animation with scene; set value immediately"
+                                //             );
+                                //             m.current_value = *value_in_scene_macro;
+                                //         }
+                                //     }
+                                // }
                             }
                         }
                     }

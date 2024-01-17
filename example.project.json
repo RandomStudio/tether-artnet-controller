@@ -23,6 +23,12 @@
       "path": "./fixtures/Varytec_HERO_340FX.json",
       "offsetChannels": 27,
       "modeIndex": 0
+    },
+    {
+      "label": "X5 Test",
+      "path": "./fixtures/GLP_Impression_X5.json",
+      "offsetChannels": 100,
+      "modeIndex": 0
     }
   ],
   "scenes": [

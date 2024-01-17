@@ -18,7 +18,7 @@
           "channel": 3,
           "label": "Inclination (tilt) ",
           "notes": "(0° up to the maximum value of the Tilt area. middle position: 128)",
-          "default": 128
+          "home": 128
         },
         {
           "channel": 4,
@@ -33,12 +33,12 @@
           "channel": 6,
           "label": "Dimmer intensity",
           "notes": "from dark (0) to bright (255)",
-          "default": 255
+          "home": 255
         },
         {
           "channel": 7,
           "label": "Shutter",
-          "default": 255,
+          "home": 255,
           "ranges": [
             {
               "range": [0, 9],

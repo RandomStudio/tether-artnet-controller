@@ -1,0 +1,616 @@
+{
+  "name": "GLP Impression X5",
+  "reference": "https://www.glp.de/en/products/entertainment-lighting/moving-lights-led/impression-x5",
+  "modes": [
+    {
+      "name": "Mode 1: Basic",
+      "mappings": [
+        {
+          "channel": 1,
+          "label": "Pan coarse",
+          "notes": "Pan left -> right"
+        },
+        {
+          "channel": 2,
+          "label": "Pan fine",
+          "notes": "Pan left -> right"
+        },
+        {
+          "channel": 3,
+          "label": "Tilt coarse",
+          "notes": "Tilt back -> front"
+        },
+        {
+          "channel": 4,
+          "label": "Tilt fine",
+          "notes": "Tilt back -> front"
+        },
+        {
+          "channel": 5,
+          "label": "Intensity coarse",
+          "notes": "Intensity 0 -> 100%",
+          "home": 255
+        },
+        {
+          "channel": 6,
+          "label": "Intensity fine",
+          "notes": "Intensity 0 -> 100%"
+        },
+        {
+          "channel": 7,
+          "label": "Shutter",
+          "home": 255,
+          "ranges": [
+            {
+              "range": [0, 4],
+              "label": "Closed"
+            },
+            {
+              "range": [5, 9],
+              "label": "the range 005 -> 009"
+            },
+            {
+              "range": [10, 39],
+              "label": "Pulse slow -> fast"
+            },
+            {
+              "range": [40, 69],
+              "label": "Pulse opening slow -> fast"
+            },
+            {
+              "range": [70, 99],
+              "label": "Pulse closing slow -> fast"
+            },
+            {
+              "range": [100, 129],
+              "label": "Double flash slow -> fast"
+            },
+            {
+              "range": [130, 159],
+              "label": "Strobe random pixel slow -> fast"
+            },
+            {
+              "range": [160, 199],
+              "label": "Strobe random all slow -> fast"
+            },
+            {
+              "range": [200, 250],
+              "label": "Strobe sync all pixels slow -> fast"
+            },
+            {
+              "range": [251, 255],
+              "label": "Open"
+            }
+          ]
+        },
+        {
+          "channel": 8,
+          "label": "Zoom",
+          "notes": "Zoom narrow -> wide"
+        },
+        {
+          "channel": 9,
+          "label": "Control/Settings",
+          "notes": "See manual page 40"
+        },
+        {
+          "channel": 10,
+          "label": "Accessory 1",
+          "notes": "Effect parameter 1"
+        },
+        {
+          "channel": 11,
+          "label": "Accessory 2",
+          "notes": "Effect parameter 2"
+        },
+        {
+          "channel": 12,
+          "label": "Coarse RGB Red / RGBL Red / x",
+          "notes": "DMX.x = x * 255 / 0.8"
+        },
+        {
+          "channel": 13,
+          "label": "Fine RGB Red / RGBL Red / x",
+          "notes": "DMX.x = x * 65535 / 0.8"
+        },
+        {
+          "channel": 14,
+          "label": "Coarse RGB Green / RGBL Green / y",
+          "notes": "DMX.y = y* 255 / 0.8"
+        },
+        {
+          "channel": 15,
+          "label": "Fine RGB Green / RGBL Green / y",
+          "notes": "DMX.y = y * 65535 / 0.8"
+        },
+        {
+          "channel": 16,
+          "label": "Coarse RGB Blue / RGBL Blue",
+          "notes": "x;y not used"
+        },
+        {
+          "channel": 17,
+          "label": "Fine RGB Blue / RGBL Blue",
+          "notes": "x;y not used"
+        },
+        {
+          "channel": 18,
+          "label": "Coarse Lime",
+          "notes": "RGB, x;y not used"
+        },
+        {
+          "channel": 19,
+          "label": "Fine Lime",
+          "notes": "RGB, x;y not used"
+        },
+        {
+          "channel": 20,
+          "label": "Colour Wheel",
+          "notes": "for exact colors see Color wheel specifications on page 48)",
+          "ranges": [
+            {
+              "range": [0, 9],
+              "label": "Open (selected white point)"
+            },
+            {
+              "range": [10, 12],
+              "label": "Filter 004, Medium Bastard Amber"
+            },
+            {
+              "range": [13, 15],
+              "label": "Filter 019, Fire"
+            },
+            {
+              "range": [16, 18],
+              "label": "Filter 025, Sunset Red"
+            },
+            {
+              "range": [19, 21],
+              "label": "Filter 026, Bright Red"
+            },
+            {
+              "range": [22, 24],
+              "label": "Filter 036, Medium Pink"
+            },
+            {
+              "range": [25, 27],
+              "label": "Filter 049, Medium Purple"
+            },
+            {
+              "range": [28, 30],
+              "label": "Filter 058, Lavender"
+            },
+            {
+              "range": [31, 33],
+              "label": "Filter 068, Sky Blue"
+            },
+            {
+              "range": [34, 36],
+              "label": "Filter 088, Lime Green"
+            },
+            {
+              "range": [37, 39],
+              "label": "Filter 089, Moss Green"
+            },
+            {
+              "range": [40, 42],
+              "label": "Filter 090, Dark Yellow Green"
+            },
+            {
+              "range": [43, 45],
+              "label": "Filter 102, Light Amber"
+            },
+            {
+              "range": [46, 48],
+              "label": "Filter 103, Straw"
+            },
+            {
+              "range": [49, 51],
+              "label": "Filter 106, Primary Red"
+            },
+            {
+              "range": [52, 54],
+              "label": "Filter 111, Dark Pink"
+            },
+            {
+              "range": [55, 57],
+              "label": "Filter 115, Peacock Blue"
+            },
+            {
+              "range": [58, 60],
+              "label": "Filter 117, Steel Blue"
+            },
+            {
+              "range": [61, 63],
+              "label": "Filter 118, Light Blue"
+            },
+            {
+              "range": [64, 66],
+              "label": "Filter 121, Filter Green"
+            },
+            {
+              "range": [67, 69],
+              "label": "Filter 122, Fern Green"
+            },
+            {
+              "range": [70, 72],
+              "label": "Filter 124, Dark Green"
+            },
+            {
+              "range": [73, 75],
+              "label": "Filter 126, Mauve"
+            },
+            {
+              "range": [76, 78],
+              "label": "Filter 128, Bright Pink"
+            },
+            {
+              "range": [79, 81],
+              "label": "Filter 131, Marine Blue"
+            },
+            {
+              "range": [82, 84],
+              "label": "Filter 132, Medium Blue"
+            },
+            {
+              "range": [85, 87],
+              "label": "Filter 134, Golden Amber"
+            },
+            {
+              "range": [88, 90],
+              "label": "Filter 135, Deep Golden Amber"
+            },
+            {
+              "range": [91, 93],
+              "label": "Filter 136, Pale Lavender"
+            },
+            {
+              "range": [94, 96],
+              "label": "Filter 137, Special Lavender"
+            },
+            {
+              "range": [97, 99],
+              "label": "Filter 138, Pale Green"
+            },
+            {
+              "range": [100, 102],
+              "label": "Filter 140, Summer Blue"
+            },
+            {
+              "range": [103, 105],
+              "label": "Filter 141, Bright Blue"
+            },
+            {
+              "range": [106, 108],
+              "label": "Filter 143, Pale Navy Blue"
+            },
+            {
+              "range": [109, 111],
+              "label": "Filter 147, Apricot"
+            },
+            {
+              "range": [112, 114],
+              "label": "Filter 148, Bright Rose"
+            },
+            {
+              "range": [115, 117],
+              "label": "Filter 152, Pale Gold"
+            },
+            {
+              "range": [118, 120],
+              "label": "Filter 154, Pale Rose"
+            },
+            {
+              "range": [121, 123],
+              "label": "Filter 157, Pink"
+            },
+            {
+              "range": [124, 126],
+              "label": "Filter 162, Bastard Amber"
+            },
+            {
+              "range": [127, 129],
+              "label": "Filter 164, Flame Red"
+            },
+            {
+              "range": [130, 132],
+              "label": "Filter 165, Daylight Blue"
+            },
+            {
+              "range": [133, 135],
+              "label": "Filter 169, Lilac Tint"
+            },
+            {
+              "range": [136, 138],
+              "label": "Filter 170, Deep Lavender"
+            },
+            {
+              "range": [139, 141],
+              "label": "Filter 172, Lagoon Blue"
+            },
+            {
+              "range": [142, 144],
+              "label": "Filter 180, Dark Lavender"
+            },
+            {
+              "range": [145, 147],
+              "label": "Filter 182, Light Red"
+            },
+            {
+              "range": [148, 150],
+              "label": "Filter 194, Surprise Pink"
+            },
+            {
+              "range": [151, 153],
+              "label": "Filter 197, Alice Blue"
+            },
+            {
+              "range": [154, 156],
+              "label": "Filter 201, Full C.T. Blue"
+            },
+            {
+              "range": [157, 159],
+              "label": "Filter 202, Half C.T. Blue"
+            },
+            {
+              "range": [160, 162],
+              "label": "Filter 203, Quarter C.T. Blue"
+            },
+            {
+              "range": [163, 165],
+              "label": "Filter 204, Full C.T. Orange"
+            },
+            {
+              "range": [166, 168],
+              "label": "Filter 206, Quartet C.T. Orange"
+            },
+            {
+              "range": [169, 171],
+              "label": "Filter 219, Fluorescent Green"
+            },
+            {
+              "range": [172, 174],
+              "label": "Filter 247, Filter Minus Green"
+            },
+            {
+              "range": [175, 177],
+              "label": "Filter 248, Half Minus Green"
+            },
+            {
+              "range": [178, 180],
+              "label": "Filter 281, Three Quarter C.T. Blue"
+            },
+            {
+              "range": [181, 183],
+              "label": "Filter 285, Three Quarter C.T. Orang"
+            },
+            {
+              "range": [184, 186],
+              "label": "Filter 352, Glacier Blue"
+            },
+            {
+              "range": [187, 189],
+              "label": "Filter 353, Lighter Blue"
+            },
+            {
+              "range": [190, 192],
+              "label": "Filter 506, Madge"
+            },
+            {
+              "range": [193, 195],
+              "label": "Filter 778, Millennium Gold"
+            },
+            {
+              "range": [196, 198],
+              "label": "Filter 793, Vanity Fair"
+            },
+            {
+              "range": [199, 201],
+              "label": "Filter 798, Chrysalis Pink"
+            },
+            {
+              "range": [202, 204],
+              "label": "HSI scroll, stop at first color"
+            },
+            {
+              "range": [205, 252],
+              "label": "HSI scroll slow -> fast"
+            },
+            {
+              "range": [253, 255],
+              "label": "HSI scroll, stop at current color"
+            }
+          ]
+        },
+        {
+          "channel": 21,
+          "label": "Colour Temperature Control",
+          "ranges": [
+            {
+              "range": [0, 9],
+              "label": "Open"
+            },
+            {
+              "range": [10, 255],
+              "label": "Fade through color temperatures",
+              "notes": "10,000K to 2,500K stepless interpolation"
+            }
+          ]
+        },
+        {
+          "channel": 22,
+          "label": "CQC Saturation",
+          "notes": "Color Quality Control",
+          "ranges": [
+            {
+              "range": [0, 9],
+              "label": "HQ (high quality), saturated color"
+            },
+            {
+              "range": [10, 117],
+              "label": "Crossfade, saturated to unsaturated"
+            },
+            {
+              "range": [118, 127],
+              "label": "HQ (high quality), unsaturated color"
+            },
+            {
+              "range": [128, 137],
+              "label": "HO (high output), unsaturated color"
+            },
+            {
+              "range": [138, 245],
+              "label": "Crossfade, unsaturated to saturated"
+            },
+            {
+              "range": [246, 255],
+              "label": "HO (high output), saturated color"
+            }
+          ]
+        },
+        {
+          "channel": 23,
+          "label": "M/G shift",
+          "ranges": [
+            {
+              "range": [0, 9],
+              "label": "Off (no correction)"
+            },
+            {
+              "range": [10, 10],
+              "label": "Full plus magenta +100%"
+            },
+            {
+              "range": [11, 124],
+              "label": "Plus magenta +99% -> +1%"
+            },
+            {
+              "range": [125, 140],
+              "label": "Neutral / no correction"
+            },
+            {
+              "range": [141, 254],
+              "label": "Plus green +1% -> +99%"
+            },
+            {
+              "range": [255, 255],
+              "label": "Full plus green +100%"
+            }
+          ]
+        },
+        {
+          "channel": 24,
+          "label": "Tungsten simulation",
+          "ranges": [
+            {
+              "range": [0, 9],
+              "label": "Off"
+            },
+            {
+              "range": [10, 19],
+              "label": "Tungsten ACL 250W/28V"
+            },
+            {
+              "range": [20, 29],
+              "label": "Tungsten Blinder 650W/120V"
+            },
+            {
+              "range": [30, 39],
+              "label": "Tungsten 750W/80V"
+            },
+            {
+              "range": [40, 49],
+              "label": "Tungsten 1000W/240V"
+            },
+            {
+              "range": [50, 59],
+              "label": "Tungsten 1200W/240V"
+            },
+            {
+              "range": [60, 69],
+              "label": "Tungsten 2000W/230V"
+            },
+            {
+              "range": [70, 79],
+              "label": "Tungsten 2500W/230V"
+            },
+            {
+              "range": [80, 89],
+              "label": "Tungsten 5000W/230V"
+            },
+            {
+              "range": [90, 120],
+              "label": "No function (off)"
+            },
+            {
+              "range": [121, 139],
+              "label": "Off"
+            },
+            {
+              "range": [140, 149],
+              "label": "FX Tungsten ACL 250W/28V"
+            },
+            {
+              "range": [150, 159],
+              "label": "FX Tungsten Blinder 650W/120V"
+            },
+            {
+              "range": [160, 169],
+              "label": "FX Tungsten 750W/80V"
+            },
+            {
+              "range": [170, 179],
+              "label": "FX Tungsten 1000W/240V"
+            },
+            {
+              "range": [180, 189],
+              "label": "FX Tungsten 1200W/240V"
+            },
+            {
+              "range": [190, 199],
+              "label": "FX Tungsten 2000W/230V"
+            },
+            {
+              "range": [200, 209],
+              "label": "FX Tungsten 2500W/230V"
+            },
+            {
+              "range": [210, 219],
+              "label": "FX Tungsten 5000W/230V"
+            },
+            {
+              "range": [220, 255],
+              "label": "No function (off)"
+            }
+          ]
+        }
+      ],
+      "macros": [
+        {
+          "label": "red",
+          "channels": [12]
+        },
+        {
+          "label": "green",
+          "channels": [14]
+        },
+        {
+          "label": "blue",
+          "channels": [16]
+        },
+        {
+          "label": "pan",
+          "channels": [1]
+        },
+        {
+          "label": "tilt",
+          "channels": [3]
+        },
+        {
+          "label": "zoom",
+          "channels": [8]
+        }
+      ]
+    }
+  ]
+}

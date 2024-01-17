@@ -17,7 +17,7 @@
         {
           "channel": 3,
           "label": "TILT MOVEMENT 8bit",
-          "default": 128
+          "home": 128
         },
         {
           "channel": 4,
@@ -90,7 +90,7 @@
         {
           "channel": 18,
           "label": "SHUTTER/STROBE",
-          "default": 255,
+          "home": 255,
           "ranges": [
             {
               "range": [0, 31],
@@ -132,7 +132,7 @@
         {
           "channel": 19,
           "label": "MASTER DIMMER",
-          "default": 255
+          "home": 255
         },
         {
           "channel": 20,

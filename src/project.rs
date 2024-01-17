@@ -46,7 +46,7 @@ pub struct Mapping {
     pub channel: u16,
     pub label: String,
     pub notes: Option<String>,
-    pub default: Option<u8>,
+    pub home: Option<u8>,
     pub ranges: Option<Vec<RangeDescription>>,
 }
 

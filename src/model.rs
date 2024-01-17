@@ -83,7 +83,7 @@ impl Model {
             view_mode: ViewMode::Simple,
         };
 
-        model.apply_channel_defaults();
+        model.apply_home_values();
 
         model
     }
@@ -354,14 +354,14 @@ impl Model {
         }
     }
 
-    pub fn apply_channel_defaults(&mut self) {
+    pub fn apply_home_values(&mut self) {
         self.channels_state = [0].repeat(CHANNELS_PER_UNIVERSE as usize); // init zeroes
 
         let fixtures_clone = self.project.fixtures.clone();
         for fixture in fixtures_clone.iter() {
             let current_mode = &fixture.config.active_mode;
             for m in &current_mode.mappings {
-                if let Some(default_value) = m.default {
+                if let Some(default_value) = m.home {
                     let channel_index = m.channel + fixture.offset_channels - 1;
                     self.channels_state[channel_index as usize] = default_value;
                 }

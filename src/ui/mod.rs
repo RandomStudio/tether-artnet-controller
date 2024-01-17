@@ -216,9 +216,9 @@ pub fn render_fixture_controls(model: &mut Model, ui: &mut Ui) {
 pub fn render_macro_controls(model: &mut Model, ui: &mut Ui) {
     ui.heading("All");
     ui.horizontal(|ui| {
-        if ui.button("DEFAULTS").clicked() {
+        if ui.button("HOME").clicked() {
             model.apply_macros = false;
-            model.apply_channel_defaults();
+            model.apply_home_values();
         }
         if ui.button("ZERO").clicked() {
             model.apply_macros = false;

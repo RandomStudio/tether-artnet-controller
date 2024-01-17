@@ -29,10 +29,11 @@ If you have Tether Egui installed (`cargo install tether-egui`) then the easiest
 - [x] MIDI (Tether, remote) control
 - [x] Allow macro "current values" to be updated remotely via Tether
 - [x] Macro Animations on remote messages via Tether
-- [ ] Project JSON should save ArtNet configuration (but can override via CLI args)
 - [x] Provide simple/advanced views (e.g. "macros only" vs "the kitchen sink")
 - [x] Scenes should be triggered by Tether messages
-- [ ] Hit a button to save the current state of all macros to a new Scene
+- [x] Hit a button to save the current state of all macros to a new Scene
+- [ ] Project JSON should save ArtNet configuration (but can override via CLI args)
+- [ ] Colour conversions should be possible manually, e.g. RGB -> CMY
 - [ ] With macros, add some visual indicators of state, e.g. Colour, Brightness and Pan/Tilt 
 - [ ] At the moment, macros simply get "inactive" when something further downstream is applied (fixture controls, individual channels); it would be nice to propagate any live changes applied back "up" to the macro values as well.
 - [ ] Add 16-bit control, at least for macros (single slider adjusts the two channels as split between first and second 8-bit digits)

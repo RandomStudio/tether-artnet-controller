@@ -1,9 +1,15 @@
 {
   "fixtures": [
     {
-      "label": "Hex East",
+      "label": "RGB Fixture",
       "path": "./fixtures/ADJ_Vizi_Hex_Wash7.json",
       "offsetChannels": 0,
+      "modeIndex": 0
+    },
+    {
+      "label": "CMY Fixture",
+      "path": "./fixtures/Cameo_Opus_S5.json",
+      "offsetChannels": 100,
       "modeIndex": 0
     }
   ],

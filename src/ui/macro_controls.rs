@@ -90,14 +90,21 @@ pub fn render_macro_controls(model: &mut Model, ui: &mut Ui) {
                                         } else {
                                             ui.label("");
                                         }
-
-                                        ui.end_row();
                                     }
                                     crate::project::FixtureMacro::Colour(colour_macro) => {
-                                        ui.label("todo");
-                                        ui.end_row();
+                                        ui.label(&colour_macro.label);
+                                        if ui
+                                            .color_edit_button_srgba(
+                                                &mut colour_macro.current_value,
+                                            )
+                                            .changed()
+                                        {
+                                            model.apply_macros = true;
+                                        };
                                     }
                                 }
+
+                                ui.end_row();
                             }
                         });
                 });

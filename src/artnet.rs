@@ -7,7 +7,7 @@ use artnet_protocol::{ArtCommand, Output};
 use rand::{rngs::ThreadRng, Rng};
 
 use crate::{
-    project::{ChannelMacro, FixtureInstance},
+    project::{CMYChannels, ChannelMacro, FixtureInstance, RGBWChannels},
     settings::CHANNELS_PER_UNIVERSE,
 };
 
@@ -92,7 +92,68 @@ impl ArtNetInterface {
                             }
                         }
                         crate::project::FixtureMacro::Colour(colour_macro) => {
-                            // todo
+                            match &colour_macro.channels {
+                                crate::project::ChannelList::Additive(rgba) => {
+                                    let RGBWChannels {
+                                        red,
+                                        green,
+                                        blue,
+                                        white,
+                                    } = rgba;
+                                    for c in red.iter() {
+                                        self.channels[(*c - 1 + f.offset_channels) as usize] =
+                                            colour_macro.current_value.r();
+                                    }
+                                    for c in green.iter() {
+                                        self.channels[(*c - 1 + f.offset_channels) as usize] =
+                                            colour_macro.current_value.g();
+                                    }
+                                    for c in blue.iter() {
+                                        self.channels[(*c - 1 + f.offset_channels) as usize] =
+                                            colour_macro.current_value.b();
+                                    }
+                                    // TODO: calculate white based on RGB
+                                    // Could convert all rgb values from "opaque" version (ignore alpha)
+                                    // then use inverse of alpha for white, i.e.
+                                    // alpha = 100% => full saturation, no white
+                                    // alpha = 0% => RGB the same, but mix in full white
+                                    // for c in white.iter() {
+                                    //     self.channels[(*c - 1 + f.offset_channels) as usize] =
+                                    //         colour_macro.current_value.a();
+                                    // }
+                                }
+                                crate::project::ChannelList::Subtractive(cmy) => {
+                                    let CMYChannels {
+                                        cyan,
+                                        magenta,
+                                        yellow,
+                                        white,
+                                    } = cmy;
+                                    let brightness = colour_macro.current_value.a();
+
+                                    let c = 255 - colour_macro.current_value.r();
+                                    let m = 255 - colour_macro.current_value.g();
+                                    let y = 255 - colour_macro.current_value.b();
+
+                                    for channel in cyan.iter() {
+                                        self.channels
+                                            [(*channel - 1 + f.offset_channels) as usize] = c;
+                                    }
+                                    for channel in magenta.iter() {
+                                        self.channels
+                                            [(*channel - 1 + f.offset_channels) as usize] = m;
+                                    }
+                                    for channel in yellow.iter() {
+                                        self.channels
+                                            [(*channel - 1 + f.offset_channels) as usize] = y;
+                                    }
+                                    for channel in white.iter() {
+                                        self.channels
+                                            [(*channel - 1 + f.offset_channels) as usize] =
+                                            brightness;
+                                    }
+                                }
+                            }
                         }
                     }
                 }

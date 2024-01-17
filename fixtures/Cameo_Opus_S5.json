@@ -93,20 +93,29 @@
       ],
       "macros": [
         {
-          "label": "cyan",
-          "channels": [8]
+          "colour": {
+            "label": "colour",
+            "channels": {
+              "subtractive": {
+                "cyan": [8],
+                "magenta": [9],
+                "yellow": [10],
+                "white": [11]
+              }
+            }
+          }
         },
         {
-          "label": "magenta",
-          "channels": [9]
+          "control": {
+            "label": "pan",
+            "channels": [1]
+          }
         },
         {
-          "label": "yellow",
-          "channels": [10]
-        },
-        {
-          "label": "white",
-          "channels": [11]
+          "control": {
+            "label": "tilt",
+            "channels": [3]
+          }
         }
       ]
     }

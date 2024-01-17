@@ -75,25 +75,25 @@ impl Clone for ChannelMacro {
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct RGBWChannels {
-    red: Vec<u16>,
-    green: Vec<u16>,
-    blue: Vec<u16>,
-    white: Vec<u16>,
+    pub red: Vec<u16>,
+    pub green: Vec<u16>,
+    pub blue: Vec<u16>,
+    pub white: Vec<u16>,
 }
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct CMYChannels {
-    cyan: Vec<u16>,
-    magenta: Vec<u16>,
-    yellow: Vec<u16>,
-    white: Vec<u16>,
+    pub cyan: Vec<u16>,
+    pub magenta: Vec<u16>,
+    pub yellow: Vec<u16>,
+    pub white: Vec<u16>,
 }
 
 #[derive(Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub enum ChannelList {
     Additive(RGBWChannels),
-    Substractive(CMYChannels),
+    Subtractive(CMYChannels),
 }
 
 #[derive(Serialize, Deserialize)]

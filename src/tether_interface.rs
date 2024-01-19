@@ -34,27 +34,18 @@ pub struct RemoteMacroMessage {
     /// If no fixture specified, assume all
     pub fixture_label: Option<String>,
     pub macro_label: String,
-    pub value: RemoteMacroValue,
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-#[serde(rename_all = "camelCase")]
-pub struct RemoteAnimationMessage {
-    /// If no fixture specified, assume all
-    pub fixture_label: Option<String>,
-    pub macro_label: String,
     /// Start value will be "whatever the current value is";
     /// so `target_value` is the End value
-    pub target_value: RemoteMacroValue,
+    pub value: RemoteMacroValue,
     /// Animation duration in ms
-    pub duration: u64,
+    pub duration: Option<u64>,
 }
 #[derive(Debug)]
 pub enum TetherMidiMessage {
     /// Already-encoded payload
-    Raw(Vec<u8>),
+    // Raw(Vec<u8>),
     NoteOn(TetherNotePayload),
-    NoteOff(TetherNotePayload),
+    // NoteOff(TetherNotePayload),
     ControlChange(TetherControlChangePayload),
 }
 
@@ -68,8 +59,7 @@ pub struct RemoteSceneMessage {
 
 pub enum RemoteControlMessage {
     Midi(TetherMidiMessage),
-    MacroDirect(RemoteMacroMessage),
-    MacroAnimation(RemoteAnimationMessage),
+    MacroAnimation(RemoteMacroMessage),
     SceneAnimation(RemoteSceneMessage),
 }
 
@@ -87,10 +77,6 @@ pub fn start_tether_thread(tx: Sender<RemoteControlMessage>) -> JoinHandle<()> {
         .expect("failed to create Input Plug");
 
     let input_macros = PlugOptionsBuilder::create_input("macros")
-        .build(&tether_agent)
-        .expect("failed to create Input Plug");
-
-    let input_animations = PlugOptionsBuilder::create_input("animations")
         .build(&tether_agent)
         .expect("failed to create Input Plug");
 
@@ -118,13 +104,6 @@ pub fn start_tether_thread(tx: Sender<RemoteControlMessage>) -> JoinHandle<()> {
             if input_macros.matches(&topic) {
                 debug!("Macro (direct) control message");
                 let m = rmp_serde::from_slice::<RemoteMacroMessage>(&message.payload()).unwrap();
-                tx.send(RemoteControlMessage::MacroDirect(m))
-                    .expect("failed to send from Tether Interface thread");
-            }
-            if input_animations.matches(&topic) {
-                debug!("Macro Animation control message");
-                let m =
-                    rmp_serde::from_slice::<RemoteAnimationMessage>(&message.payload()).unwrap();
                 tx.send(RemoteControlMessage::MacroAnimation(m))
                     .expect("failed to send from Tether Interface thread");
             }

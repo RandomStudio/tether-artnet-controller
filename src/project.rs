@@ -107,7 +107,7 @@ pub struct ColourMacro {
     #[serde(skip, default = "default_rgb")]
     pub current_value: Color32,
     #[serde(skip)]
-    pub animation: Option<Animation>,
+    pub animation: Option<(Animation, Color32, Color32)>,
 }
 
 impl Clone for ColourMacro {

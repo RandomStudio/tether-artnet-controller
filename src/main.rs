@@ -1,7 +1,7 @@
 use std::{net::SocketAddr, sync::mpsc};
 
 use env_logger::Env;
-use log::{debug, error, info};
+use log::{debug, info};
 
 use clap::Parser;
 

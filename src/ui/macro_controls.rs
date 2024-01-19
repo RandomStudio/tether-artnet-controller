@@ -93,14 +93,31 @@ pub fn render_macro_controls(model: &mut Model, ui: &mut Ui) {
                                     }
                                     crate::project::FixtureMacro::Colour(colour_macro) => {
                                         ui.label(&colour_macro.label);
-                                        if ui
-                                            .color_edit_button_srgba(
-                                                &mut colour_macro.current_value,
-                                            )
-                                            .changed()
+                                        ui.add_enabled_ui(colour_macro.animation.is_some(), |ui| {
+                                            if ui
+                                                .color_edit_button_srgba(
+                                                    &mut colour_macro.current_value,
+                                                )
+                                                .changed()
+                                            {
+                                                model.apply_macros = true;
+                                            }
+                                        });
+                                        {};
+                                        if let Some((animation, _start, _end)) =
+                                            &mut colour_macro.animation
                                         {
-                                            model.apply_macros = true;
-                                        };
+                                            ui.label(
+                                                RichText::new(format!(
+                                                    "{}%",
+                                                    (animation.get_progress() * 100.) as u8
+                                                ))
+                                                .color(Color32::GREEN)
+                                                .small(),
+                                            );
+                                        } else {
+                                            ui.label("");
+                                        }
                                     }
                                 }
 

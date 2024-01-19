@@ -4,10 +4,10 @@ use std::{
 };
 
 use artnet_protocol::{ArtCommand, Output};
-use rand::{rngs::ThreadRng, Rng};
+use rand::Rng;
 
 use crate::{
-    project::{CMYChannels, ChannelMacro, FixtureInstance, RGBWChannels},
+    project::{CMYChannels, FixtureInstance, RGBWChannels},
     settings::CHANNELS_PER_UNIVERSE,
 };
 

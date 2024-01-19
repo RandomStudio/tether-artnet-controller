@@ -1,20 +1,19 @@
 use std::{
-    ops::Deref,
     sync::mpsc::Receiver,
     time::{Duration, SystemTime},
 };
 
-use log::{debug, error, info, warn};
+use log::{debug, error, info};
 use tween::SineInOut;
 
 use crate::{
-    animation::Animation,
+    animation::{animate_colour, Animation},
     artnet::{random, zero, ArtNetInterface},
-    project::{FixtureInstance, Project, Scene},
+    project::{FixtureInstance, Project},
     settings::{Cli, CHANNELS_PER_UNIVERSE},
     tether_interface::{
-        RemoteAnimationMessage, RemoteControlMessage, RemoteMacroMessage, RemoteMacroValue,
-        RemoteSceneMessage, TetherControlChangePayload, TetherMidiMessage, TetherNotePayload,
+        RemoteControlMessage, RemoteMacroMessage, RemoteMacroValue, RemoteSceneMessage,
+        TetherMidiMessage, TetherNotePayload,
     },
     ui::{render_gui, ViewMode},
 };
@@ -95,11 +94,8 @@ impl Model {
                 RemoteControlMessage::Midi(midi_msg) => {
                     self.handle_midi_message(midi_msg);
                 }
-                RemoteControlMessage::MacroDirect(macro_msg) => {
-                    self.handle_macro_message(macro_msg);
-                }
                 RemoteControlMessage::MacroAnimation(animation_msg) => {
-                    self.handle_animation_message(animation_msg);
+                    self.handle_macro_message(animation_msg);
                 }
                 RemoteControlMessage::SceneAnimation(scene_msg) => {
                     self.handle_scene_message(scene_msg);
@@ -152,8 +148,20 @@ impl Model {
                             }
                         }
                     }
-                    crate::project::FixtureMacro::Colour(_) => {
-                        // Cannot animate Colour Macros (yet)
+                    crate::project::FixtureMacro::Colour(colour_macro) => {
+                        if let Some((animation, start_colour, end_colour)) =
+                            &mut colour_macro.animation
+                        {
+                            let (progress, is_done) = animation.get_value_and_done();
+                            colour_macro.current_value =
+                                animate_colour(start_colour, end_colour, progress);
+
+                            // NB: Check if done AFTER applying value
+                            if is_done {
+                                debug!("Animation done; delete");
+                                colour_macro.animation = None;
+                            }
+                        }
                     }
                 }
             }
@@ -162,7 +170,7 @@ impl Model {
 
     fn handle_midi_message(&mut self, m: TetherMidiMessage) {
         match m {
-            TetherMidiMessage::Raw(_) => todo!(),
+            // TetherMidiMessage::Raw(_) => todo!(),
             TetherMidiMessage::NoteOn(note) => {
                 let TetherNotePayload {
                     note,
@@ -174,13 +182,13 @@ impl Model {
                 debug!("Note {} => macro group index {}", note, index);
                 self.selected_macro_group_index = index as usize;
             }
-            TetherMidiMessage::NoteOff(_) => todo!(),
-            TetherMidiMessage::ControlChange(cc) => {
-                let TetherControlChangePayload {
-                    channel: _,
-                    controller,
-                    value,
-                } = cc;
+            // TetherMidiMessage::NoteOff(_) => todo!(),
+            TetherMidiMessage::ControlChange(_cc) => {
+                // let TetherControlChangePayload {
+                //     channel: _,
+                //     controller,
+                //     value,
+                // } = cc;
 
                 todo!();
 
@@ -229,50 +237,7 @@ impl Model {
         }
     }
 
-    fn handle_macro_message(&mut self, msg: RemoteMacroMessage) {
-        let target_fixtures = get_target_fixtures_list(&self.project.fixtures, &msg.fixture_label);
-
-        for (i, fixture) in self.project.fixtures.iter_mut().enumerate() {
-            if target_fixtures.contains(&i) {
-                if let Some(target_macro) =
-                    fixture
-                        .config
-                        .active_mode
-                        .macros
-                        .iter_mut()
-                        .find(|m| match m {
-                            crate::project::FixtureMacro::Control(control_macro) => {
-                                control_macro.label.eq_ignore_ascii_case(&msg.macro_label)
-                            }
-                            crate::project::FixtureMacro::Colour(colour_macro) => {
-                                colour_macro.label.eq_ignore_ascii_case(&msg.macro_label)
-                            }
-                        })
-                {
-                    match target_macro {
-                        crate::project::FixtureMacro::Control(control_macro) => match msg.value {
-                            RemoteMacroValue::ControlValue(control_value) => {
-                                control_macro.current_value = control_value;
-                            }
-                            RemoteMacroValue::ColourValue(_) => {
-                                error!("Remote message targets Control Macro, but provided Colour Value");
-                            }
-                        },
-                        crate::project::FixtureMacro::Colour(colour_macro) => match msg.value {
-                            RemoteMacroValue::ColourValue(colour_value) => {
-                                colour_macro.current_value = colour_value;
-                            }
-                            RemoteMacroValue::ControlValue(_) => {
-                                error!("Remote message targets Colour Macro, but provided Control Value")
-                            }
-                        },
-                    }
-                }
-            }
-        }
-    }
-
-    pub fn handle_animation_message(&mut self, msg: RemoteAnimationMessage) {
+    pub fn handle_macro_message(&mut self, msg: RemoteMacroMessage) {
         let target_fixtures = get_target_fixtures_list(&self.project.fixtures, &msg.fixture_label);
 
         debug!(
@@ -299,34 +264,74 @@ impl Model {
                 {
                     match target_macro {
                         crate::project::FixtureMacro::Control(control_macro) => {
-                            match msg.target_value {
+                            match msg.value {
                                 RemoteMacroValue::ControlValue(target_value) => {
-                                    let start_value = control_macro.current_value as f32 / 255.0;
-                                    let end_value = target_value as f32 / 255.0;
-                                    let duration = Duration::from_millis(msg.duration);
+                                    if let Some(ms) = msg.duration {
+                                        let duration = Duration::from_millis(ms);
+                                        let start_value =
+                                            control_macro.current_value as f32 / 255.0;
+                                        let end_value = target_value as f32 / 255.0;
 
-                                    control_macro.animation = Some(Animation::new(
+                                        control_macro.animation = Some(Animation::new(
+                                            duration,
+                                            start_value,
+                                            end_value,
+                                            Box::new(SineInOut),
+                                        ));
+
+                                        debug!(
+                                            "Added Control Value animation with duration {}ms, {} -> {}",
+                                            duration.as_millis(),
+                                            start_value,
+                                            end_value
+                                        );
+                                    } else {
+                                        debug!(
+                                            "No animation; immediately go to Control Macro value"
+                                        );
+                                        control_macro.animation = None; // cancel first
+                                        control_macro.current_value = target_value;
+                                    }
+                                }
+                                RemoteMacroValue::ColourValue(_) => {
+                                    error!("Remote Animation Message targets Control Macro, but provides Colour Value instead");
+                                }
+                            }
+                        }
+                        crate::project::FixtureMacro::Colour(colour_macro) => match msg.value {
+                            RemoteMacroValue::ControlValue(_) => {
+                                error!("Remote Animation Message targets Colour Macro, but provices Control Value instead");
+                            }
+                            RemoteMacroValue::ColourValue(target_colour) => {
+                                if let Some(ms) = msg.duration {
+                                    let duration = Duration::from_millis(ms);
+                                    let start_value = 0.;
+                                    let end_value = 1.0;
+
+                                    let animation = Animation::new(
                                         duration,
                                         start_value,
                                         end_value,
                                         Box::new(SineInOut),
-                                    ));
+                                    );
+                                    let start_colour = colour_macro.current_value;
+                                    let end_colour = target_colour;
 
                                     debug!(
-                                        "Added animation with duration {}ms, {} -> {}",
+                                        "Added Colour animation with duration {}ms, {:?} => {:?}",
                                         duration.as_millis(),
-                                        start_value,
-                                        end_value
+                                        start_colour,
+                                        end_colour
                                     );
-                                }
-                                RemoteMacroValue::ColourValue(_) => {
-                                    error!("Remote Animation Message targets Control Macro, but provides Colour Value");
+
+                                    colour_macro.animation =
+                                        Some((animation, start_colour, end_colour));
+                                } else {
+                                    debug!("No animation; immediately go to Colour Macro value");
+                                    colour_macro.current_value = target_colour;
                                 }
                             }
-                        }
-                        crate::project::FixtureMacro::Colour(_) => {
-                            warn!("Colour animations are not yet implemented!");
-                        }
+                        },
                     }
                 }
             }
@@ -476,7 +481,7 @@ fn get_target_fixtures_list(
     fixtures
         .iter()
         .enumerate()
-        .filter(|(i, f)| {
+        .filter(|(_i, f)| {
             if let Some(label) = label_search_string {
                 f.label.eq_ignore_ascii_case(&label)
             } else {

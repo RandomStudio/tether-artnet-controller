@@ -4,7 +4,7 @@ use std::{
     time::{Duration, SystemTime},
 };
 
-use log::{debug, error, info};
+use log::{debug, error, info, warn};
 use tween::SineInOut;
 
 use crate::{
@@ -138,16 +138,24 @@ impl Model {
     fn animate_macros(&mut self) {
         for fixture in self.project.fixtures.iter_mut() {
             for m in fixture.config.active_mode.macros.iter_mut() {
-                // if let Some(animation) = &mut m.animation {
-                //     let (value, is_done) = animation.get_value_and_done();
-                //     let dmx_value = (value * 255.0) as u8;
-                //     // m.current_value = dmx_value;
+                match m {
+                    crate::project::FixtureMacro::Control(control_macro) => {
+                        if let Some(animation) = &mut control_macro.animation {
+                            let (value, is_done) = animation.get_value_and_done();
+                            let dmx_value = (value * 255.0) as u8;
+                            control_macro.current_value = dmx_value;
 
-                //     // Check if done AFTER applying value
-                //     if is_done {
-                //         // m.animation = None;
-                //     }
-                // }
+                            // NB: Check if done AFTER applying value
+                            if is_done {
+                                debug!("Animation done; delete");
+                                control_macro.animation = None;
+                            }
+                        }
+                    }
+                    crate::project::FixtureMacro::Colour(_) => {
+                        // Cannot animate Colour Macros (yet)
+                    }
+                }
             }
         }
     }
@@ -274,29 +282,53 @@ impl Model {
 
         for (i, fixture) in self.project.fixtures.iter_mut().enumerate() {
             if target_fixtures.contains(&i) {
-                // if let Some(target_macro) = fixture.config.active_mode.macros.iter_mut().find(
-                //     |m: &&mut crate::project::ChannelMacro| {
-                //         m.label.eq_ignore_ascii_case(&msg.macro_label)
-                //     },
-                // ) {
-                //     let start_value = target_macro.current_value as f32 / 255.0;
-                //     let end_value = msg.target_value as f32 / 255.0;
-                //     let duration = Duration::from_millis(msg.duration);
+                if let Some(target_macro) =
+                    fixture
+                        .config
+                        .active_mode
+                        .macros
+                        .iter_mut()
+                        .find(|m| match m {
+                            crate::project::FixtureMacro::Control(m) => {
+                                m.label.eq_ignore_ascii_case(&msg.macro_label)
+                            }
+                            crate::project::FixtureMacro::Colour(m) => {
+                                m.label.eq_ignore_ascii_case(&msg.macro_label)
+                            }
+                        })
+                {
+                    match target_macro {
+                        crate::project::FixtureMacro::Control(control_macro) => {
+                            match msg.target_value {
+                                RemoteMacroValue::ControlValue(target_value) => {
+                                    let start_value = control_macro.current_value as f32 / 255.0;
+                                    let end_value = target_value as f32 / 255.0;
+                                    let duration = Duration::from_millis(msg.duration);
 
-                //     target_macro.animation = Some(Animation::new(
-                //         duration,
-                //         start_value,
-                //         end_value,
-                //         Box::new(SineInOut),
-                //     ));
+                                    control_macro.animation = Some(Animation::new(
+                                        duration,
+                                        start_value,
+                                        end_value,
+                                        Box::new(SineInOut),
+                                    ));
 
-                //     debug!(
-                //         "Added animation with duration {}ms, {} -> {}",
-                //         duration.as_millis(),
-                //         start_value,
-                //         end_value
-                //     );
-                // }
+                                    debug!(
+                                        "Added animation with duration {}ms, {} -> {}",
+                                        duration.as_millis(),
+                                        start_value,
+                                        end_value
+                                    );
+                                }
+                                RemoteMacroValue::ColourValue(_) => {
+                                    error!("Remote Animation Message targets Control Macro, but provides Colour Value");
+                                }
+                            }
+                        }
+                        crate::project::FixtureMacro::Colour(_) => {
+                            warn!("Colour animations are not yet implemented!");
+                        }
+                    }
+                }
             }
         }
     }

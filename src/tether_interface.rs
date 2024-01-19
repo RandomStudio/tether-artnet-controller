@@ -45,7 +45,7 @@ pub struct RemoteAnimationMessage {
     pub macro_label: String,
     /// Start value will be "whatever the current value is";
     /// so `target_value` is the End value
-    pub target_value: u8,
+    pub target_value: RemoteMacroValue,
     /// Animation duration in ms
     pub duration: u64,
 }

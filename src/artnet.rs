@@ -100,27 +100,30 @@ impl ArtNetInterface {
                                         blue,
                                         white,
                                     } = rgba;
+
+                                    // Convert all rgb values from "opaque" version (ignoring alpha)
+                                    let opaque = colour_macro.current_value.to_opaque();
                                     for c in red.iter() {
                                         self.channels[(*c - 1 + f.offset_channels) as usize] =
-                                            colour_macro.current_value.r();
+                                            opaque.r();
                                     }
                                     for c in green.iter() {
                                         self.channels[(*c - 1 + f.offset_channels) as usize] =
-                                            colour_macro.current_value.g();
+                                            opaque.g();
                                     }
                                     for c in blue.iter() {
                                         self.channels[(*c - 1 + f.offset_channels) as usize] =
-                                            colour_macro.current_value.b();
+                                            opaque.b();
                                     }
-                                    // TODO: calculate white based on RGB
-                                    // Could convert all rgb values from "opaque" version (ignore alpha)
-                                    // then use inverse of alpha for white, i.e.
-                                    // alpha = 100% => full saturation, no white
-                                    // alpha = 0% => RGB the same, but mix in full white
-                                    // for c in white.iter() {
-                                    //     self.channels[(*c - 1 + f.offset_channels) as usize] =
-                                    //         colour_macro.current_value.a();
-                                    // }
+
+                                    // Use inverse of alpha for "white mix" , i.e.
+                                    //  alpha = 100% => full saturation, no white
+                                    //  alpha = 0% => RGB the same, but mix in full white
+                                    let white_inverse = 255 - colour_macro.current_value.a();
+                                    for c in white.iter() {
+                                        self.channels[(*c - 1 + f.offset_channels) as usize] =
+                                            white_inverse;
+                                    }
                                 }
                                 crate::project::ChannelList::Subtractive(cmy) => {
                                     let CMYChannels {

@@ -147,7 +147,7 @@
           },
           "midiMapping": null
         },
-        "value": "{\"macroLabel\":\"colour\",  \"value\": { \"ColourValue\": [255,0,0,255] } }"
+        "value": "{\"macroLabel\":\"colour\",  \"value\": { \"ColourValue\": [20,100,10,255] },\"duration\":5000 }"
       }
     }
   ],

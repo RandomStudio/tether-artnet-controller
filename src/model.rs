@@ -398,6 +398,7 @@ impl Model {
                                                         &control_macro_in_fixture.label, control_macro_in_scene
                                                     );
                                                     if let Some(ms) = animation_ms {
+                                                        debug!("Scene includes animation; animate Control Value over {}ms", ms);
                                                         control_macro_in_fixture.animation =
                                                             Some(Animation::new(
                                                                 Duration::from_millis(ms),
@@ -410,7 +411,7 @@ impl Model {
                                                                 Box::new(SineInOut),
                                                             ))
                                                     } else {
-                                                        debug!("No Animation specified; change immediate");
+                                                        debug!("No Animation specified; change Control Value immediately");
                                                         control_macro_in_fixture.current_value =
                                                             *control_macro_in_scene;
                                                     }
@@ -439,8 +440,27 @@ impl Model {
                                                         &fixture.label,
                                                         &colour_macro_in_fixture.label, colour_macro_in_scene
                                                     );
-                                                    colour_macro_in_fixture.current_value =
-                                                        *colour_macro_in_scene;
+                                                    if let Some(ms) = animation_ms {
+                                                        debug!("Scene includes animation; animate Colour over {}ms", ms);
+                                                        let animation = Animation::new(
+                                                            Duration::from_millis(ms),
+                                                            0.0,
+                                                            1.0,
+                                                            Box::new(SineInOut),
+                                                        );
+                                                        let start_colour =
+                                                            colour_macro_in_fixture.current_value;
+                                                        let end_colour = *colour_macro_in_scene;
+                                                        colour_macro_in_fixture.animation = Some((
+                                                            animation,
+                                                            start_colour,
+                                                            end_colour,
+                                                        ));
+                                                    } else {
+                                                        debug!("No Animation specified; change Colour immediately");
+                                                        colour_macro_in_fixture.current_value =
+                                                            *colour_macro_in_scene;
+                                                    }
                                                 }
                                             }
                                         }

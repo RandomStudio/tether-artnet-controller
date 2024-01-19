@@ -61,7 +61,7 @@ pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
                             go_scene = Some(scene_index);
                         };
                         if let Some(t) = scene.last_active {
-                            let progress = t.elapsed().unwrap().as_secs_f32() / 5.0;
+                            let progress = t.elapsed().unwrap().as_secs_f32() / 1.0;
                             if progress >= 1.0 { scene.last_active = None; }
                             ui.add(Spinner::new());
                         }

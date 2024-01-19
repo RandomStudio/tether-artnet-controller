@@ -297,9 +297,9 @@ impl Model {
     ) {
         match self.project.scenes.get(scene_index) {
             Some(scene) => {
-                debug!("Match scene {:?}", &scene.label);
+                debug!("Match scene {}", &scene.label);
                 for fixture in self.project.fixtures.iter_mut() {
-                    for (fixture_label_in_scene, states) in scene.state.iter() {
+                    for (fixture_label_in_scene, fixture_state_in_scene) in scene.state.iter() {
                         // If there are fixtureFilters applied, check for matches against this list
                         // as well as the name vs the key in the Scene. If no filters, just check
                         // the name.
@@ -311,34 +311,60 @@ impl Model {
                         };
                         if is_target_fixture {
                             debug!(
-                                "Scene has match for {}:{}",
+                                "Scene has match for fixture {} == {}",
                                 &fixture.label, fixture_label_in_scene
                             );
                             for m in fixture.config.active_mode.macros.iter_mut() {
-                                // if let Some(value_in_scene_macro) = states.get(&m.label) {
-                                //     debug!("Scene sets {} to {}", &m.label, value_in_scene_macro);
-                                //     match animation_ms {
-                                //         Some(ms) => {
-                                //             debug!("Apply animation with {}ms", ms);
-                                //             let start_value = m.current_value as f32 / 255.0;
-                                //             let end_value = *value_in_scene_macro as f32 / 255.0;
-                                //             let duration = Duration::from_millis(ms);
-
-                                //             m.animation = Some(Animation::new(
-                                //                 duration,
-                                //                 start_value,
-                                //                 end_value,
-                                //                 Box::new(SineInOut),
-                                //             ))
-                                //         }
-                                //         None => {
-                                //             debug!(
-                                //                 "No animation with scene; set value immediately"
-                                //             );
-                                //             m.current_value = *value_in_scene_macro;
-                                //         }
-                                //     }
-                                // }
+                                match m {
+                                    crate::project::FixtureMacro::Control(
+                                        control_macro_in_fixture,
+                                    ) => {
+                                        if let Some(macro_in_scene) = fixture_state_in_scene
+                                            .get(&control_macro_in_fixture.label)
+                                        {
+                                            match macro_in_scene {
+                                                crate::project::SceneValue::ControlValue(
+                                                    control_macro_in_scene,
+                                                ) => {
+                                                    debug!(
+                                                        "With fixture {}, Scene sets control macro {} to {}",
+                                                        &fixture.label,
+                                                        &control_macro_in_fixture.label, control_macro_in_scene
+                                                    );
+                                                    control_macro_in_fixture.current_value =
+                                                        *control_macro_in_scene;
+                                                }
+                                                crate::project::SceneValue::ColourValue(_) => {
+                                                    debug!("This is Colour Macro for fixture; Control Macro from scene will not apply");
+                                                }
+                                            }
+                                        }
+                                    }
+                                    crate::project::FixtureMacro::Colour(
+                                        colour_macro_in_fixture,
+                                    ) => {
+                                        if let Some(macro_in_scene) = fixture_state_in_scene
+                                            .get(&colour_macro_in_fixture.label)
+                                        {
+                                            match macro_in_scene {
+                                                crate::project::SceneValue::ControlValue(_) => {
+                                                    debug!("This is Control Macro for fixture; Colour Macro from scene will not apply");
+                                                }
+                                                crate::project::SceneValue::ColourValue(
+                                                    colour_macro_in_scene,
+                                                ) => {
+                                                    debug!(
+                                                        "With fixture {}, Scene sets colour macro {} to {:?}",
+                                                        &fixture.label,
+                                                        &colour_macro_in_fixture.label, colour_macro_in_scene
+                                                    );
+                                                    colour_macro_in_fixture.current_value =
+                                                        *colour_macro_in_scene;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
                     }

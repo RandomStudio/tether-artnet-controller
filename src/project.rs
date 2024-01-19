@@ -134,8 +134,14 @@ pub struct RangeDescription {
     pub label: String,
 }
 
+#[derive(Serialize, Deserialize, Clone)]
+pub enum SceneValue {
+    ControlValue(u8),
+    ColourValue(Color32),
+}
+
 /// "Macro label": value
-pub type SceneState = HashMap<String, u8>;
+pub type SceneState = HashMap<String, SceneValue>;
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct Scene {

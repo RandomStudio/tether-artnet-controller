@@ -4,7 +4,7 @@ use egui::{Grid, RichText, ScrollArea, Slider, Spinner, Ui};
 
 use crate::{
     model::Model,
-    project::{Scene, SceneState},
+    project::{Scene, SceneState, SceneValue},
 };
 
 pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
@@ -24,9 +24,16 @@ pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
             let mut state = HashMap::<String, SceneState>::new();
 
             for fixture in model.project.fixtures.iter() {
-                let mut m_state = HashMap::new();
+                let mut m_state: HashMap<String, SceneValue> = HashMap::new();
                 for m in fixture.config.active_mode.macros.iter() {
-                    // m_state.insert(String::from(&m.label), m.current_value);
+                    match m {
+                        crate::project::FixtureMacro::Control(control_macro) => {
+                            m_state.insert(String::from(&control_macro.label), SceneValue::ControlValue(control_macro.current_value));
+                        },
+                        crate::project::FixtureMacro::Colour(colour_macro) => {
+                            m_state.insert(String::from(&colour_macro.label), SceneValue::ColourValue(colour_macro.current_value));
+                        },
+                    };
                 }
                 state.insert(String::from(&fixture.label), m_state);
             }
@@ -70,7 +77,7 @@ pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
                                 .num_columns(2)
                                 .show(ui, |ui| {
                                     for m in states.iter_mut() {
-                                        let (macro_label, scene_value) = m;
+                                        let (macro_label, _scene_value) = m;
                                         ui.label(macro_label);
                                         // ui.add(Slider::new(scene_value, 0..=255));
                                         if let Some(matched_fixture) = model
@@ -79,17 +86,31 @@ pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
                                             .iter()
                                             .find(|x| x.label.eq(fixture_label))
                                         {
-                                            // if let Some(matched_macro) = matched_fixture
-                                            //     .config
-                                            //     .active_mode
-                                            //     .macros
-                                            //     .iter()
-                                            //     .find(|x| x.label.eq(macro_label))
-                                            // {
-                                            //     let mut value = matched_macro.current_value;
-                                            //     ui.add(Slider::new(&mut value, 0..=255));
-                                            //     ui.small("Adjust values in Macros panel");
-                                            // }
+                                            if let Some(matched_macro) = matched_fixture
+                                                .config
+                                                .active_mode
+                                                .macros
+                                                .iter()
+                                                .find(|x|  match x {
+                                                    crate::project::FixtureMacro::Control(m) => m.label.eq(macro_label),
+                                                    crate::project::FixtureMacro::Colour(m) => m.label.eq(macro_label),
+                                                }
+                                                    
+                                            )
+                                            {
+                                                match matched_macro {
+                                                    crate::project::FixtureMacro::Control(m) => {
+                                                        let mut dummy_value = m.current_value;
+                                                        ui.add(Slider::new(&mut dummy_value, 0..=255));
+                                                        
+                                                    } ,
+                                                    crate::project::FixtureMacro::Colour(m) => {
+                                                        let mut dummy_value = m.current_value.clone();
+                                                        ui.color_edit_button_srgba(&mut dummy_value);
+                                                    }
+                                                };
+                                                ui.small("Adjust values in Macros panel");
+                                            }
                                         } else {
                                             ui.label("Something went wrong matching fixture macros to scene macros!");
                                         }
@@ -134,12 +155,19 @@ pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
 
     if let Some(scene_index) = update_scene {
         let scene = &mut model.project.scenes[scene_index];
-        // scene.state.clear();
 
         for fixture in model.project.fixtures.iter() {
-            let mut m_state = HashMap::new();
+            let mut m_state: HashMap<String, SceneValue> = HashMap::new();
             for m in fixture.config.active_mode.macros.iter() {
-                // m_state.insert(String::from(&m.label), m.current_value);
+                match m {
+                    crate::project::FixtureMacro::Control(control_macro) => {
+                        m_state.insert(String::from(&control_macro.label), SceneValue::ControlValue(control_macro.current_value));
+                    },
+                    crate::project::FixtureMacro::Colour(colour_macro) => {
+                        m_state.insert(String::from(&colour_macro.label), SceneValue::ColourValue(colour_macro.current_value));
+
+                    },
+                }
             }
             scene.state.insert(String::from(&fixture.label), m_state);
         }

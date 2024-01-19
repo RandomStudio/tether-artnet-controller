@@ -25,5 +25,168 @@
       "modeIndex": 0
     }
   ],
-  "scenes": []
+  "scenes": [
+    {
+      "label": "white down",
+      "state": {
+        "Hex East": {
+          "pan": {
+            "ControlValue": 165
+          },
+          "colour": {
+            "ColourValue": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "zoom": {
+            "ControlValue": 0
+          },
+          "tilt": {
+            "ControlValue": 135
+          }
+        },
+        "Hex West": {
+          "zoom": {
+            "ControlValue": 0
+          },
+          "colour": {
+            "ColourValue": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "tilt": {
+            "ControlValue": 120
+          },
+          "pan": {
+            "ControlValue": 77
+          }
+        },
+        "Hero South": {
+          "tilt": {
+            "ControlValue": 127
+          },
+          "zoom": {
+            "ControlValue": 0
+          },
+          "colour": {
+            "ColourValue": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "pan": {
+            "ControlValue": 205
+          }
+        },
+        "Hero North": {
+          "pan": {
+            "ControlValue": 193
+          },
+          "colour": {
+            "ColourValue": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "tilt": {
+            "ControlValue": 150
+          },
+          "zoom": {
+            "ControlValue": 0
+          }
+        }
+      }
+    },
+    {
+      "label": "rgbw plus yellow",
+      "state": {
+        "Hero South": {
+          "zoom": {
+            "ControlValue": 255
+          },
+          "colour": {
+            "ColourValue": [
+              237,
+              255,
+              0,
+              255
+            ]
+          },
+          "pan": {
+            "ControlValue": 0
+          },
+          "tilt": {
+            "ControlValue": 140
+          }
+        },
+        "Hex East": {
+          "pan": {
+            "ControlValue": 0
+          },
+          "tilt": {
+            "ControlValue": 150
+          },
+          "colour": {
+            "ColourValue": [
+              255,
+              0,
+              0,
+              255
+            ]
+          },
+          "zoom": {
+            "ControlValue": 255
+          }
+        },
+        "Hex West": {
+          "colour": {
+            "ColourValue": [
+              0,
+              255,
+              87,
+              255
+            ]
+          },
+          "pan": {
+            "ControlValue": 0
+          },
+          "zoom": {
+            "ControlValue": 255
+          },
+          "tilt": {
+            "ControlValue": 130
+          }
+        },
+        "Hero North": {
+          "colour": {
+            "ColourValue": [
+              37,
+              0,
+              243,
+              255
+            ]
+          },
+          "tilt": {
+            "ControlValue": 127
+          },
+          "zoom": {
+            "ControlValue": 255
+          },
+          "pan": {
+            "ControlValue": 0
+          }
+        }
+      }
+    }
+  ]
 }

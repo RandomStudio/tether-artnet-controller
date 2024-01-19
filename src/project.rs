@@ -96,11 +96,15 @@ pub enum ChannelList {
     Subtractive(CMYChannels),
 }
 
+fn default_rgb() -> Color32 {
+    Color32::LIGHT_YELLOW
+}
+
 #[derive(Serialize, Deserialize)]
 pub struct ColourMacro {
     pub label: String,
     pub channels: ChannelList,
-    #[serde(skip)]
+    #[serde(skip, default = "default_rgb")]
     pub current_value: Color32,
     #[serde(skip)]
     pub animation: Option<Animation>,

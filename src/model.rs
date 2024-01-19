@@ -392,8 +392,23 @@ impl Model {
                                                         &fixture.label,
                                                         &control_macro_in_fixture.label, control_macro_in_scene
                                                     );
-                                                    control_macro_in_fixture.current_value =
-                                                        *control_macro_in_scene;
+                                                    if let Some(ms) = animation_ms {
+                                                        control_macro_in_fixture.animation =
+                                                            Some(Animation::new(
+                                                                Duration::from_millis(ms),
+                                                                control_macro_in_fixture
+                                                                    .current_value
+                                                                    as f32
+                                                                    / 255.0,
+                                                                *control_macro_in_scene as f32
+                                                                    / 255.0,
+                                                                Box::new(SineInOut),
+                                                            ))
+                                                    } else {
+                                                        debug!("No Animation specified; change immediate");
+                                                        control_macro_in_fixture.current_value =
+                                                            *control_macro_in_scene;
+                                                    }
                                                 }
                                                 crate::project::SceneValue::ColourValue(_) => {
                                                     debug!("This is Colour Macro for fixture; Control Macro from scene will not apply");

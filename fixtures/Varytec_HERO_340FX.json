@@ -167,32 +167,36 @@
       ],
       "macros": [
         {
-          "label": "red",
-          "channels": [8]
+          "colour": {
+            "label": "colour",
+            "channels": {
+              "additive": {
+                "red": [8],
+                "green": [9],
+                "blue": [10],
+                "white": [11]
+              }
+            }
+          }
+        },
+
+        {
+          "control": {
+            "label": "pan",
+            "channels": [1]
+          }
         },
         {
-          "label": "green",
-          "channels": [9]
+          "control": {
+            "label": "tilt",
+            "channels": [3]
+          }
         },
         {
-          "label": "blue",
-          "channels": [10]
-        },
-        {
-          "label": "white",
-          "channels": [11]
-        },
-        {
-          "label": "pan",
-          "channels": [1]
-        },
-        {
-          "label": "tilt",
-          "channels": [3]
-        },
-        {
-          "label": "zoom",
-          "channels": [14]
+          "control": {
+            "label": "zoom",
+            "channels": [14]
+          }
         }
       ]
     }

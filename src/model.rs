@@ -13,8 +13,8 @@ use crate::{
     project::{FixtureInstance, Project, Scene},
     settings::{Cli, CHANNELS_PER_UNIVERSE},
     tether_interface::{
-        RemoteAnimationMessage, RemoteControlMessage, RemoteMacroMessage, RemoteSceneMessage,
-        TetherControlChangePayload, TetherMidiMessage, TetherNotePayload,
+        RemoteAnimationMessage, RemoteControlMessage, RemoteMacroMessage, RemoteMacroValue,
+        RemoteSceneMessage, TetherControlChangePayload, TetherMidiMessage, TetherNotePayload,
     },
     ui::{render_gui, ViewMode},
 };
@@ -174,6 +174,8 @@ impl Model {
                     value,
                 } = cc;
 
+                todo!();
+
                 // TODO: reimplement remote via Tether-MIDI
 
                 // let active_macros = self
@@ -224,13 +226,40 @@ impl Model {
 
         for (i, fixture) in self.project.fixtures.iter_mut().enumerate() {
             if target_fixtures.contains(&i) {
-                // if let Some(target_macro) = fixture.config.active_mode.macros.iter_mut().find(
-                //     |m: &&mut crate::project::ChannelMacro| {
-                //         m.label.eq_ignore_ascii_case(&msg.macro_label)
-                //     },
-                // ) {
-                //     target_macro.current_value = msg.value;
-                // }
+                if let Some(target_macro) =
+                    fixture
+                        .config
+                        .active_mode
+                        .macros
+                        .iter_mut()
+                        .find(|m| match m {
+                            crate::project::FixtureMacro::Control(control_macro) => {
+                                control_macro.label.eq_ignore_ascii_case(&msg.macro_label)
+                            }
+                            crate::project::FixtureMacro::Colour(colour_macro) => {
+                                colour_macro.label.eq_ignore_ascii_case(&msg.macro_label)
+                            }
+                        })
+                {
+                    match target_macro {
+                        crate::project::FixtureMacro::Control(control_macro) => match msg.value {
+                            RemoteMacroValue::ControlValue(control_value) => {
+                                control_macro.current_value = control_value;
+                            }
+                            RemoteMacroValue::ColourValue(_) => {
+                                error!("Remote message targets Control Macro, but provided Colour Value");
+                            }
+                        },
+                        crate::project::FixtureMacro::Colour(colour_macro) => match msg.value {
+                            RemoteMacroValue::ColourValue(colour_value) => {
+                                colour_macro.current_value = colour_value;
+                            }
+                            RemoteMacroValue::ControlValue(_) => {
+                                error!("Remote message targets Colour Macro, but provided Control Value")
+                            }
+                        },
+                    }
+                }
             }
         }
     }

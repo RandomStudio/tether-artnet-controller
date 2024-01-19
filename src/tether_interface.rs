@@ -4,6 +4,7 @@ use std::{
     time::Duration,
 };
 
+use egui::Color32;
 use log::debug;
 use serde::{Deserialize, Serialize};
 use tether_agent::{PlugOptionsBuilder, TetherAgentOptionsBuilder};
@@ -21,6 +22,11 @@ pub struct TetherControlChangePayload {
     pub controller: u8,
     pub value: u8,
 }
+#[derive(Serialize, Deserialize, Debug)]
+pub enum RemoteMacroValue {
+    ControlValue(u8),
+    ColourValue(Color32),
+}
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
@@ -28,7 +34,7 @@ pub struct RemoteMacroMessage {
     /// If no fixture specified, assume all
     pub fixture_label: Option<String>,
     pub macro_label: String,
-    pub value: u8,
+    pub value: RemoteMacroValue,
 }
 
 #[derive(Serialize, Deserialize, Debug)]

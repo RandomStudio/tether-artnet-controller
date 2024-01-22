@@ -3,6 +3,7 @@ use std::{
     time::{Duration, SystemTime},
 };
 
+use egui::Color32;
 use log::{debug, error, info};
 use tween::SineInOut;
 
@@ -13,7 +14,7 @@ use crate::{
     settings::{Cli, CHANNELS_PER_UNIVERSE},
     tether_interface::{
         RemoteControlMessage, RemoteMacroMessage, RemoteMacroValue, RemoteSceneMessage,
-        TetherMidiMessage, TetherNotePayload,
+        TetherControlChangePayload, TetherMidiMessage, TetherNotePayload,
     },
     ui::{render_gui, ViewMode},
 };
@@ -183,16 +184,12 @@ impl Model {
                 self.selected_macro_group_index = index as usize;
             }
             // TetherMidiMessage::NoteOff(_) => todo!(),
-            TetherMidiMessage::ControlChange(_cc) => {
-                // let TetherControlChangePayload {
-                //     channel: _,
-                //     controller,
-                //     value,
-                // } = cc;
-
-                todo!();
-
-                // TODO: reimplement remote via Tether-MIDI
+            TetherMidiMessage::ControlChange(cc) => {
+                let TetherControlChangePayload {
+                    channel: _,
+                    controller,
+                    value,
+                } = cc;
 
                 // let active_macros = self
                 //     .project
@@ -208,31 +205,44 @@ impl Model {
                 //     })
                 //     .filter_map(|x| x);
 
-                // let controller_start = 48;
+                let controller_start = 48;
 
-                // for (i, (fixture_config, m)) in active_macros.enumerate() {
-                //     if self.selected_macro_group_index as usize == i {
-                //         debug!("Adjust for macros {:?}", m);
-                //         let target_macro_index = controller - controller_start;
-                //         debug!("Controller {} => {}", controller, target_macro_index);
-                //         match m.get(target_macro_index as usize) {
-                //             Some(macro_control) => {
-                //                 let value = value * 2;
-                //                 debug!("Adjust {:?} to {}", macro_control, value);
-                //                 // macro_control.current_value = value * 2;
-                //                 for c in &macro_control.channels {
-                //                     let channel_index =
-                //                         (*c - 1 + fixture_config.offset_channels) as usize;
-                //                     debug!("Set channel {} to value {}", channel_index, value);
-                //                     self.channels_state[channel_index] = value;
-                //                 }
-                //             }
-                //             None => {
-                //                 error!("Failed to match macro control");
-                //             }
-                //         }
-                //     }
-                // }
+                for (i, fixture) in self.project.fixtures.iter_mut().enumerate() {
+                    if self.selected_macro_group_index as usize == i {
+                        let target_macro_index = controller - controller_start;
+                        debug!(
+                            "Controller number {} => target macro index {}",
+                            controller, target_macro_index
+                        );
+                        match fixture
+                            .config
+                            .active_mode
+                            .macros
+                            .get_mut(target_macro_index as usize)
+                        {
+                            Some(m) => match m {
+                                crate::project::FixtureMacro::Control(control_macro) => {
+                                    let value = value * 2;
+                                    debug!("Adjust {} to {}", &control_macro.label, value);
+                                    control_macro.current_value = value;
+                                }
+                                crate::project::FixtureMacro::Colour(colour_macro) => {
+                                    let value = value * 2;
+
+                                    let [r, g, b, a] = colour_macro.current_value.to_array();
+
+                                    colour_macro.current_value =
+                                        Color32::from_rgba_premultiplied(r, g, b, value);
+
+                                    debug!("Color a {} => {}", a, colour_macro.current_value.a());
+                                }
+                            },
+                            None => {
+                                error!("Failed to match macro control");
+                            }
+                        }
+                    }
+                }
             }
         }
     }

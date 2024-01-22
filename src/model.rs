@@ -178,7 +178,7 @@ impl Model {
                     channel: _,
                     velocity: _,
                 } = note;
-                let start_note = 48;
+                let start_note = self.project.midi_config.note_start;
                 let index = note - start_note;
                 debug!("Note {} => macro group index {}", note, index);
                 self.selected_macro_group_index = index as usize;
@@ -191,21 +191,11 @@ impl Model {
                     value,
                 } = cc;
 
-                // let active_macros = self
-                //     .project
-                //     .fixtures
-                //     .iter()
-                //     .map(|fc| {
-                //         if let Some(fixture) = &fc.fixture {
-                //             let macros = fixture.modes[0].macros.clone();
-                //             return Some((fc.clone(), macros));
-                //         } else {
-                //             return None;
-                //         }
-                //     })
-                //     .filter_map(|x| x);
+                let controller_start = self.project.midi_config.controller_start;
 
-                let controller_start = 48;
+                if controller < controller_start {
+                    return;
+                }
 
                 for (i, fixture) in self.project.fixtures.iter_mut().enumerate() {
                     if self.selected_macro_group_index as usize == i {

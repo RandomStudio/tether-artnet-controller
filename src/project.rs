@@ -7,9 +7,30 @@ use serde::{Deserialize, Serialize};
 use crate::animation::Animation;
 
 #[derive(Serialize, Deserialize, Clone)]
+#[serde(rename_all = "camelCase")]
 pub struct Project {
     pub fixtures: Vec<FixtureInstance>,
     pub scenes: Vec<Scene>,
+    #[serde(default)]
+    pub midi_config: MidiConfig,
+}
+
+#[derive(Serialize, Deserialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct MidiConfig {
+    /// Which controller number counts as the first, i.e. macro index 0
+    pub controller_start: u8,
+    /// Which note count as the first, i.e. fixture index 0
+    pub note_start: u8,
+}
+
+impl Default for MidiConfig {
+    fn default() -> Self {
+        MidiConfig {
+            controller_start: 48,
+            note_start: 49,
+        }
+    }
 }
 
 #[derive(Serialize, Deserialize, Clone)]
@@ -159,6 +180,7 @@ impl Project {
         Project {
             fixtures: Vec::new(),
             scenes: Vec::new(),
+            midi_config: MidiConfig::default(),
         }
     }
 

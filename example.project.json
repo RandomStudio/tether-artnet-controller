@@ -34,12 +34,7 @@
             "ControlValue": 165
           },
           "colour": {
-            "ColourValue": [
-              0,
-              0,
-              0,
-              0
-            ]
+            "ColourValue": [0, 0, 0, 0]
           },
           "zoom": {
             "ControlValue": 0
@@ -53,12 +48,7 @@
             "ControlValue": 0
           },
           "colour": {
-            "ColourValue": [
-              0,
-              0,
-              0,
-              0
-            ]
+            "ColourValue": [0, 0, 0, 0]
           },
           "tilt": {
             "ControlValue": 120
@@ -75,12 +65,7 @@
             "ControlValue": 0
           },
           "colour": {
-            "ColourValue": [
-              0,
-              0,
-              0,
-              0
-            ]
+            "ColourValue": [0, 0, 0, 0]
           },
           "pan": {
             "ControlValue": 205
@@ -91,12 +76,7 @@
             "ControlValue": 193
           },
           "colour": {
-            "ColourValue": [
-              0,
-              0,
-              0,
-              0
-            ]
+            "ColourValue": [0, 0, 0, 0]
           },
           "tilt": {
             "ControlValue": 150
@@ -115,12 +95,7 @@
             "ControlValue": 255
           },
           "colour": {
-            "ColourValue": [
-              237,
-              255,
-              0,
-              255
-            ]
+            "ColourValue": [237, 255, 0, 255]
           },
           "pan": {
             "ControlValue": 0
@@ -137,12 +112,7 @@
             "ControlValue": 150
           },
           "colour": {
-            "ColourValue": [
-              255,
-              0,
-              0,
-              255
-            ]
+            "ColourValue": [255, 0, 0, 255]
           },
           "zoom": {
             "ControlValue": 255
@@ -150,12 +120,7 @@
         },
         "Hex West": {
           "colour": {
-            "ColourValue": [
-              0,
-              255,
-              87,
-              255
-            ]
+            "ColourValue": [0, 255, 87, 255]
           },
           "pan": {
             "ControlValue": 0
@@ -169,12 +134,7 @@
         },
         "Hero North": {
           "colour": {
-            "ColourValue": [
-              37,
-              0,
-              243,
-              255
-            ]
+            "ColourValue": [37, 0, 243, 255]
           },
           "tilt": {
             "ControlValue": 127

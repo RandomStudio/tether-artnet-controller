@@ -93,7 +93,7 @@ pub fn render_macro_controls(model: &mut Model, ui: &mut Ui) {
                                     }
                                     crate::project::FixtureMacro::Colour(colour_macro) => {
                                         ui.label(&colour_macro.label);
-                                        ui.add_enabled_ui(colour_macro.animation.is_some(), |ui| {
+                                        ui.add_enabled_ui(colour_macro.animation.is_none(), |ui| {
                                             if ui
                                                 .color_edit_button_srgba(
                                                     &mut colour_macro.current_value,

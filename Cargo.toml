@@ -51,5 +51,5 @@ pr-run-mode = "upload"
 
 [workspace.metadata.dist.dependencies.apt]
 librust-atk-dev = "*"
-
+libgtk-3-dev = "*"
 

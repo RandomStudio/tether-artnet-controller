@@ -1,6 +1,6 @@
 [package]
 name = "tether-artnet-controller"
-version = "0.2.0"
+version = "0.2.3"
 edition = "2021"
 repository = "https://github.com/RandomStudio/tether-artnet-controller"
 authors = ["Stephen Buchanan"]
@@ -51,5 +51,5 @@ pr-run-mode = "plan"
 
 [workspace.metadata.dist.dependencies.apt]
 librust-atk-dev = "*"
-
+libgtk-3-dev = "*"
 

@@ -119,8 +119,6 @@ jobs:
           path: target/distrib/
       - name: Install dependencies
         run: |
-          sudo apt update
-          sudo apt install -y librust-atk-dev
           ${{ matrix.packages_install }}
       - name: Build artifacts
         run: |

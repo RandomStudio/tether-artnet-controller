@@ -5,6 +5,7 @@ edition = "2021"
 repository = "https://github.com/RandomStudio/tether-artnet-controller"
 authors = ["Stephen Buchanan"]
 description= "A remote control software lighting desk"
+license = "MIT"
 
 [package.metadata.wix]
 upgrade-guid = "8E5F37FF-2FE0-464D-B307-5F64A0466ACF"

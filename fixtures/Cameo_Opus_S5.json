@@ -89,6 +89,16 @@
           "channel": 11,
           "label": "CTO",
           "notes": "Colour Temperature Orange"
+        },
+        {
+          "channel": 17,
+          "label": "Zoom",
+          "notes": "Narrow to wide"
+        },
+        {
+          "channel": 18,
+          "label": "Focus",
+          "notes": "0% to 100% "
         }
       ],
       "macros": [

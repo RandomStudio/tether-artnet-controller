@@ -1,0 +1,31 @@
+{
+    "fixtures": [
+        {
+            "label": "Wash Front",
+            "path": "./fixtures/GLP_Impression_X5.json",
+            "offsetChannels": 0,
+            "modeIndex": 0
+          },
+          {
+            "label": "Wash Back",
+            "path": "./fixtures/GLP_Impression_X5.json",
+            "offsetChannels": 24,
+            "modeIndex": 0
+          },
+        {
+            "label": "Spot Left",
+            "path": "./fixtures/Cameo_Opus_S5.json",
+            "offsetChannels": 48,
+            "modeIndex": 0
+        },
+        {
+            "label": "Spot Right",
+            "path": "./fixtures/Cameo_Opus_S5.json",
+            "offsetChannels": 77,
+            "modeIndex": 0
+        }
+    ],
+    "scenes": [
+    ]
+  }
+  

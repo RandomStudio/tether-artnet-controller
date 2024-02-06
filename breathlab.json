@@ -29,12 +29,34 @@
     {
       "label": "idle",
       "state": {
-        "Spot Left": {
-          "zoom": {
-            "ControlValue": 0
+        "Wash Back": {
+          "colour": {
+            "ColourValue": [
+              70,
+              59,
+              160,
+              255
+            ]
+          },
+          "pan": {
+            "ControlValue": 150
+          },
+          "brightness": {
+            "ControlValue": 255
           },
           "tilt": {
+            "ControlValue": 170
+          },
+          "zoom": {
+            "ControlValue": 255
+          }
+        },
+        "Spot Left": {
+          "tilt": {
             "ControlValue": 130
+          },
+          "zoom": {
+            "ControlValue": 0
           },
           "brightness": {
             "ControlValue": 255
@@ -55,14 +77,17 @@
           }
         },
         "Wash Front": {
-          "zoom": {
-            "ControlValue": 255
+          "pan": {
+            "ControlValue": 10
+          },
+          "tilt": {
+            "ControlValue": 170
           },
           "brightness": {
             "ControlValue": 255
           },
-          "pan": {
-            "ControlValue": 10
+          "zoom": {
+            "ControlValue": 255
           },
           "colour": {
             "ColourValue": [
@@ -71,42 +96,17 @@
               199,
               255
             ]
-          },
-          "tilt": {
-            "ControlValue": 170
-          }
-        },
-        "Wash Back": {
-          "pan": {
-            "ControlValue": 150
-          },
-          "tilt": {
-            "ControlValue": 170
-          },
-          "zoom": {
-            "ControlValue": 255
-          },
-          "colour": {
-            "ColourValue": [
-              70,
-              59,
-              160,
-              255
-            ]
-          },
-          "brightness": {
-            "ControlValue": 255
           }
         },
         "Spot Right": {
+          "tilt": {
+            "ControlValue": 122
+          },
           "focus": {
             "ControlValue": 0
           },
           "pan": {
             "ControlValue": 0
-          },
-          "brightness": {
-            "ControlValue": 255
           },
           "colour": {
             "ColourValue": [
@@ -116,8 +116,8 @@
               255
             ]
           },
-          "tilt": {
-            "ControlValue": 122
+          "brightness": {
+            "ControlValue": 255
           },
           "zoom": {
             "ControlValue": 0
@@ -128,37 +128,15 @@
     {
       "label": "breathe",
       "state": {
-        "Wash Front": {
-          "pan": {
-            "ControlValue": 15
-          },
-          "zoom": {
-            "ControlValue": 175
-          },
-          "tilt": {
-            "ControlValue": 145
-          },
+        "Spot Right": {
           "brightness": {
             "ControlValue": 255
           },
-          "colour": {
-            "ColourValue": [
-              49,
-              97,
-              233,
-              255
-            ]
-          }
-        },
-        "Spot Right": {
-          "focus": {
-            "ControlValue": 255
+          "zoom": {
+            "ControlValue": 0
           },
           "pan": {
             "ControlValue": 28
-          },
-          "brightness": {
-            "ControlValue": 255
           },
           "tilt": {
             "ControlValue": 103
@@ -171,13 +149,35 @@
               255
             ]
           },
+          "focus": {
+            "ControlValue": 255
+          }
+        },
+        "Wash Front": {
+          "pan": {
+            "ControlValue": 15
+          },
+          "tilt": {
+            "ControlValue": 145
+          },
+          "brightness": {
+            "ControlValue": 255
+          },
           "zoom": {
-            "ControlValue": 0
+            "ControlValue": 175
+          },
+          "colour": {
+            "ColourValue": [
+              49,
+              97,
+              233,
+              255
+            ]
           }
         },
         "Spot Left": {
-          "tilt": {
-            "ControlValue": 150
+          "zoom": {
+            "ControlValue": 0
           },
           "brightness": {
             "ControlValue": 255
@@ -190,14 +190,14 @@
               255
             ]
           },
-          "zoom": {
-            "ControlValue": 0
+          "pan": {
+            "ControlValue": 140
+          },
+          "tilt": {
+            "ControlValue": 150
           },
           "focus": {
             "ControlValue": 255
-          },
-          "pan": {
-            "ControlValue": 140
           }
         },
         "Wash Back": {
@@ -220,6 +220,105 @@
           },
           "pan": {
             "ControlValue": 150
+          }
+        }
+      }
+    },
+    {
+      "label": "home",
+      "state": {
+        "Wash Front": {
+          "pan": {
+            "ControlValue": 10
+          },
+          "brightness": {
+            "ControlValue": 0
+          },
+          "zoom": {
+            "ControlValue": 0
+          },
+          "colour": {
+            "ColourValue": [
+              94,
+              121,
+              199,
+              255
+            ]
+          },
+          "tilt": {
+            "ControlValue": 128
+          }
+        },
+        "Spot Right": {
+          "focus": {
+            "ControlValue": 0
+          },
+          "brightness": {
+            "ControlValue": 0
+          },
+          "colour": {
+            "ColourValue": [
+              189,
+              187,
+              232,
+              255
+            ]
+          },
+          "zoom": {
+            "ControlValue": 0
+          },
+          "tilt": {
+            "ControlValue": 128
+          },
+          "pan": {
+            "ControlValue": 0
+          }
+        },
+        "Wash Back": {
+          "tilt": {
+            "ControlValue": 170
+          },
+          "colour": {
+            "ColourValue": [
+              70,
+              59,
+              160,
+              255
+            ]
+          },
+          "pan": {
+            "ControlValue": 128
+          },
+          "brightness": {
+            "ControlValue": 0
+          },
+          "zoom": {
+            "ControlValue": 0
+          }
+        },
+        "Spot Left": {
+          "pan": {
+            "ControlValue": 0
+          },
+          "brightness": {
+            "ControlValue": 0
+          },
+          "zoom": {
+            "ControlValue": 0
+          },
+          "tilt": {
+            "ControlValue": 128
+          },
+          "focus": {
+            "ControlValue": 0
+          },
+          "colour": {
+            "ColourValue": [
+              202,
+              193,
+              238,
+              255
+            ]
           }
         }
       }

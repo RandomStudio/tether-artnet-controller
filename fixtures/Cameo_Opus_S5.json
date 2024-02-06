@@ -23,7 +23,8 @@
         },
         {
           "channel": 5,
-          "label": "Dimmer"
+          "label": "Dimmer",
+          "home": 0
         },
         {
           "channel": 6,
@@ -103,6 +104,12 @@
       ],
       "macros": [
         {
+          "control": {
+            "label": "brightness",
+            "channels": [5]
+          }
+        },
+        {
           "colour": {
             "label": "colour",
             "channels": {
@@ -125,6 +132,18 @@
           "control": {
             "label": "tilt",
             "channels": [3]
+          }
+        },
+        {
+          "control": {
+            "label": "zoom",
+            "channels": [17]
+          }
+        },
+        {
+          "control": {
+            "label": "focus",
+            "channels": [18]
           }
         }
       ]

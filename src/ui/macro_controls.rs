@@ -71,7 +71,7 @@ pub fn render_macro_controls(model: &mut Model, ui: &mut Ui) {
                                                 Slider::new(
                                                     &mut control_macro.current_value,
                                                     0..=255,
-                                                ),
+                                                ).step_by(1.0),
                                             )
                                             .changed()
                                         {

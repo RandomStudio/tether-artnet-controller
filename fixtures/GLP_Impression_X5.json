@@ -29,7 +29,7 @@
           "channel": 5,
           "label": "Intensity coarse",
           "notes": "Intensity 0 -> 100%",
-          "home": 255
+          "home": 0
         },
         {
           "channel": 6,
@@ -585,7 +585,45 @@
           ]
         }
       ],
-      "macros": [ ]
+      "macros": [ 
+        {
+          "control": {
+            "label": "brightness",
+            "channels": [5]
+          }
+        },
+        {
+          "colour": {
+            "label": "colour",
+            "channels": {
+              "additive": {
+                "red": [12],
+                "green": [14],
+                "blue": [16],
+                "white": [18]
+              }
+            }
+          }
+        },
+        {
+          "control": {
+            "label": "pan",
+            "channels": [1]
+          }
+        },
+        {
+          "control": {
+            "label": "tilt",
+            "channels": [3]
+          }
+        },
+        {
+          "control": {
+            "label": "zoom",
+            "channels": [8]
+          }
+        }
+      ]
     }
   ]
 }

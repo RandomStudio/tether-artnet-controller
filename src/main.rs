@@ -16,7 +16,7 @@ use crate::{
 mod animation;
 mod artnet;
 mod model;
-mod project;
+pub mod project;
 mod settings;
 mod tether_interface;
 mod ui;

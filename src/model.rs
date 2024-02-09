@@ -10,7 +10,7 @@ use tween::SineInOut;
 use crate::{
     animation::{animate_colour, Animation},
     artnet::{random, zero, ArtNetInterface},
-    project::{FixtureInstance, Project},
+    project::Project,
     settings::{Cli, CHANNELS_PER_UNIVERSE},
     tether_interface::{
         RemoteControlMessage, RemoteMacroMessage, RemoteMacroValue, RemoteSceneMessage,
@@ -238,15 +238,8 @@ impl Model {
     }
 
     pub fn handle_macro_message(&mut self, msg: RemoteMacroMessage) {
-        let target_fixtures = get_target_fixtures_list(&self.project.fixtures, &msg.fixture_label);
-
-        debug!(
-            "Applying animation message to {} fixtures...",
-            target_fixtures.len()
-        );
-
-        for (i, fixture) in self.project.fixtures.iter_mut().enumerate() {
-            if target_fixtures.contains(&i) {
+        for fixture in self.project.fixtures.iter_mut() {
+            if fixtures_list_contains(&msg.fixture_labels, &fixture.label) {
                 if let Some(target_macro) =
                     fixture
                         .config
@@ -266,7 +259,7 @@ impl Model {
                         crate::project::FixtureMacro::Control(control_macro) => {
                             match msg.value {
                                 RemoteMacroValue::ControlValue(target_value) => {
-                                    if let Some(ms) = msg.duration {
+                                    if let Some(ms) = msg.ms {
                                         let duration = Duration::from_millis(ms);
                                         let start_value =
                                             control_macro.current_value as f32 / 255.0;
@@ -303,7 +296,7 @@ impl Model {
                                 error!("Remote Animation Message targets Colour Macro, but provices Control Value instead");
                             }
                             RemoteMacroValue::ColourValue(target_colour) => {
-                                if let Some(ms) = msg.duration {
+                                if let Some(ms) = msg.ms {
                                     let duration = Duration::from_millis(ms);
                                     let start_value = 0.;
                                     let end_value = 1.0;
@@ -349,7 +342,7 @@ impl Model {
             Some((index, scene)) => {
                 debug!("Found scene \"{}\" at index {}", &scene.label, index);
                 scene.last_active = Some(SystemTime::now());
-                self.apply_scene(index, msg.ms, msg.fixture_filters);
+                self.apply_scene(index, msg.ms, msg.fixture_labels);
             }
             None => error!("Failed to find matching scene for \"{}\"", &msg.scene_label),
         }
@@ -494,20 +487,15 @@ impl Model {
     }
 }
 
-fn get_target_fixtures_list(
-    fixtures: &[FixtureInstance],
-    label_search_string: &Option<String>,
-) -> Vec<usize> {
-    fixtures
-        .iter()
-        .enumerate()
-        .filter(|(_i, f)| {
-            if let Some(label) = label_search_string {
-                f.label.eq_ignore_ascii_case(&label)
-            } else {
-                true // match all
+fn fixtures_list_contains(search_list: &Option<Vec<String>>, label_search_string: &str) -> bool {
+    if let Some(list) = search_list {
+        for label in list.iter() {
+            if label.eq_ignore_ascii_case(label_search_string) {
+                return true;
             }
-        })
-        .filter_map(|(i, _f)| Some(i))
-        .collect()
+        }
+        false
+    } else {
+        true
+    }
 }

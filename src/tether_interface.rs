@@ -31,14 +31,14 @@ pub enum RemoteMacroValue {
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct RemoteMacroMessage {
-    /// If no fixture specified, assume all
-    pub fixture_label: Option<String>,
+    /// If no fixtures specified, assume all
+    pub fixture_labels: Option<Vec<String>>,
     pub macro_label: String,
     /// Start value will be "whatever the current value is";
     /// so `target_value` is the End value
     pub value: RemoteMacroValue,
     /// Animation duration in ms
-    pub duration: Option<u64>,
+    pub ms: Option<u64>,
 }
 #[derive(Debug)]
 pub enum TetherMidiMessage {
@@ -54,7 +54,8 @@ pub enum TetherMidiMessage {
 pub struct RemoteSceneMessage {
     pub scene_label: String,
     pub ms: Option<u64>,
-    pub fixture_filters: Option<Vec<String>>,
+    /// If no fixtures specified, assume all
+    pub fixture_labels: Option<Vec<String>>,
 }
 
 pub enum RemoteControlMessage {

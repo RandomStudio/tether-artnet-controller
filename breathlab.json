@@ -1,0 +1,331 @@
+{
+  "fixtures": [
+    {
+      "label": "Wash Front",
+      "path": "./fixtures/GLP_Impression_X5.json",
+      "offsetChannels": 0,
+      "modeIndex": 0
+    },
+    {
+      "label": "Wash Back",
+      "path": "./fixtures/GLP_Impression_X5.json",
+      "offsetChannels": 24,
+      "modeIndex": 0
+    },
+    {
+      "label": "Spot Left",
+      "path": "./fixtures/Cameo_Opus_S5.json",
+      "offsetChannels": 48,
+      "modeIndex": 0
+    },
+    {
+      "label": "Spot Right",
+      "path": "./fixtures/Cameo_Opus_S5.json",
+      "offsetChannels": 77,
+      "modeIndex": 0
+    }
+  ],
+  "scenes": [
+    {
+      "label": "idle",
+      "state": {
+        "Wash Back": {
+          "colour": {
+            "ColourValue": [
+              70,
+              59,
+              160,
+              255
+            ]
+          },
+          "pan": {
+            "ControlValue": 150
+          },
+          "brightness": {
+            "ControlValue": 255
+          },
+          "tilt": {
+            "ControlValue": 170
+          },
+          "zoom": {
+            "ControlValue": 255
+          }
+        },
+        "Spot Left": {
+          "tilt": {
+            "ControlValue": 130
+          },
+          "zoom": {
+            "ControlValue": 0
+          },
+          "brightness": {
+            "ControlValue": 255
+          },
+          "colour": {
+            "ColourValue": [
+              202,
+              193,
+              238,
+              255
+            ]
+          },
+          "focus": {
+            "ControlValue": 0
+          },
+          "pan": {
+            "ControlValue": 0
+          }
+        },
+        "Wash Front": {
+          "pan": {
+            "ControlValue": 10
+          },
+          "tilt": {
+            "ControlValue": 170
+          },
+          "brightness": {
+            "ControlValue": 255
+          },
+          "zoom": {
+            "ControlValue": 255
+          },
+          "colour": {
+            "ColourValue": [
+              94,
+              121,
+              199,
+              255
+            ]
+          }
+        },
+        "Spot Right": {
+          "tilt": {
+            "ControlValue": 122
+          },
+          "focus": {
+            "ControlValue": 0
+          },
+          "pan": {
+            "ControlValue": 0
+          },
+          "colour": {
+            "ColourValue": [
+              189,
+              187,
+              232,
+              255
+            ]
+          },
+          "brightness": {
+            "ControlValue": 255
+          },
+          "zoom": {
+            "ControlValue": 0
+          }
+        }
+      }
+    },
+    {
+      "label": "breathe",
+      "state": {
+        "Spot Right": {
+          "brightness": {
+            "ControlValue": 255
+          },
+          "zoom": {
+            "ControlValue": 0
+          },
+          "pan": {
+            "ControlValue": 28
+          },
+          "tilt": {
+            "ControlValue": 103
+          },
+          "colour": {
+            "ColourValue": [
+              206,
+              205,
+              228,
+              255
+            ]
+          },
+          "focus": {
+            "ControlValue": 255
+          }
+        },
+        "Wash Front": {
+          "pan": {
+            "ControlValue": 15
+          },
+          "tilt": {
+            "ControlValue": 145
+          },
+          "brightness": {
+            "ControlValue": 255
+          },
+          "zoom": {
+            "ControlValue": 175
+          },
+          "colour": {
+            "ColourValue": [
+              49,
+              97,
+              233,
+              255
+            ]
+          }
+        },
+        "Spot Left": {
+          "zoom": {
+            "ControlValue": 0
+          },
+          "brightness": {
+            "ControlValue": 255
+          },
+          "colour": {
+            "ColourValue": [
+              196,
+              197,
+              214,
+              255
+            ]
+          },
+          "pan": {
+            "ControlValue": 140
+          },
+          "tilt": {
+            "ControlValue": 150
+          },
+          "focus": {
+            "ControlValue": 255
+          }
+        },
+        "Wash Back": {
+          "zoom": {
+            "ControlValue": 255
+          },
+          "tilt": {
+            "ControlValue": 170
+          },
+          "brightness": {
+            "ControlValue": 255
+          },
+          "colour": {
+            "ColourValue": [
+              60,
+              19,
+              216,
+              255
+            ]
+          },
+          "pan": {
+            "ControlValue": 150
+          }
+        }
+      }
+    },
+    {
+      "label": "home",
+      "state": {
+        "Wash Front": {
+          "pan": {
+            "ControlValue": 10
+          },
+          "brightness": {
+            "ControlValue": 0
+          },
+          "zoom": {
+            "ControlValue": 0
+          },
+          "colour": {
+            "ColourValue": [
+              94,
+              121,
+              199,
+              255
+            ]
+          },
+          "tilt": {
+            "ControlValue": 128
+          }
+        },
+        "Spot Right": {
+          "focus": {
+            "ControlValue": 0
+          },
+          "brightness": {
+            "ControlValue": 0
+          },
+          "colour": {
+            "ColourValue": [
+              189,
+              187,
+              232,
+              255
+            ]
+          },
+          "zoom": {
+            "ControlValue": 0
+          },
+          "tilt": {
+            "ControlValue": 128
+          },
+          "pan": {
+            "ControlValue": 0
+          }
+        },
+        "Wash Back": {
+          "tilt": {
+            "ControlValue": 170
+          },
+          "colour": {
+            "ColourValue": [
+              70,
+              59,
+              160,
+              255
+            ]
+          },
+          "pan": {
+            "ControlValue": 128
+          },
+          "brightness": {
+            "ControlValue": 0
+          },
+          "zoom": {
+            "ControlValue": 0
+          }
+        },
+        "Spot Left": {
+          "pan": {
+            "ControlValue": 0
+          },
+          "brightness": {
+            "ControlValue": 0
+          },
+          "zoom": {
+            "ControlValue": 0
+          },
+          "tilt": {
+            "ControlValue": 128
+          },
+          "focus": {
+            "ControlValue": 0
+          },
+          "colour": {
+            "ColourValue": [
+              202,
+              193,
+              238,
+              255
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "midiConfig": {
+    "controllerStart": 48,
+    "noteStart": 49
+  }
+}

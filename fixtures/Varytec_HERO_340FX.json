@@ -16,7 +16,7 @@
         },
         {
           "channel": 3,
-          "label": "Inclination (tilt) ",
+          "label": "Inclination (tilt)",
           "notes": "(0° up to the maximum value of the Tilt area. middle position: 128)",
           "home": 128
         },

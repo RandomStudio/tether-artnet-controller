@@ -2,25 +2,25 @@
   "fixtures": [
     {
       "label": "Hex East",
-      "path": "./fixtures/ADJ_Vizi_Hex_Wash7.json",
+      "configName": "ADJ Vizi Hex Wash 7",
       "offsetChannels": 0,
       "modeIndex": 0
     },
     {
       "label": "Hex West",
-      "path": "./fixtures/ADJ_Vizi_Hex_Wash7.json",
+      "configName": "ADJ Vizi Hex Wash 7",
       "offsetChannels": 43,
       "modeIndex": 0
     },
     {
       "label": "Hero North",
-      "path": "./fixtures/Varytec_HERO_340FX.json",
+      "configName": "Varytec HERO 340FX",
       "offsetChannels": 70,
       "modeIndex": 0
     },
     {
       "label": "Hero South",
-      "path": "./fixtures/Varytec_HERO_340FX.json",
+      "configName": "Varytec HERO 340FX",
       "offsetChannels": 27,
       "modeIndex": 0
     }
@@ -30,59 +30,79 @@
       "label": "white down",
       "state": {
         "Hex East": {
+          "tilt": {
+            "ControlValue": 128
+          },
           "pan": {
             "ControlValue": 165
           },
           "colour": {
-            "ColourValue": [0, 0, 0, 0]
+            "ColourValue": [
+              0,
+              0,
+              0,
+              0
+            ]
           },
           "zoom": {
             "ControlValue": 0
-          },
-          "tilt": {
-            "ControlValue": 135
           }
         },
         "Hex West": {
-          "zoom": {
-            "ControlValue": 0
-          },
           "colour": {
-            "ColourValue": [0, 0, 0, 0]
+            "ColourValue": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "pan": {
+            "ControlValue": 77
           },
           "tilt": {
             "ControlValue": 120
           },
-          "pan": {
-            "ControlValue": 77
+          "zoom": {
+            "ControlValue": 0
           }
         },
         "Hero South": {
+          "pan": {
+            "ControlValue": 205
+          },
           "tilt": {
             "ControlValue": 127
           },
+          "colour": {
+            "ColourValue": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
           "zoom": {
             "ControlValue": 0
-          },
-          "colour": {
-            "ColourValue": [0, 0, 0, 0]
-          },
-          "pan": {
-            "ControlValue": 205
           }
         },
         "Hero North": {
           "pan": {
             "ControlValue": 193
           },
-          "colour": {
-            "ColourValue": [0, 0, 0, 0]
-          },
           "tilt": {
             "ControlValue": 150
           },
           "zoom": {
             "ControlValue": 0
+          },
+          "colour": {
+            "ColourValue": [
+              0,
+              0,
+              0,
+              0
+            ]
           }
         }
       }
@@ -90,12 +110,55 @@
     {
       "label": "rgbw plus yellow",
       "state": {
-        "Hero South": {
+        "Hero North": {
+          "pan": {
+            "ControlValue": 0
+          },
+          "colour": {
+            "ColourValue": [
+              37,
+              0,
+              243,
+              255
+            ]
+          },
+          "tilt": {
+            "ControlValue": 127
+          },
+          "zoom": {
+            "ControlValue": 255
+          }
+        },
+        "Hex West": {
+          "tilt": {
+            "ControlValue": 130
+          },
+          "pan": {
+            "ControlValue": 0
+          },
           "zoom": {
             "ControlValue": 255
           },
           "colour": {
-            "ColourValue": [237, 255, 0, 255]
+            "ColourValue": [
+              0,
+              255,
+              87,
+              255
+            ]
+          }
+        },
+        "Hero South": {
+          "colour": {
+            "ColourValue": [
+              237,
+              255,
+              0,
+              255
+            ]
+          },
+          "zoom": {
+            "ControlValue": 255
           },
           "pan": {
             "ControlValue": 0
@@ -111,42 +174,23 @@
           "tilt": {
             "ControlValue": 150
           },
-          "colour": {
-            "ColourValue": [255, 0, 0, 255]
-          },
-          "zoom": {
-            "ControlValue": 255
-          }
-        },
-        "Hex West": {
-          "colour": {
-            "ColourValue": [0, 255, 87, 255]
-          },
-          "pan": {
-            "ControlValue": 0
-          },
           "zoom": {
             "ControlValue": 255
           },
-          "tilt": {
-            "ControlValue": 130
-          }
-        },
-        "Hero North": {
           "colour": {
-            "ColourValue": [37, 0, 243, 255]
-          },
-          "tilt": {
-            "ControlValue": 127
-          },
-          "zoom": {
-            "ControlValue": 255
-          },
-          "pan": {
-            "ControlValue": 0
+            "ColourValue": [
+              255,
+              0,
+              0,
+              255
+            ]
           }
         }
       }
     }
-  ]
+  ],
+  "midiConfig": {
+    "controllerStart": 48,
+    "noteStart": 49
+  }
 }

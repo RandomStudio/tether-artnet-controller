@@ -23,7 +23,8 @@
         },
         {
           "channel": 5,
-          "label": "Dimmer"
+          "label": "Dimmer",
+          "home": 0
         },
         {
           "channel": 6,
@@ -89,9 +90,25 @@
           "channel": 11,
           "label": "CTO",
           "notes": "Colour Temperature Orange"
+        },
+        {
+          "channel": 17,
+          "label": "Zoom",
+          "notes": "Narrow to wide"
+        },
+        {
+          "channel": 18,
+          "label": "Focus",
+          "notes": "0% to 100% "
         }
       ],
       "macros": [
+        {
+          "control": {
+            "label": "brightness",
+            "channels": [5]
+          }
+        },
         {
           "colour": {
             "label": "colour",
@@ -115,6 +132,18 @@
           "control": {
             "label": "tilt",
             "channels": [3]
+          }
+        },
+        {
+          "control": {
+            "label": "zoom",
+            "channels": [17]
+          }
+        },
+        {
+          "control": {
+            "label": "focus",
+            "channels": [18]
           }
         }
       ]

@@ -4,7 +4,7 @@ use egui::{Grid, RichText, ScrollArea, Slider, Spinner, Ui};
 
 use crate::{
     model::Model,
-    project::{Scene, SceneState, SceneValue},
+    project::{fixture::FixtureMacro, Scene, SceneState, SceneValue},
 };
 
 pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
@@ -27,10 +27,10 @@ pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
                 let mut m_state: HashMap<String, SceneValue> = HashMap::new();
                 for m in fixture.config.active_mode.macros.iter() {
                     match m {
-                        crate::project::FixtureMacro::Control(control_macro) => {
+                        FixtureMacro::Control(control_macro) => {
                             m_state.insert(String::from(&control_macro.label), SceneValue::ControlValue(control_macro.current_value));
                         },
-                        crate::project::FixtureMacro::Colour(colour_macro) => {
+                        FixtureMacro::Colour(colour_macro) => {
                             m_state.insert(String::from(&colour_macro.label), SceneValue::ColourValue(colour_macro.current_value));
                         },
                     };
@@ -92,19 +92,19 @@ pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
                                                 .macros
                                                 .iter()
                                                 .find(|x|  match x {
-                                                    crate::project::FixtureMacro::Control(m) => m.label.eq(macro_label),
-                                                    crate::project::FixtureMacro::Colour(m) => m.label.eq(macro_label),
+                                                    FixtureMacro::Control(m) => m.label.eq(macro_label),
+                                                    FixtureMacro::Colour(m) => m.label.eq(macro_label),
                                                 }
                                                     
                                             )
                                             {
                                                 match matched_macro {
-                                                    crate::project::FixtureMacro::Control(m) => {
+                                                    FixtureMacro::Control(m) => {
                                                         let mut dummy_value = m.current_value;
                                                         ui.add(Slider::new(&mut dummy_value, 0..=255));
                                                         
                                                     } ,
-                                                    crate::project::FixtureMacro::Colour(m) => {
+                                                    FixtureMacro::Colour(m) => {
                                                         let mut dummy_value = m.current_value.clone();
                                                         ui.color_edit_button_srgba(&mut dummy_value);
                                                     }
@@ -160,10 +160,10 @@ pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
             let mut m_state: HashMap<String, SceneValue> = HashMap::new();
             for m in fixture.config.active_mode.macros.iter() {
                 match m {
-                    crate::project::FixtureMacro::Control(control_macro) => {
+                    FixtureMacro::Control(control_macro) => {
                         m_state.insert(String::from(&control_macro.label), SceneValue::ControlValue(control_macro.current_value));
                     },
-                    crate::project::FixtureMacro::Colour(colour_macro) => {
+                    FixtureMacro::Colour(colour_macro) => {
                         m_state.insert(String::from(&colour_macro.label), SceneValue::ColourValue(colour_macro.current_value));
 
                     },

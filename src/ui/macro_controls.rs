@@ -3,6 +3,7 @@ use egui::{Color32, Grid, RichText, ScrollArea, Slider, Ui};
 use crate::{
     artnet::{random, zero},
     model::Model,
+    project::fixture::FixtureMacro,
 };
 
 pub fn render_macro_controls(model: &mut Model, ui: &mut Ui) {
@@ -54,7 +55,7 @@ pub fn render_macro_controls(model: &mut Model, ui: &mut Ui) {
                         .show(ui, |ui| {
                             for m in current_mode.macros.iter_mut() {
                                 match m {
-                                    crate::project::FixtureMacro::Control(control_macro) => {
+                                    FixtureMacro::Control(control_macro) => {
                                         let remapped_channels: Vec<u16> = control_macro
                                             .channels
                                             .iter()
@@ -71,7 +72,8 @@ pub fn render_macro_controls(model: &mut Model, ui: &mut Ui) {
                                                 Slider::new(
                                                     &mut control_macro.current_value,
                                                     0..=255,
-                                                ).step_by(1.0),
+                                                )
+                                                .step_by(1.0),
                                             )
                                             .changed()
                                         {
@@ -91,7 +93,7 @@ pub fn render_macro_controls(model: &mut Model, ui: &mut Ui) {
                                             ui.label("");
                                         }
                                     }
-                                    crate::project::FixtureMacro::Colour(colour_macro) => {
+                                    FixtureMacro::Colour(colour_macro) => {
                                         ui.label(&colour_macro.label);
                                         ui.add_enabled_ui(colour_macro.animation.is_none(), |ui| {
                                             if ui

@@ -10,7 +10,7 @@ use tween::SineInOut;
 use crate::{
     animation::{animate_colour, Animation},
     artnet::{random, zero, ArtNetInterface},
-    project::Project,
+    project::{fixture::FixtureMacro, Project, SceneValue},
     settings::{Cli, CHANNELS_PER_UNIVERSE},
     tether_interface::{
         RemoteControlMessage, RemoteMacroMessage, RemoteMacroValue, RemoteSceneMessage,
@@ -136,7 +136,7 @@ impl Model {
         for fixture in self.project.fixtures.iter_mut() {
             for m in fixture.config.active_mode.macros.iter_mut() {
                 match m {
-                    crate::project::FixtureMacro::Control(control_macro) => {
+                    FixtureMacro::Control(control_macro) => {
                         if let Some(animation) = &mut control_macro.animation {
                             let (value, is_done) = animation.get_value_and_done();
                             let dmx_value = (value * 255.0) as u8;
@@ -149,7 +149,7 @@ impl Model {
                             }
                         }
                     }
-                    crate::project::FixtureMacro::Colour(colour_macro) => {
+                    FixtureMacro::Colour(colour_macro) => {
                         if let Some((animation, start_colour, end_colour)) =
                             &mut colour_macro.animation
                         {
@@ -211,12 +211,12 @@ impl Model {
                             .get_mut(target_macro_index as usize)
                         {
                             Some(m) => match m {
-                                crate::project::FixtureMacro::Control(control_macro) => {
+                                FixtureMacro::Control(control_macro) => {
                                     let value = value * 2;
                                     debug!("Adjust {} to {}", &control_macro.label, value);
                                     control_macro.current_value = value;
                                 }
-                                crate::project::FixtureMacro::Colour(colour_macro) => {
+                                FixtureMacro::Colour(colour_macro) => {
                                     let value = value * 2;
 
                                     let [r, g, b, a] = colour_macro.current_value.to_array();
@@ -247,16 +247,16 @@ impl Model {
                         .macros
                         .iter_mut()
                         .find(|m| match m {
-                            crate::project::FixtureMacro::Control(m) => {
+                            FixtureMacro::Control(m) => {
                                 m.label.eq_ignore_ascii_case(&msg.macro_label)
                             }
-                            crate::project::FixtureMacro::Colour(m) => {
+                            FixtureMacro::Colour(m) => {
                                 m.label.eq_ignore_ascii_case(&msg.macro_label)
                             }
                         })
                 {
                     match target_macro {
-                        crate::project::FixtureMacro::Control(control_macro) => {
+                        FixtureMacro::Control(control_macro) => {
                             match msg.value {
                                 RemoteMacroValue::ControlValue(target_value) => {
                                     if let Some(ms) = msg.ms {
@@ -291,7 +291,7 @@ impl Model {
                                 }
                             }
                         }
-                        crate::project::FixtureMacro::Colour(colour_macro) => match msg.value {
+                        FixtureMacro::Colour(colour_macro) => match msg.value {
                             RemoteMacroValue::ControlValue(_) => {
                                 error!("Remote Animation Message targets Colour Macro, but provices Control Value instead");
                             }
@@ -375,14 +375,12 @@ impl Model {
                             );
                             for m in fixture.config.active_mode.macros.iter_mut() {
                                 match m {
-                                    crate::project::FixtureMacro::Control(
-                                        control_macro_in_fixture,
-                                    ) => {
+                                    FixtureMacro::Control(control_macro_in_fixture) => {
                                         if let Some(macro_in_scene) = fixture_state_in_scene
                                             .get(&control_macro_in_fixture.label)
                                         {
                                             match macro_in_scene {
-                                                crate::project::SceneValue::ControlValue(
+                                                SceneValue::ControlValue(
                                                     control_macro_in_scene,
                                                 ) => {
                                                     debug!(
@@ -409,25 +407,21 @@ impl Model {
                                                             *control_macro_in_scene;
                                                     }
                                                 }
-                                                crate::project::SceneValue::ColourValue(_) => {
+                                                SceneValue::ColourValue(_) => {
                                                     debug!("This is Colour Macro for fixture; Control Macro from scene will not apply");
                                                 }
                                             }
                                         }
                                     }
-                                    crate::project::FixtureMacro::Colour(
-                                        colour_macro_in_fixture,
-                                    ) => {
+                                    FixtureMacro::Colour(colour_macro_in_fixture) => {
                                         if let Some(macro_in_scene) = fixture_state_in_scene
                                             .get(&colour_macro_in_fixture.label)
                                         {
                                             match macro_in_scene {
-                                                crate::project::SceneValue::ControlValue(_) => {
+                                                SceneValue::ControlValue(_) => {
                                                     debug!("This is Control Macro for fixture; Colour Macro from scene will not apply");
                                                 }
-                                                crate::project::SceneValue::ColourValue(
-                                                    colour_macro_in_scene,
-                                                ) => {
+                                                SceneValue::ColourValue(colour_macro_in_scene) => {
                                                     debug!(
                                                         "With fixture {}, Scene sets colour macro {} to {:?}",
                                                         &fixture.label,

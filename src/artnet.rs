@@ -7,7 +7,7 @@ use artnet_protocol::{ArtCommand, Output};
 use rand::Rng;
 
 use crate::{
-    project::{CMYChannels, FixtureInstance, RGBWChannels},
+    project::fixture::{CMYChannels, ChannelList, FixtureInstance, FixtureMacro, RGBWChannels},
     settings::CHANNELS_PER_UNIVERSE,
 };
 
@@ -85,15 +85,15 @@ impl ArtNetInterface {
             for f in fixtures {
                 for m in &f.config.active_mode.macros {
                     match m {
-                        crate::project::FixtureMacro::Control(control_macro) => {
+                        FixtureMacro::Control(control_macro) => {
                             for c in &control_macro.channels {
                                 self.channels[(*c - 1 + f.offset_channels) as usize] =
                                     control_macro.current_value;
                             }
                         }
-                        crate::project::FixtureMacro::Colour(colour_macro) => {
+                        FixtureMacro::Colour(colour_macro) => {
                             match &colour_macro.channels {
-                                crate::project::ChannelList::Additive(rgba) => {
+                                ChannelList::Additive(rgba) => {
                                     let RGBWChannels {
                                         red,
                                         green,
@@ -125,7 +125,7 @@ impl ArtNetInterface {
                                             white_inverse;
                                     }
                                 }
-                                crate::project::ChannelList::Subtractive(cmy) => {
+                                ChannelList::Subtractive(cmy) => {
                                     let CMYChannels {
                                         cyan,
                                         magenta,

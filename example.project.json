@@ -2,25 +2,25 @@
   "fixtures": [
     {
       "label": "Hex East",
-      "path": "./fixtures/ADJ_Vizi_Hex_Wash7.json",
+      "configName": "ADJ Vizi Hex Wash 7",
       "offsetChannels": 0,
       "modeIndex": 0
     },
     {
       "label": "Hex West",
-      "path": "./fixtures/ADJ_Vizi_Hex_Wash7.json",
+      "configName": "ADJ Vizi Hex Wash 7",
       "offsetChannels": 43,
       "modeIndex": 0
     },
     {
       "label": "Hero North",
-      "path": "./fixtures/Varytec_HERO_340FX.json",
+      "configName": "Varytec HERO 340FX",
       "offsetChannels": 70,
       "modeIndex": 0
     },
     {
       "label": "Hero South",
-      "path": "./fixtures/Varytec_HERO_340FX.json",
+      "configName": "Varytec HERO 340FX",
       "offsetChannels": 27,
       "modeIndex": 0
     }

@@ -6,8 +6,10 @@ use crate::animation::Animation;
 #[derive(Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct FixtureInstance {
+    /// The label (should be unique per project) of this fixture instance
     pub label: String,
-    pub path: String,
+    /// The exact match for the fixture name as it appears in the fixture config JSON
+    pub config_name: String,
     pub offset_channels: u16,
     #[serde(default)]
     pub mode_index: usize,

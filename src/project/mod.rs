@@ -78,19 +78,28 @@ impl Project {
                     project.fixtures.len()
                 );
 
-                for fixture in project.fixtures.iter_mut() {
-                    match fs::read_to_string(&fixture.path) {
-                        Ok(d) => {
-                            info!("Loaded fixture data from {}; parsing...", &fixture.path);
-                            let parsed = serde_json::from_str::<FixtureConfig>(&d)?;
-                            info!("... Parsed fixture OK");
-                            fixture.config = parsed;
-                            fixture.config.active_mode =
-                                fixture.config.modes[fixture.mode_index].clone();
-                        }
-                        Err(e) => {
-                            error!("Failed to load fixture: {}", e);
-                        }
+                let all_fixtures_json = include_str!("../all_fixtures.json");
+                let all_fixtures = serde_json::from_str::<Vec<FixtureConfig>>(all_fixtures_json)
+                    .expect("failed to parse all_fixtures JSON");
+
+                debug!(
+                    "Loaded {} fixtures from all_fixtures JSON",
+                    all_fixtures.len(),
+                );
+
+                for fixture_ref in project.fixtures.iter_mut() {
+                    if let Some(fixture_config) = all_fixtures
+                        .iter()
+                        .find(|x| x.name.eq_ignore_ascii_case(&fixture_ref.config_name))
+                    {
+                        fixture_ref.config = fixture_config.clone();
+                        fixture_ref.config.active_mode =
+                            fixture_ref.config.modes[fixture_ref.mode_index].clone();
+                    } else {
+                        error!(
+                            "Failed to match config name \"{}\" with any known fixtures",
+                            &fixture_ref.config_name
+                        );
                     }
                 }
 

@@ -30,6 +30,12 @@
       "label": "white down",
       "state": {
         "Hex East": {
+          "tilt": {
+            "ControlValue": 128
+          },
+          "pan": {
+            "ControlValue": 165
+          },
           "colour": {
             "ColourValue": [
               0,
@@ -40,53 +46,31 @@
           },
           "zoom": {
             "ControlValue": 0
-          },
-          "tilt": {
-            "ControlValue": 135
-          },
-          "pan": {
-            "ControlValue": 165
           }
         },
         "Hex West": {
+          "colour": {
+            "ColourValue": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "pan": {
+            "ControlValue": 77
+          },
           "tilt": {
             "ControlValue": 120
           },
           "zoom": {
             "ControlValue": 0
-          },
-          "pan": {
-            "ControlValue": 77
-          },
-          "colour": {
-            "ColourValue": [
-              0,
-              0,
-              0,
-              0
-            ]
-          }
-        },
-        "Hero North": {
-          "zoom": {
-            "ControlValue": 0
-          },
-          "pan": {
-            "ControlValue": 193
-          },
-          "tilt": {
-            "ControlValue": 150
-          },
-          "colour": {
-            "ColourValue": [
-              0,
-              0,
-              0,
-              0
-            ]
           }
         },
         "Hero South": {
+          "pan": {
+            "ControlValue": 205
+          },
           "tilt": {
             "ControlValue": 127
           },
@@ -100,9 +84,25 @@
           },
           "zoom": {
             "ControlValue": 0
-          },
+          }
+        },
+        "Hero North": {
           "pan": {
-            "ControlValue": 205
+            "ControlValue": 193
+          },
+          "tilt": {
+            "ControlValue": 150
+          },
+          "zoom": {
+            "ControlValue": 0
+          },
+          "colour": {
+            "ColourValue": [
+              0,
+              0,
+              0,
+              0
+            ]
           }
         }
       }
@@ -110,26 +110,10 @@
     {
       "label": "rgbw plus yellow",
       "state": {
-        "Hex East": {
-          "colour": {
-            "ColourValue": [
-              255,
-              0,
-              0,
-              255
-            ]
-          },
-          "zoom": {
-            "ControlValue": 255
-          },
+        "Hero North": {
           "pan": {
             "ControlValue": 0
           },
-          "tilt": {
-            "ControlValue": 150
-          }
-        },
-        "Hero North": {
           "colour": {
             "ColourValue": [
               37,
@@ -138,30 +122,8 @@
               255
             ]
           },
-          "pan": {
-            "ControlValue": 0
-          },
-          "zoom": {
-            "ControlValue": 255
-          },
           "tilt": {
             "ControlValue": 127
-          }
-        },
-        "Hero South": {
-          "colour": {
-            "ColourValue": [
-              237,
-              255,
-              0,
-              255
-            ]
-          },
-          "tilt": {
-            "ControlValue": 140
-          },
-          "pan": {
-            "ControlValue": 0
           },
           "zoom": {
             "ControlValue": 255
@@ -182,6 +144,44 @@
               0,
               255,
               87,
+              255
+            ]
+          }
+        },
+        "Hero South": {
+          "colour": {
+            "ColourValue": [
+              237,
+              255,
+              0,
+              255
+            ]
+          },
+          "zoom": {
+            "ControlValue": 255
+          },
+          "pan": {
+            "ControlValue": 0
+          },
+          "tilt": {
+            "ControlValue": 140
+          }
+        },
+        "Hex East": {
+          "pan": {
+            "ControlValue": 0
+          },
+          "tilt": {
+            "ControlValue": 150
+          },
+          "zoom": {
+            "ControlValue": 255
+          },
+          "colour": {
+            "ColourValue": [
+              255,
+              0,
+              0,
               255
             ]
           }

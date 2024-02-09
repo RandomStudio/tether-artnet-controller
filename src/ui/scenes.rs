@@ -127,7 +127,7 @@ pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
                     ui.horizontal(|ui| {
                         if ui.button("✏").clicked() {
                             scene.is_editing = true;
-                            go_scene = Some(scene_index);
+                            // go_scene = Some(scene_index);
                         }
                         if ui.button("🗑").clicked() {
                             delete_scene = Some(scene_index);

@@ -26,6 +26,7 @@ pub struct Model {
     pub settings: Cli,
     pub artnet: ArtNetInterface,
     pub project: Project,
+    pub current_project_path: Option<String>,
     /// Whether macros should currently be applied
     pub apply_macros: bool,
     /// Determines which macros are adjusted via MIDI
@@ -45,8 +46,13 @@ impl Model {
         settings: Cli,
         artnet: ArtNetInterface,
     ) -> Model {
+        let mut current_project_path = None;
+
         let project = match Project::load(&settings.project_path) {
-            Ok(p) => p,
+            Ok(p) => {
+                current_project_path = Some(String::from(&settings.project_path));
+                p
+            }
             Err(e) => {
                 error!(
                     "Failed to load project from path \"{}\"; {:?}",
@@ -75,6 +81,7 @@ impl Model {
             settings,
             artnet,
             project,
+            current_project_path,
             selected_macro_group_index: 0,
             apply_macros: false,
             view_mode: ViewMode::Simple,

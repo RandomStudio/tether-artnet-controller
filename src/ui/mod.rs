@@ -15,6 +15,8 @@ mod scenes;
 pub const SIMPLE_WIN_SIZE: Vec2 = Vec2::new(400., 1024.0);
 pub const ADVANCED_WIN_SIZE: Vec2 = Vec2::new(1280., 900.);
 
+// const WINDOW_RESET_POSITION: [f32; 2] = [32.0, 32.0];
+
 #[derive(PartialEq)]
 pub enum ViewMode {
     Simple,
@@ -76,14 +78,14 @@ pub fn render_mode_switcher(model: &mut Model, ctx: &egui::Context, frame: &mut 
                     .clicked()
                 {
                     frame.set_window_size(ADVANCED_WIN_SIZE);
-                    frame.set_window_pos([0., 0.].into())
+                    // frame.set_window_pos(WINDOW_RESET_POSITION.into())
                 }
                 if ui
                     .selectable_value(&mut model.view_mode, ViewMode::Scenes, "Scenes")
                     .clicked()
                 {
                     frame.set_window_size(ADVANCED_WIN_SIZE);
-                    frame.set_window_pos([0., 0.].into())
+                    // frame.set_window_pos(WINDOW_RESET_POSITION.into())
                 }
                 ui.label("|");
                 if ui.button("New").clicked() {

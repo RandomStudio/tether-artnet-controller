@@ -2,25 +2,25 @@
   "fixtures": [
     {
       "label": "Wash Front",
-      "path": "./fixtures/GLP_Impression_X5.json",
+      "configName": "GLP Impression X5",
       "offsetChannels": 0,
       "modeIndex": 0
     },
     {
       "label": "Wash Back",
-      "path": "./fixtures/GLP_Impression_X5.json",
+      "configName": "GLP Impression X5",
       "offsetChannels": 24,
       "modeIndex": 0
     },
     {
       "label": "Spot Left",
-      "path": "./fixtures/Cameo_Opus_S5.json",
+      "configName": "Cameo Opus S5",
       "offsetChannels": 48,
       "modeIndex": 0
     },
     {
       "label": "Spot Right",
-      "path": "./fixtures/Cameo_Opus_S5.json",
+      "configName": "Cameo Opus S5",
       "offsetChannels": 77,
       "modeIndex": 0
     }
@@ -31,12 +31,7 @@
       "state": {
         "Wash Back": {
           "colour": {
-            "ColourValue": [
-              70,
-              59,
-              160,
-              255
-            ]
+            "ColourValue": [70, 59, 160, 255]
           },
           "pan": {
             "ControlValue": 150
@@ -62,12 +57,7 @@
             "ControlValue": 255
           },
           "colour": {
-            "ColourValue": [
-              202,
-              193,
-              238,
-              255
-            ]
+            "ColourValue": [202, 193, 238, 255]
           },
           "focus": {
             "ControlValue": 0
@@ -90,12 +80,7 @@
             "ControlValue": 255
           },
           "colour": {
-            "ColourValue": [
-              94,
-              121,
-              199,
-              255
-            ]
+            "ColourValue": [94, 121, 199, 255]
           }
         },
         "Spot Right": {
@@ -109,12 +94,7 @@
             "ControlValue": 0
           },
           "colour": {
-            "ColourValue": [
-              189,
-              187,
-              232,
-              255
-            ]
+            "ColourValue": [189, 187, 232, 255]
           },
           "brightness": {
             "ControlValue": 255
@@ -142,12 +122,7 @@
             "ControlValue": 103
           },
           "colour": {
-            "ColourValue": [
-              206,
-              205,
-              228,
-              255
-            ]
+            "ColourValue": [206, 205, 228, 255]
           },
           "focus": {
             "ControlValue": 255
@@ -167,12 +142,7 @@
             "ControlValue": 175
           },
           "colour": {
-            "ColourValue": [
-              49,
-              97,
-              233,
-              255
-            ]
+            "ColourValue": [49, 97, 233, 255]
           }
         },
         "Spot Left": {
@@ -183,12 +153,7 @@
             "ControlValue": 255
           },
           "colour": {
-            "ColourValue": [
-              196,
-              197,
-              214,
-              255
-            ]
+            "ColourValue": [196, 197, 214, 255]
           },
           "pan": {
             "ControlValue": 140
@@ -211,12 +176,7 @@
             "ControlValue": 255
           },
           "colour": {
-            "ColourValue": [
-              60,
-              19,
-              216,
-              255
-            ]
+            "ColourValue": [60, 19, 216, 255]
           },
           "pan": {
             "ControlValue": 150
@@ -238,12 +198,7 @@
             "ControlValue": 0
           },
           "colour": {
-            "ColourValue": [
-              94,
-              121,
-              199,
-              255
-            ]
+            "ColourValue": [94, 121, 199, 255]
           },
           "tilt": {
             "ControlValue": 128
@@ -257,12 +212,7 @@
             "ControlValue": 0
           },
           "colour": {
-            "ColourValue": [
-              189,
-              187,
-              232,
-              255
-            ]
+            "ColourValue": [189, 187, 232, 255]
           },
           "zoom": {
             "ControlValue": 0
@@ -279,12 +229,7 @@
             "ControlValue": 170
           },
           "colour": {
-            "ColourValue": [
-              70,
-              59,
-              160,
-              255
-            ]
+            "ColourValue": [70, 59, 160, 255]
           },
           "pan": {
             "ControlValue": 128
@@ -313,12 +258,7 @@
             "ControlValue": 0
           },
           "colour": {
-            "ColourValue": [
-              202,
-              193,
-              238,
-              255
-            ]
+            "ColourValue": [202, 193, 238, 255]
           }
         }
       }

@@ -1,4 +1,4 @@
-use std::{net::SocketAddr, sync::mpsc};
+use std::{net::SocketAddr, sync::mpsc, time::Duration};
 
 use env_logger::Env;
 use log::{debug, info};
@@ -58,6 +58,7 @@ fn main() {
 
     if cli.headless_mode {
         info!("Running in headless mode; Ctrl+C to quit");
+        std::thread::sleep(Duration::from_secs(2));
         loop {
             model.update();
         }

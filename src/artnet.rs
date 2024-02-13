@@ -4,6 +4,7 @@ use std::{
 };
 
 use artnet_protocol::{ArtCommand, Output};
+use log::debug;
 use rand::Rng;
 
 use crate::{
@@ -49,6 +50,10 @@ impl ArtNetInterface {
                 }
             }
             ArtNetMode::Unicast(src, destination) => {
+                debug!(
+                    "Will connect from interface {} to destination {}",
+                    &src, &destination
+                );
                 let socket = UdpSocket::bind(src).unwrap();
 
                 socket.set_broadcast(false).unwrap();

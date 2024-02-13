@@ -60,6 +60,7 @@ fn main() {
         info!("Running in headless mode; Ctrl+C to quit");
         std::thread::sleep(Duration::from_secs(2));
         loop {
+            std::thread::sleep(Duration::from_millis(1));
             model.update();
         }
     } else {

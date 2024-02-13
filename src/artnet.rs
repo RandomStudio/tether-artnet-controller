@@ -41,6 +41,7 @@ impl ArtNetInterface {
                     .next()
                     .unwrap();
                 socket.set_broadcast(true).unwrap();
+                debug!("Broadcast mode set up OK");
                 ArtNetInterface {
                     socket,
                     destination: broadcast_addr,

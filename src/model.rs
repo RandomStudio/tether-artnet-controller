@@ -133,7 +133,9 @@ impl Model {
             std::thread::sleep(Duration::from_secs(1));
         } else {
             if !work_done {
-                // std::thread::sleep(Duration::from_millis(self.settings.artnet_update_frequency));
+                // std::thread::sleep(Duration::from_secs_f32(
+                //     1.0 / self.settings.artnet_update_frequency as f32,
+                // ));
                 std::thread::sleep(Duration::from_millis(1));
             }
         }

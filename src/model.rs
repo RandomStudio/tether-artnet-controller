@@ -4,7 +4,7 @@ use std::{
 };
 
 use egui::Color32;
-use log::{debug, error, info};
+use log::{debug, error, info, trace};
 use tween::SineInOut;
 
 use crate::{
@@ -40,7 +40,8 @@ impl eframe::App for Model {
     }
 
     fn on_exit(&mut self, _gl: Option<&eframe::glow::Context>) {
-        println!("On exit!");
+        debug!("eframe On exit");
+        self.reset_before_quit();
     }
 }
 
@@ -125,6 +126,7 @@ impl Model {
                 &self.project.fixtures,
                 self.apply_macros,
             ) {
+                trace!("Artnet did update");
                 work_done = true;
                 if self.apply_macros {
                     self.animate_macros();
@@ -479,6 +481,9 @@ impl Model {
     }
 
     pub fn apply_home_values(&mut self) {
+        debug!("Apply home values");
+        debug!("Before: {:?}", self.channels_state);
+
         self.channels_state = [0].repeat(CHANNELS_PER_UNIVERSE as usize); // init zeroes
 
         let fixtures_clone = self.project.fixtures.clone();
@@ -491,6 +496,16 @@ impl Model {
                 }
             }
         }
+        debug!("After: {:?}", self.channels_state);
+    }
+
+    pub fn reset_before_quit(&mut self) {
+        info!("Reset before quit...");
+        self.apply_macros = false;
+        self.apply_home_values();
+        self.update();
+        std::thread::sleep(Duration::from_millis(100));
+        info!("...reset before quit done");
     }
 }
 

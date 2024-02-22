@@ -4,7 +4,7 @@ use std::{
 };
 
 use artnet_protocol::{ArtCommand, Output};
-use log::debug;
+use log::{debug, trace};
 use rand::Rng;
 
 use crate::{
@@ -169,6 +169,7 @@ impl ArtNetInterface {
             }
         }
 
+        trace!("Channel state {:?}", self.channels);
         let command = ArtCommand::Output(Output {
             port_address: 0.into(),
             data: self.channels.clone().into(), // make temp copy of self channel state (?)

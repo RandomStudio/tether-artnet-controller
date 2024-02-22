@@ -66,7 +66,8 @@ fn main() {
     } else {
         info!("Running graphics mode; close the window to quit");
         let options = eframe::NativeOptions {
-            initial_window_size: Some(SIMPLE_WIN_SIZE),
+            viewport: egui::ViewportBuilder::default().with_inner_size(SIMPLE_WIN_SIZE),
+            run_and_return: true,
             ..Default::default()
         };
         eframe::run_native(
@@ -75,8 +76,9 @@ fn main() {
             Box::new(|_cc| Box::<Model>::new(model)),
         )
         .expect("Failed to launch GUI");
+        std::thread::sleep(Duration::from_secs(5));
+        println!("Boo!");
         info!("GUI ended; exit now...");
-        // TODO: need to tell each thread to stop (if it's looping)
         // for h in handles {
         //     match h.join() {
         //         Ok(()) => {
@@ -87,6 +89,6 @@ fn main() {
         //         }
         //     }
         // }
-        std::process::exit(0);
+        // std::process::exit(0);
     }
 }

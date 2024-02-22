@@ -4,7 +4,7 @@ version = "0.3.1"
 edition = "2021"
 repository = "https://github.com/RandomStudio/tether-artnet-controller"
 authors = ["Stephen Buchanan"]
-description= "A remote control software lighting desk"
+description = "A remote control software lighting desk"
 license = "MIT"
 
 [package.metadata.wix]
@@ -26,10 +26,10 @@ log = "0.4.18"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0.91"
 rmp-serde = "1.1.1"
-eframe = "0.22.0"
-egui = { version = "0.22.0", features = ["persistence"] }
+egui = { version = "0.26.2", features = ["persistence"] }
 anyhow = "1.0.75"
 rfd = "0.12.1"
+eframe = "0.26.2"
 
 # The profile that 'cargo dist' will build with
 [profile.dist]
@@ -45,11 +45,15 @@ ci = ["github"]
 # The installers to generate for each app
 installers = ["shell", "msi"]
 # Target platforms to build apps for (Rust target-triple syntax)
-targets = ["aarch64-apple-darwin", "x86_64-apple-darwin", "x86_64-unknown-linux-gnu", "x86_64-pc-windows-msvc"]
+targets = [
+    "aarch64-apple-darwin",
+    "x86_64-apple-darwin",
+    "x86_64-unknown-linux-gnu",
+    "x86_64-pc-windows-msvc",
+]
 # Publish jobs to run in CI
 pr-run-mode = "plan"
 
 [workspace.metadata.dist.dependencies.apt]
 librust-atk-dev = "*"
 libgtk-3-dev = "*"
-

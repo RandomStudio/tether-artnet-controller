@@ -24,7 +24,7 @@ pub enum ViewMode {
     Scenes,
 }
 
-pub fn render_gui(model: &mut Model, ctx: &egui::Context, frame: &mut eframe::Frame) {
+pub fn render_gui(model: &mut Model, ctx: &eframe::egui::Context, frame: &mut eframe::Frame) {
     ctx.request_repaint();
 
     render_mode_switcher(model, ctx, frame);
@@ -61,7 +61,11 @@ pub fn render_gui(model: &mut Model, ctx: &egui::Context, frame: &mut eframe::Fr
     model.update();
 }
 
-pub fn render_mode_switcher(model: &mut Model, ctx: &egui::Context, frame: &mut eframe::Frame) {
+pub fn render_mode_switcher(
+    model: &mut Model,
+    ctx: &eframe::egui::Context,
+    _frame: &mut eframe::Frame,
+) {
     egui::TopBottomPanel::top("Tabs")
         .min_height(32.)
         .show(ctx, |ui| {
@@ -71,20 +75,21 @@ pub fn render_mode_switcher(model: &mut Model, ctx: &egui::Context, frame: &mut 
                     .selectable_value(&mut model.view_mode, ViewMode::Simple, "Simple")
                     .clicked()
                 {
-                    frame.set_window_size(SIMPLE_WIN_SIZE);
+                    ctx.send_viewport_cmd(egui::ViewportCommand::InnerSize(SIMPLE_WIN_SIZE));
+                    // frame.set_window_size(SIMPLE_WIN_SIZE);
                 };
                 if ui
                     .selectable_value(&mut model.view_mode, ViewMode::Advanced, "Advanced")
                     .clicked()
                 {
-                    frame.set_window_size(ADVANCED_WIN_SIZE);
+                    ctx.send_viewport_cmd(egui::ViewportCommand::InnerSize(ADVANCED_WIN_SIZE));
                     // frame.set_window_pos(WINDOW_RESET_POSITION.into())
                 }
                 if ui
                     .selectable_value(&mut model.view_mode, ViewMode::Scenes, "Scenes")
                     .clicked()
                 {
-                    frame.set_window_size(ADVANCED_WIN_SIZE);
+                    ctx.send_viewport_cmd(egui::ViewportCommand::InnerSize(ADVANCED_WIN_SIZE));
                     // frame.set_window_pos(WINDOW_RESET_POSITION.into())
                 }
                 ui.label("|");

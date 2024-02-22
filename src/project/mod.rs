@@ -74,7 +74,7 @@ impl Project {
                 let mut project =
                     serde_json::from_str::<Project>(&d).expect("failed to parse project file");
                 info!(
-                    "... loaded project with {} fictures OK",
+                    "... loaded project with {} fixtures OK",
                     project.fixtures.len()
                 );
 

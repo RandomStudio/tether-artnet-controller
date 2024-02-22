@@ -35,8 +35,12 @@ pub struct Model {
 }
 
 impl eframe::App for Model {
-    fn update(&mut self, ctx: &egui::Context, frame: &mut eframe::Frame) {
+    fn update(&mut self, ctx: &eframe::egui::Context, frame: &mut eframe::Frame) {
         render_gui(self, ctx, frame);
+    }
+
+    fn on_exit(&mut self, _gl: Option<&eframe::glow::Context>) {
+        println!("On exit!");
     }
 }
 

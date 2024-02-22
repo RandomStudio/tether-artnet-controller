@@ -738,7 +738,7 @@
           ]
         }
       ],
-      "macros": [ 
+      "macros": [
         {
           "control": {
             "label": "brightness",
@@ -774,6 +774,12 @@
           "control": {
             "label": "zoom",
             "channels": [8]
+          }
+        },
+        {
+          "control": {
+            "label": "shutter",
+            "channels": [7]
           }
         }
       ]

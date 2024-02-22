@@ -30,6 +30,7 @@ egui = { version = "0.26.2", features = ["persistence"] }
 anyhow = "1.0.75"
 rfd = "0.12.1"
 eframe = "0.26.2"
+ctrlc = "3.4.2"
 
 # The profile that 'cargo dist' will build with
 [profile.dist]

@@ -29,66 +29,9 @@
     {
       "label": "white down",
       "state": {
-        "Hex East": {
-          "tilt": {
-            "ControlValue": 128
-          },
-          "pan": {
-            "ControlValue": 165
-          },
-          "colour": {
-            "ColourValue": [
-              0,
-              0,
-              0,
-              0
-            ]
-          },
-          "zoom": {
-            "ControlValue": 0
-          }
-        },
-        "Hex West": {
-          "colour": {
-            "ColourValue": [
-              0,
-              0,
-              0,
-              0
-            ]
-          },
-          "pan": {
-            "ControlValue": 77
-          },
-          "tilt": {
-            "ControlValue": 120
-          },
-          "zoom": {
-            "ControlValue": 0
-          }
-        },
-        "Hero South": {
-          "pan": {
-            "ControlValue": 205
-          },
-          "tilt": {
-            "ControlValue": 127
-          },
-          "colour": {
-            "ColourValue": [
-              0,
-              0,
-              0,
-              0
-            ]
-          },
-          "zoom": {
-            "ControlValue": 0
-          }
-        },
         "Hero North": {
-          "pan": {
-            "ControlValue": 193
+          "brightness": {
+            "ControlValue": 255
           },
           "tilt": {
             "ControlValue": 150
@@ -103,6 +46,75 @@
               0,
               0
             ]
+          },
+          "pan": {
+            "ControlValue": 193
+          }
+        },
+        "Hex West": {
+          "pan": {
+            "ControlValue": 77
+          },
+          "colour": {
+            "ColourValue": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "brightness": {
+            "ControlValue": 255
+          },
+          "tilt": {
+            "ControlValue": 120
+          },
+          "zoom": {
+            "ControlValue": 0
+          }
+        },
+        "Hero South": {
+          "pan": {
+            "ControlValue": 205
+          },
+          "brightness": {
+            "ControlValue": 255
+          },
+          "tilt": {
+            "ControlValue": 127
+          },
+          "zoom": {
+            "ControlValue": 0
+          },
+          "colour": {
+            "ColourValue": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        "Hex East": {
+          "zoom": {
+            "ControlValue": 0
+          },
+          "colour": {
+            "ColourValue": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "pan": {
+            "ControlValue": 165
+          },
+          "brightness": {
+            "ControlValue": 255
+          },
+          "tilt": {
+            "ControlValue": 128
           }
         }
       }
@@ -111,9 +123,6 @@
       "label": "rgbw plus yellow",
       "state": {
         "Hero North": {
-          "pan": {
-            "ControlValue": 0
-          },
           "colour": {
             "ColourValue": [
               37,
@@ -127,25 +136,9 @@
           },
           "zoom": {
             "ControlValue": 255
-          }
-        },
-        "Hex West": {
-          "tilt": {
-            "ControlValue": 130
           },
           "pan": {
             "ControlValue": 0
-          },
-          "zoom": {
-            "ControlValue": 255
-          },
-          "colour": {
-            "ColourValue": [
-              0,
-              255,
-              87,
-              255
-            ]
           }
         },
         "Hero South": {
@@ -157,25 +150,44 @@
               255
             ]
           },
-          "zoom": {
-            "ControlValue": 255
-          },
           "pan": {
             "ControlValue": 0
+          },
+          "zoom": {
+            "ControlValue": 255
           },
           "tilt": {
             "ControlValue": 140
           }
         },
-        "Hex East": {
+        "Hex West": {
+          "zoom": {
+            "ControlValue": 255
+          },
+          "tilt": {
+            "ControlValue": 130
+          },
+          "colour": {
+            "ColourValue": [
+              0,
+              255,
+              87,
+              255
+            ]
+          },
           "pan": {
             "ControlValue": 0
-          },
+          }
+        },
+        "Hex East": {
           "tilt": {
             "ControlValue": 150
           },
           "zoom": {
             "ControlValue": 255
+          },
+          "pan": {
+            "ControlValue": 0
           },
           "colour": {
             "ColourValue": [

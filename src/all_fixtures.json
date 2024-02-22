@@ -920,7 +920,7 @@
         {
           "channel": 19,
           "label": "MASTER DIMMER",
-          "home": 255
+          "home": 0
         },
         {
           "channel": 20,
@@ -1131,6 +1131,12 @@
         },
         {
           "control": {
+            "label": "brightness",
+            "channels": [19]
+          }
+        },
+        {
+          "control": {
             "label": "pan",
             "channels": [1]
           }
@@ -1186,7 +1192,7 @@
           "channel": 6,
           "label": "Dimmer intensity",
           "notes": "from dark (0) to bright (255)",
-          "home": 255
+          "home": 0
         },
         {
           "channel": 7,
@@ -1319,6 +1325,12 @@
         }
       ],
       "macros": [
+        {
+          "control": {
+            "label": "brightness",
+            "channels": [6]
+          }
+        },
         {
           "colour": {
             "label": "colour",

@@ -132,7 +132,7 @@
         {
           "channel": 19,
           "label": "MASTER DIMMER",
-          "home": 255
+          "home": 0
         },
         {
           "channel": 20,
@@ -339,6 +339,12 @@
                 "white": [8, 14]
               }
             }
+          }
+        },
+        {
+          "control": {
+            "label": "brightness",
+            "channels": [19]
           }
         },
         {

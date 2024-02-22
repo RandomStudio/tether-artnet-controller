@@ -1,7 +1,7 @@
 use std::{net::SocketAddr, sync::mpsc, time::Duration};
 
 use env_logger::Env;
-use log::{debug, info};
+use log::{debug, error, info};
 
 use clap::Parser;
 
@@ -36,7 +36,8 @@ fn main() {
     let mut handles = Vec::new();
 
     let (tether_tx, tether_rx) = mpsc::channel();
-    let tether_handle = start_tether_thread(tether_tx);
+    let (quit_tx, quit_rx) = mpsc::channel();
+    let tether_handle = start_tether_thread(tether_tx, quit_rx);
 
     handles.push(tether_handle);
 
@@ -76,19 +77,22 @@ fn main() {
             Box::new(|_cc| Box::<Model>::new(model)),
         )
         .expect("Failed to launch GUI");
-        std::thread::sleep(Duration::from_secs(5));
-        println!("Boo!");
-        info!("GUI ended; exit now...");
-        // for h in handles {
-        //     match h.join() {
-        //         Ok(()) => {
-        //             debug!("Thread join OK");
-        //         }
-        //         Err(e) => {
-        //             error!("Thread joined with error, {:?}", e);
-        //         }
-        //     }
-        // }
-        // std::process::exit(0);
+        info!("GUI ended; exit soon...");
+        quit_tx
+            .send(())
+            .expect("failed to send quit message through channel");
+        for h in handles {
+            match h.join() {
+                Ok(()) => {
+                    debug!("Thread join OK");
+                }
+                Err(e) => {
+                    error!("Thread joined with error, {:?}", e);
+                }
+            }
+        }
+        std::thread::sleep(Duration::from_secs(1));
+        info!("...Exit now");
+        std::process::exit(0);
     }
 }

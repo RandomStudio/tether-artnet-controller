@@ -76,21 +76,18 @@ pub fn render_mode_switcher(
                     .clicked()
                 {
                     ctx.send_viewport_cmd(egui::ViewportCommand::InnerSize(SIMPLE_WIN_SIZE));
-                    // frame.set_window_size(SIMPLE_WIN_SIZE);
                 };
                 if ui
                     .selectable_value(&mut model.view_mode, ViewMode::Advanced, "Advanced")
                     .clicked()
                 {
                     ctx.send_viewport_cmd(egui::ViewportCommand::InnerSize(ADVANCED_WIN_SIZE));
-                    // frame.set_window_pos(WINDOW_RESET_POSITION.into())
                 }
                 if ui
                     .selectable_value(&mut model.view_mode, ViewMode::Scenes, "Scenes")
                     .clicked()
                 {
                     ctx.send_viewport_cmd(egui::ViewportCommand::InnerSize(ADVANCED_WIN_SIZE));
-                    // frame.set_window_pos(WINDOW_RESET_POSITION.into())
                 }
                 ui.label("|");
                 if ui.button("New").clicked() {

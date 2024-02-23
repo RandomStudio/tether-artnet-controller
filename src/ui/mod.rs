@@ -27,6 +27,15 @@ pub enum ViewMode {
 pub fn render_gui(model: &mut Model, ctx: &eframe::egui::Context, frame: &mut eframe::Frame) {
     ctx.request_repaint();
 
+    if ctx.input(|i| i.viewport().close_requested()) {
+        if model.allowed_to_close {
+            // do nothing - we will close
+        } else {
+            ctx.send_viewport_cmd(egui::ViewportCommand::CancelClose);
+            model.show_confirm_exit = true;
+        }
+    }
+
     render_mode_switcher(model, ctx, frame);
 
     match model.view_mode {
@@ -58,7 +67,27 @@ pub fn render_gui(model: &mut Model, ctx: &eframe::egui::Context, frame: &mut ef
         }
     }
 
-    model.update();
+    if model.show_confirm_exit {
+        egui::Window::new("Do you want to quit?")
+            .collapsible(false)
+            .resizable(false)
+            .show(ctx, |ui| {
+                ui.horizontal(|ui| {
+                    if ui.button("No").clicked() {
+                        model.show_confirm_exit = false;
+                        model.allowed_to_close = false;
+                    }
+
+                    if ui.button("Yes").clicked() {
+                        model.show_confirm_exit = false;
+                        model.allowed_to_close = true;
+                        ui.ctx().send_viewport_cmd(egui::ViewportCommand::Close);
+                    }
+                });
+            });
+    } else {
+        model.update();
+    }
 }
 
 pub fn render_mode_switcher(

@@ -40,6 +40,8 @@ pub struct Model {
     pub view_mode: ViewMode,
     pub exit_mode: BehaviourOnExit,
     pub save_on_exit: bool,
+    pub show_confirm_exit: bool,
+    pub allowed_to_close: bool,
 }
 
 impl eframe::App for Model {
@@ -100,6 +102,8 @@ impl Model {
             view_mode: ViewMode::Simple,
             exit_mode: BehaviourOnExit::Home,
             save_on_exit: true,
+            show_confirm_exit: false,
+            allowed_to_close: false,
         };
 
         model.apply_home_values();

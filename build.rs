@@ -17,11 +17,11 @@ fn main() {
 
     for (index, fixture_path) in entries.iter().enumerate() {
         println!("Fixture file: {:?}", fixture_path);
-        match fs::read_to_string(&fixture_path) {
+        match fs::read_to_string(fixture_path) {
             Ok(d) => {
                 entire_string.push_str(&d);
                 if index < (entries.len() - 1) {
-                    entire_string.push_str(",");
+                    entire_string.push(',');
                 }
             }
             Err(e) => {
@@ -36,5 +36,6 @@ fn main() {
     entire_string.push_str("\n]");
 
     let mut f = File::create("src/all_fixtures.json").expect("failed to create output file");
-    f.write(entire_string.as_bytes()).expect("failed to write");
+    f.write_all(entire_string.as_bytes())
+        .expect("failed to write");
 }

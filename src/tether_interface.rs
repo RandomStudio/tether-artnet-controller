@@ -9,13 +9,6 @@ use log::{debug, info};
 use serde::{Deserialize, Serialize};
 use tether_agent::{PlugOptionsBuilder, TetherAgent, TetherAgentOptionsBuilder};
 
-pub struct TetherInterface {
-    tether_agent: TetherAgent,
-    tx: Sender<RemoteControlMessage>,
-    rx_quit: Receiver<()>,
-    handle: JoinHandle<()>,
-}
-
 #[derive(Serialize, Deserialize, Debug)]
 pub struct TetherNotePayload {
     pub channel: u8,
@@ -69,6 +62,13 @@ pub enum RemoteControlMessage {
     Midi(TetherMidiMessage),
     MacroAnimation(RemoteMacroMessage),
     SceneAnimation(RemoteSceneMessage),
+}
+
+pub struct TetherInterface {
+    tether_agent: TetherAgent,
+    pub tx: Sender<RemoteControlMessage>,
+    rx_quit: Receiver<()>,
+    handle: JoinHandle<()>,
 }
 
 impl TetherInterface {

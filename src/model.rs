@@ -1,5 +1,6 @@
 use std::{
-    sync::mpsc::Receiver,
+    sync::mpsc::{self, Receiver, Sender},
+    thread::JoinHandle,
     time::{Duration, SystemTime},
 };
 
@@ -14,7 +15,7 @@ use crate::{
     settings::{Cli, CHANNELS_PER_UNIVERSE},
     tether_interface::{
         RemoteControlMessage, RemoteMacroMessage, RemoteMacroValue, RemoteSceneMessage,
-        TetherControlChangePayload, TetherMidiMessage, TetherNotePayload,
+        TetherControlChangePayload, TetherInterface, TetherMidiMessage, TetherNotePayload,
     },
     ui::{render_gui, ViewMode},
 };
@@ -27,9 +28,12 @@ pub enum BehaviourOnExit {
 }
 
 pub struct Model {
+    pub handles: Vec<JoinHandle<()>>,
+    pub quit_tether_tx: Sender<()>,
     pub channels_state: Vec<u8>,
     pub channels_assigned: Vec<bool>,
     pub tether_rx: Receiver<RemoteControlMessage>,
+    pub tether_interface: Option<TetherInterface>,
     pub settings: Cli,
     pub artnet: ArtNetInterface,
     pub project: Project,
@@ -57,11 +61,7 @@ impl eframe::App for Model {
 }
 
 impl Model {
-    pub fn new(
-        tether_rx: Receiver<RemoteControlMessage>,
-        settings: Cli,
-        artnet: ArtNetInterface,
-    ) -> Model {
+    pub fn new(settings: Cli, artnet: ArtNetInterface) -> Model {
         let mut current_project_path = None;
 
         let project = match Project::load(&settings.project_path) {
@@ -90,8 +90,14 @@ impl Model {
             }
         }
 
+        let (tether_tx, tether_rx) = mpsc::channel();
+        let (quit_tether_tx, quit_tether_rx) = mpsc::channel();
+
         let mut model = Model {
+            quit_tether_tx,
+            handles: Vec::new(),
             tether_rx,
+            tether_interface: None,
             channels_state: Vec::new(),
             channels_assigned,
             settings,
@@ -543,6 +549,10 @@ impl Model {
         }
         std::thread::sleep(Duration::from_millis(500));
         info!("...reset before quit done");
+    }
+
+    pub fn handles_mut(&mut self) -> &mut [JoinHandle<()>] {
+        &mut self.handles
     }
 }
 

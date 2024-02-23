@@ -84,6 +84,9 @@ pub fn render_gui(model: &mut Model, ctx: &eframe::egui::Context, frame: &mut ef
                         ui.ctx().send_viewport_cmd(egui::ViewportCommand::Close);
                     }
                 });
+                ui.group(|ui| {
+                    ui.checkbox(&mut model.save_on_exit, "Save Project on exit");
+                });
             });
     } else {
         model.update();

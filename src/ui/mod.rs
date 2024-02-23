@@ -150,7 +150,7 @@ pub fn render_mode_switcher(
                 match &model.current_project_path {
                     Some(existing_project_path) => {
                         if ui.button("Save").clicked() {
-                            match Project::save(&existing_project_path, &model.project) {
+                            match Project::save(existing_project_path, &model.project) {
                                 Ok(()) => {
                                     info!("Saved OK!");
                                 }

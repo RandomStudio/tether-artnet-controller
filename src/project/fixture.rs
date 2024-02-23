@@ -60,7 +60,7 @@ impl Clone for ChannelMacro {
         Self {
             label: self.label.clone(),
             channels: self.channels.clone(),
-            current_value: self.current_value.clone(),
+            current_value: self.current_value,
             animation: None, // Just ignore
         }
     }
@@ -108,7 +108,7 @@ impl Clone for ColourMacro {
         Self {
             label: self.label.clone(),
             channels: self.channels.clone(),
-            current_value: self.current_value.clone(),
+            current_value: self.current_value,
             animation: None,
         }
     }

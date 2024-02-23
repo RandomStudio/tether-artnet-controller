@@ -13,8 +13,6 @@ use crate::{
     ui::SIMPLE_WIN_SIZE,
 };
 
-use ctrlc;
-
 mod animation;
 mod artnet;
 mod model;
@@ -72,7 +70,7 @@ fn main() {
         .expect("failed to set Ctrl+C handler");
         std::thread::sleep(Duration::from_secs(2));
         while !should_quit {
-            if let Ok(_) = quit_cli_rx.try_recv() {
+            if quit_cli_rx.try_recv().is_ok() {
                 info!("Headless loop should quit");
                 should_quit = true;
             }

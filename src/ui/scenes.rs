@@ -95,17 +95,17 @@ pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
                                                     FixtureMacro::Control(m) => m.label.eq(macro_label),
                                                     FixtureMacro::Colour(m) => m.label.eq(macro_label),
                                                 }
-                                                    
+
                                             )
                                             {
                                                 match matched_macro {
                                                     FixtureMacro::Control(m) => {
                                                         let mut dummy_value = m.current_value;
                                                         ui.add(Slider::new(&mut dummy_value, 0..=255));
-                                                        
+
                                                     } ,
                                                     FixtureMacro::Colour(m) => {
-                                                        let mut dummy_value = m.current_value.clone();
+                                                        let mut dummy_value = m.current_value;
                                                         ui.color_edit_button_srgba(&mut dummy_value);
                                                     }
                                                 };
@@ -161,12 +161,17 @@ pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
             for m in fixture.config.active_mode.macros.iter() {
                 match m {
                     FixtureMacro::Control(control_macro) => {
-                        m_state.insert(String::from(&control_macro.label), SceneValue::ControlValue(control_macro.current_value));
-                    },
+                        m_state.insert(
+                            String::from(&control_macro.label),
+                            SceneValue::ControlValue(control_macro.current_value),
+                        );
+                    }
                     FixtureMacro::Colour(colour_macro) => {
-                        m_state.insert(String::from(&colour_macro.label), SceneValue::ColourValue(colour_macro.current_value));
-
-                    },
+                        m_state.insert(
+                            String::from(&colour_macro.label),
+                            SceneValue::ColourValue(colour_macro.current_value),
+                        );
+                    }
                 }
             }
             scene.state.insert(String::from(&fixture.label), m_state);

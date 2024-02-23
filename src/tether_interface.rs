@@ -95,7 +95,7 @@ pub fn start_tether_thread(
             while let Some((topic, message)) = tether_agent.check_messages() {
                 if input_midi_cc.matches(&topic) {
                     debug!("MIDI CC");
-                    let m = rmp_serde::from_slice::<TetherControlChangePayload>(&message.payload())
+                    let m = rmp_serde::from_slice::<TetherControlChangePayload>(message.payload())
                         .unwrap();
                     tx.send(RemoteControlMessage::Midi(
                         TetherMidiMessage::ControlChange(m),
@@ -104,26 +104,24 @@ pub fn start_tether_thread(
                 }
                 if input_midi_notes.matches(&topic) {
                     debug!("MIDI Note");
-                    let m = rmp_serde::from_slice::<TetherNotePayload>(&message.payload()).unwrap();
+                    let m = rmp_serde::from_slice::<TetherNotePayload>(message.payload()).unwrap();
                     tx.send(RemoteControlMessage::Midi(TetherMidiMessage::NoteOn(m)))
                         .expect("failed to send from Tether Interface thread")
                 }
                 if input_macros.matches(&topic) {
                     debug!("Macro (direct) control message");
-                    let m =
-                        rmp_serde::from_slice::<RemoteMacroMessage>(&message.payload()).unwrap();
+                    let m = rmp_serde::from_slice::<RemoteMacroMessage>(message.payload()).unwrap();
                     tx.send(RemoteControlMessage::MacroAnimation(m))
                         .expect("failed to send from Tether Interface thread");
                 }
                 if input_scenes.matches(&topic) {
                     debug!("Remote Scene message");
-                    let m =
-                        rmp_serde::from_slice::<RemoteSceneMessage>(&message.payload()).unwrap();
+                    let m = rmp_serde::from_slice::<RemoteSceneMessage>(message.payload()).unwrap();
                     tx.send(RemoteControlMessage::SceneAnimation(m))
                         .expect("failed to send from Tether Interface thread");
                 }
             }
-            if let Ok(_) = rx_quit.try_recv() {
+            if rx_quit.try_recv().is_ok() {
                 info!("Tether thread got quit request");
                 should_quit = true;
             }

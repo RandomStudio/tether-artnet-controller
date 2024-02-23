@@ -116,10 +116,16 @@ impl Project {
         let json = serde_json::to_string_pretty(&project)?;
         debug!("{}", json);
 
-        fs::write(&path, json)?;
+        fs::write(path, json)?;
 
         info!("Saved Project JSON to \"{}\" OK", &path);
 
         Ok(())
+    }
+}
+
+impl Default for Project {
+    fn default() -> Self {
+        Self::new()
     }
 }

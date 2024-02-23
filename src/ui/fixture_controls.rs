@@ -10,7 +10,7 @@ pub fn render_fixture_controls(model: &mut Model, ui: &mut Ui) {
             for (i, fixture) in model.project.fixtures.iter().enumerate() {
                 let config = &fixture.config;
                 ui.heading(format!("{} +{}", &fixture.label, fixture.offset_channels));
-                ui.label(format!("{}", &config.name));
+                ui.label((config.name).to_string());
                 ui.hyperlink_to("Reference/manual", &config.reference);
                 let current_mode = &config.modes[fixture.mode_index];
 

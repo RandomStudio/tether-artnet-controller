@@ -135,30 +135,28 @@ impl Model {
             random(&mut self.channels_state);
         } else if self.settings.auto_zero {
             zero(&mut self.channels_state);
-        } else {
-            if self.artnet.update(
-                &self.channels_state,
-                &self.project.fixtures,
-                self.apply_macros,
-            ) {
-                trace!("Artnet did update");
-                work_done = true;
-                if self.apply_macros {
-                    self.animate_macros();
-                    self.channels_state = self.artnet.get_state().to_vec();
-                }
+        }
+        if self.artnet.update(
+            &self.channels_state,
+            &self.project.fixtures,
+            self.apply_macros,
+        ) {
+            trace!("Artnet did update");
+            work_done = true;
+            if self.apply_macros {
+                self.animate_macros();
+                self.channels_state = self.artnet.get_state().to_vec();
             }
         }
 
         if self.settings.auto_random || self.settings.auto_zero {
             std::thread::sleep(Duration::from_secs(1));
-        } else {
-            if !work_done {
-                // std::thread::sleep(Duration::from_secs_f32(
-                //     1.0 / self.settings.artnet_update_frequency as f32,
-                // ));
-                std::thread::sleep(Duration::from_millis(1));
-            }
+        }
+        if !work_done {
+            // std::thread::sleep(Duration::from_secs_f32(
+            //     1.0 / self.settings.artnet_update_frequency as f32,
+            // ));
+            std::thread::sleep(Duration::from_millis(1));
         }
     }
 
@@ -228,7 +226,7 @@ impl Model {
                 }
 
                 for (i, fixture) in self.project.fixtures.iter_mut().enumerate() {
-                    if self.selected_macro_group_index as usize == i {
+                    if self.selected_macro_group_index == i {
                         let target_macro_index = controller - controller_start;
                         debug!(
                             "Controller number {} => target macro index {}",
@@ -518,7 +516,7 @@ impl Model {
         if self.save_on_exit {
             info!("Save-on-exit enabled; will save current project if loaded...");
             if let Some(existing_project_path) = &self.current_project_path {
-                match Project::save(&existing_project_path, &self.project) {
+                match Project::save(existing_project_path, &self.project) {
                     Ok(_) => info!("...Saved current project \"{}\" OK", &existing_project_path),
                     Err(e) => error!("...Something went wrong saving: {}", e),
                 }

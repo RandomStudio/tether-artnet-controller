@@ -191,7 +191,7 @@ pub fn zero(channels: &mut Vec<u8>) {
     *channels = [0].repeat(CHANNELS_PER_UNIVERSE as usize);
 }
 
-pub fn random(channels: &mut Vec<u8>) {
+pub fn random(channels: &mut [u8]) {
     let mut rng = rand::thread_rng();
     for c in channels.iter_mut() {
         *c = rng.gen::<u8>();

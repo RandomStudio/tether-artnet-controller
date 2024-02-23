@@ -2,6 +2,8 @@
 
 Sometimes you don't need pixel-mapping, you just need to control some DMX fixtures.
 
+![screenshot](./screenshot.png)
+
 This application lets you achieve the following:
 - fiddle with some sliders to figure out what each channel is doing, without even needing to set up "fixtures" or "mapping" first
 - set up a Project with Fixtures, complete with easy-to-access documentation about what each channel does

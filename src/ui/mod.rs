@@ -148,6 +148,9 @@ pub fn render_mode_switcher(
                     }
                 }
             });
+            if let Some(existing_project_path) = &model.current_project_path {
+                ui.label(RichText::new(existing_project_path).italics().small());
+            }
         });
 }
 

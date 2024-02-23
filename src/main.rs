@@ -80,7 +80,6 @@ fn main() {
             model.update();
         }
         model.reset_before_quit();
-        std::thread::sleep(Duration::from_millis(100));
     } else {
         info!("Running graphics mode; close the window to quit");
         let options = eframe::NativeOptions {

@@ -4,7 +4,7 @@ use std::{
 };
 
 use egui::Color32;
-use log::{debug, error, info, trace};
+use log::{debug, error, info, trace, warn};
 use tween::SineInOut;
 
 use crate::{
@@ -19,6 +19,12 @@ use crate::{
     ui::{render_gui, ViewMode},
 };
 
+pub enum BehaviourOnExit {
+    DoNothing,
+    Home,
+    Zero,
+}
+
 pub struct Model {
     pub channels_state: Vec<u8>,
     pub channels_assigned: Vec<bool>,
@@ -32,6 +38,8 @@ pub struct Model {
     /// Determines which macros are adjusted via MIDI
     pub selected_macro_group_index: usize,
     pub view_mode: ViewMode,
+    pub exit_mode: BehaviourOnExit,
+    pub save_on_exit: bool,
 }
 
 impl eframe::App for Model {
@@ -90,6 +98,8 @@ impl Model {
             selected_macro_group_index: 0,
             apply_macros: false,
             view_mode: ViewMode::Simple,
+            exit_mode: BehaviourOnExit::Home,
+            save_on_exit: true,
         };
 
         model.apply_home_values();
@@ -500,11 +510,35 @@ impl Model {
     }
 
     pub fn reset_before_quit(&mut self) {
-        info!("Reset before quit...");
-        self.apply_macros = false;
-        self.apply_home_values();
-        self.update();
-        std::thread::sleep(Duration::from_millis(100));
+        if self.save_on_exit {
+            info!("Save-on-exit enabled; will save current project if loaded...");
+            if let Some(existing_project_path) = &self.current_project_path {
+                match Project::save(&existing_project_path, &self.project) {
+                    Ok(_) => info!("...Saved current project \"{}\" OK", &existing_project_path),
+                    Err(e) => error!("...Something went wrong saving: {}", e),
+                }
+            } else {
+                warn!("...No project was loaded; nothing saved")
+            }
+        }
+        match self.exit_mode {
+            BehaviourOnExit::DoNothing => {
+                warn!("Exit behaviour explicitly set to do Nothing; will just quit")
+            }
+            BehaviourOnExit::Home => {
+                info!("Exit Behaviour: All fixtures Go Home");
+                self.apply_macros = false;
+                self.apply_home_values();
+                self.update();
+            }
+            BehaviourOnExit::Zero => {
+                info!("Exit Behaviour: All fixtures Go Zero");
+                self.apply_macros = false;
+                zero(&mut self.channels_state);
+                self.update();
+            }
+        }
+        std::thread::sleep(Duration::from_millis(500));
         info!("...reset before quit done");
     }
 }

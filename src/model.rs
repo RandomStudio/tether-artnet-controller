@@ -19,6 +19,7 @@ use crate::{
     ui::{render_gui, ViewMode},
 };
 
+#[derive(PartialEq)]
 pub enum BehaviourOnExit {
     DoNothing,
     Home,

@@ -1,7 +1,11 @@
 use egui::{Color32, Grid, RichText, ScrollArea, Slider, Ui, Vec2};
 use log::{error, info, warn};
 
-use crate::{model::Model, project::Project, settings::CHANNELS_PER_UNIVERSE};
+use crate::{
+    model::{BehaviourOnExit, Model},
+    project::Project,
+    settings::CHANNELS_PER_UNIVERSE,
+};
 
 use self::{
     fixture_controls::render_fixture_controls, macro_controls::render_macro_controls,
@@ -68,24 +72,39 @@ pub fn render_gui(model: &mut Model, ctx: &eframe::egui::Context, frame: &mut ef
     }
 
     if model.show_confirm_exit {
-        egui::Window::new("Do you want to quit?")
+        egui::Window::new("Ready to Quit?")
             .collapsible(false)
             .resizable(false)
             .show(ctx, |ui| {
                 ui.horizontal(|ui| {
-                    if ui.button("No").clicked() {
-                        model.show_confirm_exit = false;
-                        model.allowed_to_close = false;
-                    }
-
-                    if ui.button("Yes").clicked() {
+                    if ui.button(RichText::new("Yes ⏏").heading()).clicked() {
                         model.show_confirm_exit = false;
                         model.allowed_to_close = true;
                         ui.ctx().send_viewport_cmd(egui::ViewportCommand::Close);
                     }
+                    if ui.button(RichText::new("Cancel 🗙").heading()).clicked() {
+                        model.show_confirm_exit = false;
+                        model.allowed_to_close = false;
+                    }
                 });
+                ui.checkbox(&mut model.save_on_exit, "Save Project on exit");
                 ui.group(|ui| {
-                    ui.checkbox(&mut model.save_on_exit, "Save Project on exit");
+                    ui.heading("Behaviour on exit");
+                    ui.radio_value(
+                        &mut model.exit_mode,
+                        BehaviourOnExit::DoNothing,
+                        "Do nothing",
+                    );
+                    ui.radio_value(
+                        &mut model.exit_mode,
+                        BehaviourOnExit::Home,
+                        "All fixtures to Home",
+                    );
+                    ui.radio_value(
+                        &mut model.exit_mode,
+                        BehaviourOnExit::Zero,
+                        "All channels to Zero",
+                    );
                 });
             });
     } else {

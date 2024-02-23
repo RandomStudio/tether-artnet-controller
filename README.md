@@ -1,6 +1,6 @@
 # Tether ArtNet Controller
 
-Sometimes you don't need pixel-mapping, you just need to control some DMX fixtures.
+Sometimes you don't need pixel-mapping, you just need to control some DMX fixtures. __This application works like a lighting desk, but better.__
 
 ![screenshot](./screenshot.png)
 
@@ -49,8 +49,9 @@ If you have Tether Egui installed (`cargo install tether-egui`) then the easiest
 - [x] Scenes should be triggered by Tether messages
 - [x] Hit a button to save the current state of all macros to a new Scene
 - [ ] Project JSON should save ArtNet configuration (but can override via CLI args)
-- [ ] Colour conversions should be possible manually, e.g. RGB -> CMY
-- [ ] With macros, add some visual indicators of state, e.g. Colour, Brightness and Pan/Tilt
-- [ ] At the moment, macros simply get "inactive" when something further downstream is applied (fixture controls, individual channels); it would be nice to propagate any live changes applied back "up" to the macro values as well.
+- [x] Colour conversions should be possible manually, e.g. RGB -> CMY
+- [x] With macros, add some visual indicators of state, e.g. Colour, Brightness and Pan/Tilt
+- [ ] Allow the app to launch just fine without Tether
+- [ ] Allow the app to launch without any project file at all
 - [ ] Add 16-bit control, at least for macros (single slider adjusts the two channels as split between first and second 8-bit digits)
 - [ ] ArtNet on separate thread, with more precise timing; this might require some messaging back and forth and/or mutex

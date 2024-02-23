@@ -2,6 +2,8 @@
 
 Sometimes you don't need pixel-mapping, you just need to control some DMX fixtures. __This application works like a lighting desk, but better.__
 
+Runs on Mac, Linux and even Windows.
+
 ![screenshot](./screenshot.png)
 
 This application lets you achieve the following:

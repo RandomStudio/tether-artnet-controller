@@ -83,21 +83,7 @@ fn main() {
         .expect("Failed to launch GUI");
         info!("GUI ended; exit soon...");
     }
-    // model
-    //     .quit_tether_tx
-    //     .send(())
-    //     .expect("failed to send quit message via channel");
-    // let handles = model.handles_mut();
-    // for h in handles {
-    //     match h.join() {
-    //         Ok(()) => {
-    //             debug!("Thread join OK");
-    //         }
-    //         Err(e) => {
-    //             error!("Thread joined with error, {:?}", e);
-    //         }
-    //     }
-    // }
+
     std::thread::sleep(Duration::from_secs(1));
     info!("...Exit now");
     std::process::exit(0);

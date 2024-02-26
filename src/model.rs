@@ -17,7 +17,7 @@ use crate::{
         RemoteControlMessage, RemoteMacroMessage, RemoteMacroValue, RemoteSceneMessage,
         TetherControlChangePayload, TetherInterface, TetherMidiMessage, TetherNotePayload,
     },
-    ui::{render_gui, ViewMode},
+    ui::{attempt_connection, render_gui, ViewMode},
 };
 
 #[derive(PartialEq)]
@@ -96,7 +96,11 @@ impl Model {
             }
         }
 
+        let should_quit = Arc::new(Mutex::new(false));
+
         let tether_interface = TetherInterface::new();
+
+        let should_auto_connect = !settings.tether_disable_autoconnect;
 
         let mut model = Model {
             tether_status: TetherStatus::NotConnected,
@@ -115,8 +119,13 @@ impl Model {
             save_on_exit: true,
             show_confirm_exit: false,
             allowed_to_close: false,
-            should_quit: Arc::new(Mutex::new(false)),
+            should_quit,
         };
+
+        if should_auto_connect {
+            info!("Auto connect Tether enabled; will attempt to connect now...");
+            attempt_connection(&mut model)
+        }
 
         model.apply_home_values();
 

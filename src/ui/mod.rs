@@ -241,6 +241,7 @@ fn render_tether_controls(model: &mut Model, ui: &mut Ui) {
 
         match &model.tether_status {
             TetherStatus::NotConnected => {
+                ui.label(RichText::new("Not (yet) connected").color(Color32::YELLOW));
                 offer_tether_connect(model, ui);
             }
             TetherStatus::Connected => {
@@ -257,13 +258,17 @@ fn render_tether_controls(model: &mut Model, ui: &mut Ui) {
 
 fn offer_tether_connect(model: &mut Model, ui: &mut Ui) {
     if ui.button("Connect").clicked() {
-        match model.tether_interface.connect(model.should_quit.clone()) {
-            Ok(_) => {
-                model.tether_status = TetherStatus::Connected;
-            }
-            Err(e) => {
-                model.tether_status = TetherStatus::Errored(format!("Error: {e}"));
-            }
+        attempt_connection(model);
+    }
+}
+
+pub fn attempt_connection(model: &mut Model) {
+    match model.tether_interface.connect(model.should_quit.clone()) {
+        Ok(_) => {
+            model.tether_status = TetherStatus::Connected;
+        }
+        Err(e) => {
+            model.tether_status = TetherStatus::Errored(format!("Error: {e}"));
         }
     }
 }

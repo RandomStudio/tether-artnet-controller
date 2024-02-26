@@ -45,4 +45,8 @@ pub struct Cli {
 
     #[arg(long = "auto.random")]
     pub auto_random: bool,
+
+    /// Flag to disable Tether connect on start (GUI only)
+    #[arg(long = "tether.noAutoConnect")]
+    pub tether_disable_autoconnect: bool,
 }

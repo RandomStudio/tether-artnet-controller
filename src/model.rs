@@ -1,5 +1,5 @@
 use std::{
-    sync::mpsc::{self, Receiver, Sender},
+    sync::{Arc, Mutex},
     thread::JoinHandle,
     time::{Duration, SystemTime},
 };
@@ -29,11 +29,9 @@ pub enum BehaviourOnExit {
 
 pub struct Model {
     pub handles: Vec<JoinHandle<()>>,
-    pub quit_tether_tx: Sender<()>,
     pub channels_state: Vec<u8>,
     pub channels_assigned: Vec<bool>,
-    pub tether_rx: Receiver<RemoteControlMessage>,
-    pub tether_interface: Option<TetherInterface>,
+    pub tether_interface: TetherInterface,
     pub settings: Cli,
     pub artnet: ArtNetInterface,
     pub project: Project,
@@ -47,6 +45,7 @@ pub struct Model {
     pub save_on_exit: bool,
     pub show_confirm_exit: bool,
     pub allowed_to_close: bool,
+    pub should_quit: Arc<Mutex<bool>>,
 }
 
 impl eframe::App for Model {
@@ -90,14 +89,11 @@ impl Model {
             }
         }
 
-        let (tether_tx, tether_rx) = mpsc::channel();
-        let (quit_tether_tx, quit_tether_rx) = mpsc::channel();
+        let tether_interface = TetherInterface::new();
 
         let mut model = Model {
-            quit_tether_tx,
             handles: Vec::new(),
-            tether_rx,
-            tether_interface: None,
+            tether_interface,
             channels_state: Vec::new(),
             channels_assigned,
             settings,
@@ -111,6 +107,7 @@ impl Model {
             save_on_exit: true,
             show_confirm_exit: false,
             allowed_to_close: false,
+            should_quit: Arc::new(Mutex::new(false)),
         };
 
         model.apply_home_values();
@@ -121,7 +118,7 @@ impl Model {
     pub fn update(&mut self) {
         let mut work_done = false;
 
-        while let Ok(m) = self.tether_rx.try_recv() {
+        while let Ok(m) = self.tether_interface.message_rx.try_recv() {
             work_done = true;
             self.apply_macros = true;
             match m {
@@ -519,6 +516,7 @@ impl Model {
     }
 
     pub fn reset_before_quit(&mut self) {
+        *self.should_quit.lock().unwrap() = true;
         if self.save_on_exit {
             info!("Save-on-exit enabled; will save current project if loaded...");
             if let Some(existing_project_path) = &self.current_project_path {
@@ -549,10 +547,6 @@ impl Model {
         }
         std::thread::sleep(Duration::from_millis(500));
         info!("...reset before quit done");
-    }
-
-    pub fn handles_mut(&mut self) -> &mut [JoinHandle<()>] {
-        &mut self.handles
     }
 }
 

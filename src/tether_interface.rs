@@ -1,11 +1,15 @@
 use std::{
-    sync::mpsc::{Receiver, Sender},
+    sync::{
+        self,
+        mpsc::{Receiver, Sender},
+        Arc, Mutex,
+    },
     thread::{sleep, spawn, JoinHandle},
     time::Duration,
 };
 
 use egui::Color32;
-use log::{debug, info};
+use log::{debug, error, info};
 use serde::{Deserialize, Serialize};
 use tether_agent::{PlugOptionsBuilder, TetherAgent, TetherAgentOptionsBuilder};
 
@@ -65,14 +69,27 @@ pub enum RemoteControlMessage {
 }
 
 pub struct TetherInterface {
-    tether_agent: TetherAgent,
-    pub tx: Sender<RemoteControlMessage>,
-    rx_quit: Receiver<()>,
-    handle: JoinHandle<()>,
+    pub message_rx: Receiver<RemoteControlMessage>,
+    pub quit_channel: (Sender<()>, Receiver<()>),
+    // ---
+    message_tx: Sender<RemoteControlMessage>,
 }
 
 impl TetherInterface {
-    pub fn new(tx: Sender<RemoteControlMessage>, rx_quit: Receiver<()>) -> Self {
+    pub fn new() -> Self {
+        let (message_tx, message_rx) = sync::mpsc::channel();
+        let (quit_tx, quit_rx) = sync::mpsc::channel();
+
+        TetherInterface {
+            message_tx,
+            message_rx,
+            quit_channel: (quit_tx, quit_rx),
+        }
+    }
+
+    pub fn connect(&mut self, should_quit: Arc<Mutex<bool>>) {
+        info!("Attempt to connect Tether Agent...");
+
         let tether_agent = TetherAgentOptionsBuilder::new("ArtnetController")
             .build()
             .expect("failed to init Tether Agent");
@@ -93,10 +110,11 @@ impl TetherInterface {
             .build(&tether_agent)
             .expect("failed to create Input Plug");
 
-        let mut should_quit = false;
+        let tx = self.message_tx.clone();
+        let (quit_tx, quit_rx) = &self.quit_channel;
 
-        let handle = spawn(move || {
-            while !should_quit {
+        let handle = Some(spawn(move || {
+            while !*should_quit.lock().unwrap() {
                 while let Some((topic, message)) = tether_agent.check_messages() {
                     if input_midi_cc.matches(&topic) {
                         debug!("MIDI CC");
@@ -130,19 +148,9 @@ impl TetherInterface {
                             .expect("failed to send from Tether Interface thread");
                     }
                 }
-                if rx_quit.try_recv().is_ok() {
-                    info!("Tether thread got quit request");
-                    should_quit = true;
-                }
                 sleep(Duration::from_millis(1));
             }
-        });
-
-        TetherInterface {
-            tether_agent,
-            tx,
-            rx_quit,
-            handle,
-        }
+            info!("Tether Interface: Thread loop end");
+        }));
     }
 }

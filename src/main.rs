@@ -1,7 +1,7 @@
 use std::{net::SocketAddr, sync::mpsc, time::Duration};
 
 use env_logger::Env;
-use log::{debug, error, info};
+use log::{debug, info};
 
 use clap::Parser;
 
@@ -31,10 +31,6 @@ fn main() {
         .init();
 
     debug!("Started with settings: {:?}", cli);
-
-    // let (tether_tx, tether_rx) = mpsc::channel();
-    // let (quit_tether_tx, quit_tether_rx) = mpsc::channel();
-    // let tether_handle = start_tether_thread(tether_tx.clone(), quit_tether_rx);
 
     let artnet = {
         if cli.artnet_broadcast {
@@ -72,7 +68,6 @@ fn main() {
             std::thread::sleep(Duration::from_millis(1));
             model.update();
         }
-        model.reset_before_quit();
     } else {
         info!("Running graphics mode; close the window to quit");
         let options = eframe::NativeOptions {
@@ -88,10 +83,10 @@ fn main() {
         .expect("Failed to launch GUI");
         info!("GUI ended; exit soon...");
     }
-    model
-        .quit_tether_tx
-        .send(())
-        .expect("failed to send quit message via channel");
+    // model
+    //     .quit_tether_tx
+    //     .send(())
+    //     .expect("failed to send quit message via channel");
     // let handles = model.handles_mut();
     // for h in handles {
     //     match h.join() {

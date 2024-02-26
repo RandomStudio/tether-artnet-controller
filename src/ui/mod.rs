@@ -45,6 +45,7 @@ pub fn render_gui(model: &mut Model, ctx: &eframe::egui::Context, frame: &mut ef
     match model.view_mode {
         ViewMode::Advanced => {
             egui::SidePanel::left("LeftPanel").show(ctx, |ui| {
+                render_tether_controls(model, ui);
                 render_macro_controls(model, ui);
             });
 
@@ -58,11 +59,13 @@ pub fn render_gui(model: &mut Model, ctx: &eframe::egui::Context, frame: &mut ef
         }
         ViewMode::Simple => {
             egui::CentralPanel::default().show(ctx, |ui| {
+                render_tether_controls(model, ui);
                 render_macro_controls(model, ui);
             });
         }
         ViewMode::Scenes => {
             egui::SidePanel::left("LeftPanel").show(ctx, |ui| {
+                render_tether_controls(model, ui);
                 render_macro_controls(model, ui);
             });
             egui::CentralPanel::default().show(ctx, |ui| {
@@ -230,4 +233,12 @@ pub fn render_sliders(model: &mut Model, ui: &mut Ui) {
                 }
             });
         });
+}
+
+fn render_tether_controls(model: &mut Model, ui: &mut Ui) {
+    ui.group(|ui| {
+        if ui.button("Connect").clicked() {
+            model.tether_interface.connect(model.should_quit.clone());
+        }
+    });
 }

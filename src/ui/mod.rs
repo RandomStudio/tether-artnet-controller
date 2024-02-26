@@ -263,7 +263,10 @@ fn offer_tether_connect(model: &mut Model, ui: &mut Ui) {
 }
 
 pub fn attempt_connection(model: &mut Model) {
-    match model.tether_interface.connect(model.should_quit.clone()) {
+    match model.tether_interface.connect(
+        model.should_quit.clone(),
+        model.settings.tether_host.as_deref(),
+    ) {
         Ok(_) => {
             model.tether_status = TetherStatus::Connected;
         }

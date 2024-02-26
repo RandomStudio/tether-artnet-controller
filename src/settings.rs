@@ -49,4 +49,8 @@ pub struct Cli {
     /// Flag to disable Tether connect on start (GUI only)
     #[arg(long = "tether.noAutoConnect")]
     pub tether_disable_autoconnect: bool,
+
+    /// Host/IP for Tether MQTT Broker
+    #[arg(long = "tether.host")]
+    pub tether_host: Option<String>,
 }

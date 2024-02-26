@@ -53,7 +53,7 @@ If you have Tether Egui installed (`cargo install tether-egui`) then the easiest
 - [ ] Project JSON should save ArtNet configuration (but can override via CLI args)
 - [x] Colour conversions should be possible manually, e.g. RGB -> CMY
 - [x] With macros, add some visual indicators of state, e.g. Colour, Brightness and Pan/Tilt
-- [ ] Allow the app to launch just fine without Tether
+- [x] Allow the app to launch just fine without Tether
 - [ ] Allow the app to launch without any project file at all
 - [ ] Add 16-bit control, at least for macros (single slider adjusts the two channels as split between first and second 8-bit digits)
 - [ ] ArtNet on separate thread, with more precise timing; this might require some messaging back and forth and/or mutex

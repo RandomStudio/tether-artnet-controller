@@ -2,7 +2,7 @@ use egui::{Color32, Grid, RichText, ScrollArea, Slider, Ui, Vec2};
 use log::{error, info, warn};
 
 use crate::{
-    model::{BehaviourOnExit, Model},
+    model::{BehaviourOnExit, Model, TetherStatus},
     project::Project,
     settings::CHANNELS_PER_UNIVERSE,
 };
@@ -45,6 +45,7 @@ pub fn render_gui(model: &mut Model, ctx: &eframe::egui::Context, frame: &mut ef
     match model.view_mode {
         ViewMode::Advanced => {
             egui::SidePanel::left("LeftPanel").show(ctx, |ui| {
+                render_tether_controls(model, ui);
                 render_macro_controls(model, ui);
             });
 
@@ -58,11 +59,13 @@ pub fn render_gui(model: &mut Model, ctx: &eframe::egui::Context, frame: &mut ef
         }
         ViewMode::Simple => {
             egui::CentralPanel::default().show(ctx, |ui| {
+                render_tether_controls(model, ui);
                 render_macro_controls(model, ui);
             });
         }
         ViewMode::Scenes => {
             egui::SidePanel::left("LeftPanel").show(ctx, |ui| {
+                render_tether_controls(model, ui);
                 render_macro_controls(model, ui);
             });
             egui::CentralPanel::default().show(ctx, |ui| {
@@ -230,4 +233,45 @@ pub fn render_sliders(model: &mut Model, ui: &mut Ui) {
                 }
             });
         });
+}
+
+fn render_tether_controls(model: &mut Model, ui: &mut Ui) {
+    ui.horizontal(|ui| {
+        ui.heading("Tether");
+
+        match &model.tether_status {
+            TetherStatus::NotConnected => {
+                ui.label(RichText::new("Not (yet) connected").color(Color32::YELLOW));
+                offer_tether_connect(model, ui);
+            }
+            TetherStatus::Connected => {
+                ui.label(RichText::new("Connected").color(Color32::LIGHT_GREEN));
+            }
+            TetherStatus::Errored(msg) => {
+                ui.label(RichText::new(msg).color(Color32::RED));
+                offer_tether_connect(model, ui);
+            }
+        }
+    });
+    ui.separator();
+}
+
+fn offer_tether_connect(model: &mut Model, ui: &mut Ui) {
+    if ui.button("Connect").clicked() {
+        attempt_connection(model);
+    }
+}
+
+pub fn attempt_connection(model: &mut Model) {
+    match model.tether_interface.connect(
+        model.should_quit.clone(),
+        model.settings.tether_host.as_deref(),
+    ) {
+        Ok(_) => {
+            model.tether_status = TetherStatus::Connected;
+        }
+        Err(e) => {
+            model.tether_status = TetherStatus::Errored(format!("Error: {e}"));
+        }
+    }
 }

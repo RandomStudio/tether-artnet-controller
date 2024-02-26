@@ -1,5 +1,6 @@
 use std::{
-    sync::mpsc::Receiver,
+    sync::{Arc, Mutex},
+    thread::JoinHandle,
     time::{Duration, SystemTime},
 };
 
@@ -14,9 +15,9 @@ use crate::{
     settings::{Cli, CHANNELS_PER_UNIVERSE},
     tether_interface::{
         RemoteControlMessage, RemoteMacroMessage, RemoteMacroValue, RemoteSceneMessage,
-        TetherControlChangePayload, TetherMidiMessage, TetherNotePayload,
+        TetherControlChangePayload, TetherInterface, TetherMidiMessage, TetherNotePayload,
     },
-    ui::{render_gui, ViewMode},
+    ui::{attempt_connection, render_gui, ViewMode},
 };
 
 #[derive(PartialEq)]
@@ -26,10 +27,18 @@ pub enum BehaviourOnExit {
     Zero,
 }
 
+pub enum TetherStatus {
+    NotConnected,
+    Connected,
+    Errored(String),
+}
+
 pub struct Model {
+    pub handles: Vec<JoinHandle<()>>,
     pub channels_state: Vec<u8>,
     pub channels_assigned: Vec<bool>,
-    pub tether_rx: Receiver<RemoteControlMessage>,
+    pub tether_interface: TetherInterface,
+    pub tether_status: TetherStatus,
     pub settings: Cli,
     pub artnet: ArtNetInterface,
     pub project: Project,
@@ -43,6 +52,7 @@ pub struct Model {
     pub save_on_exit: bool,
     pub show_confirm_exit: bool,
     pub allowed_to_close: bool,
+    pub should_quit: Arc<Mutex<bool>>,
 }
 
 impl eframe::App for Model {
@@ -57,11 +67,7 @@ impl eframe::App for Model {
 }
 
 impl Model {
-    pub fn new(
-        tether_rx: Receiver<RemoteControlMessage>,
-        settings: Cli,
-        artnet: ArtNetInterface,
-    ) -> Model {
+    pub fn new(settings: Cli, artnet: ArtNetInterface) -> Model {
         let mut current_project_path = None;
 
         let project = match Project::load(&settings.project_path) {
@@ -90,8 +96,16 @@ impl Model {
             }
         }
 
+        let should_quit = Arc::new(Mutex::new(false));
+
+        let tether_interface = TetherInterface::new();
+
+        let should_auto_connect = !settings.tether_disable_autoconnect;
+
         let mut model = Model {
-            tether_rx,
+            tether_status: TetherStatus::NotConnected,
+            handles: Vec::new(),
+            tether_interface,
             channels_state: Vec::new(),
             channels_assigned,
             settings,
@@ -105,7 +119,13 @@ impl Model {
             save_on_exit: true,
             show_confirm_exit: false,
             allowed_to_close: false,
+            should_quit,
         };
+
+        if should_auto_connect {
+            info!("Auto connect Tether enabled; will attempt to connect now...");
+            attempt_connection(&mut model)
+        }
 
         model.apply_home_values();
 
@@ -115,7 +135,7 @@ impl Model {
     pub fn update(&mut self) {
         let mut work_done = false;
 
-        while let Ok(m) = self.tether_rx.try_recv() {
+        while let Ok(m) = self.tether_interface.message_rx.try_recv() {
             work_done = true;
             self.apply_macros = true;
             match m {
@@ -513,6 +533,7 @@ impl Model {
     }
 
     pub fn reset_before_quit(&mut self) {
+        *self.should_quit.lock().unwrap() = true;
         if self.save_on_exit {
             info!("Save-on-exit enabled; will save current project if loaded...");
             if let Some(existing_project_path) = &self.current_project_path {

@@ -1,7 +1,7 @@
 use std::{net::SocketAddr, sync::mpsc, time::Duration};
 
 use env_logger::Env;
-use log::{debug, error, info};
+use log::{debug, info};
 
 use clap::Parser;
 
@@ -9,7 +9,6 @@ use crate::{
     artnet::{ArtNetInterface, ArtNetMode},
     model::Model,
     settings::Cli,
-    tether_interface::start_tether_thread,
     ui::SIMPLE_WIN_SIZE,
 };
 
@@ -33,14 +32,6 @@ fn main() {
 
     debug!("Started with settings: {:?}", cli);
 
-    let mut handles = Vec::new();
-
-    let (tether_tx, tether_rx) = mpsc::channel();
-    let (quit_tether_tx, quit_tether_rx) = mpsc::channel();
-    let tether_handle = start_tether_thread(tether_tx.clone(), quit_tether_rx);
-
-    handles.push(tether_handle);
-
     let artnet = {
         if cli.artnet_broadcast {
             ArtNetInterface::new(ArtNetMode::Broadcast, cli.artnet_update_frequency)
@@ -55,7 +46,7 @@ fn main() {
         }
     };
 
-    let mut model = Model::new(tether_rx, cli.clone(), artnet);
+    let mut model = Model::new(cli.clone(), artnet);
 
     if cli.headless_mode {
         info!("Running in headless mode; Ctrl+C to quit");
@@ -77,7 +68,6 @@ fn main() {
             std::thread::sleep(Duration::from_millis(1));
             model.update();
         }
-        model.reset_before_quit();
     } else {
         info!("Running graphics mode; close the window to quit");
         let options = eframe::NativeOptions {
@@ -93,19 +83,7 @@ fn main() {
         .expect("Failed to launch GUI");
         info!("GUI ended; exit soon...");
     }
-    quit_tether_tx
-        .send(())
-        .expect("failed to send quit message via channel");
-    for h in handles {
-        match h.join() {
-            Ok(()) => {
-                debug!("Thread join OK");
-            }
-            Err(e) => {
-                error!("Thread joined with error, {:?}", e);
-            }
-        }
-    }
+
     std::thread::sleep(Duration::from_secs(1));
     info!("...Exit now");
     std::process::exit(0);

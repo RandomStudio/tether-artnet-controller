@@ -27,11 +27,18 @@ pub enum BehaviourOnExit {
     Zero,
 }
 
+pub enum TetherStatus {
+    NotConnected,
+    Connected,
+    Errored(String),
+}
+
 pub struct Model {
     pub handles: Vec<JoinHandle<()>>,
     pub channels_state: Vec<u8>,
     pub channels_assigned: Vec<bool>,
     pub tether_interface: TetherInterface,
+    pub tether_status: TetherStatus,
     pub settings: Cli,
     pub artnet: ArtNetInterface,
     pub project: Project,
@@ -92,6 +99,7 @@ impl Model {
         let tether_interface = TetherInterface::new();
 
         let mut model = Model {
+            tether_status: TetherStatus::NotConnected,
             handles: Vec::new(),
             tether_interface,
             channels_state: Vec::new(),

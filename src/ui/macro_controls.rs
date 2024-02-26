@@ -7,8 +7,8 @@ use crate::{
 };
 
 pub fn render_macro_controls(model: &mut Model, ui: &mut Ui) {
-    ui.heading("All");
     ui.horizontal(|ui| {
+        ui.heading("All");
         if ui.button("HOME").clicked() {
             model.apply_macros = false;
             model.apply_home_values();

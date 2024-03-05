@@ -19,6 +19,7 @@ pub struct ArtNetInterface {
     channels: Vec<u8>,
     update_interval: Duration,
     last_sent: Option<SystemTime>,
+    mode_in_use: ArtNetMode,
 }
 
 #[derive(Serialize, Deserialize, Clone)]
@@ -51,6 +52,7 @@ impl ArtNetInterface {
                     channels,
                     update_interval,
                     last_sent: None,
+                    mode_in_use: mode.clone(),
                 }
             }
             ArtNetMode::Unicast(src, destination) => {
@@ -67,6 +69,7 @@ impl ArtNetInterface {
                     channels,
                     update_interval,
                     last_sent: None,
+                    mode_in_use: mode.clone(),
                 }
             }
         }
@@ -187,6 +190,10 @@ impl ArtNetInterface {
 
     pub fn get_state(&self) -> &[u8] {
         &self.channels
+    }
+
+    pub fn mode_in_use(&self) -> &ArtNetMode {
+        &self.mode_in_use
     }
 }
 

@@ -36,7 +36,7 @@ pub struct Cli {
     pub unicast_dst: Option<std::net::IpAddr>,
 
     /// Update frequency, in Hertz, for sending ArtNet data (gets converted to ms)
-    #[arg(long = "artnet.freq")]
+    #[arg(long = "artnet.freq", default_value_t=DEFAULT_ARTNET_HERTZ)]
     pub artnet_update_frequency: u64,
 
     // TODO: split tasks/commands such as "auto" into separate Clap Command

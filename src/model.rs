@@ -69,42 +69,46 @@ impl eframe::App for Model {
 }
 
 impl Model {
-    pub fn new(settings: Cli) -> Model {
+    pub fn new(cli: Cli) -> Model {
         let mut current_project_path = None;
 
-        let project = match Project::load(&settings.project_path) {
+        let project = match Project::load(&cli.project_path) {
             Ok(p) => {
-                current_project_path = Some(String::from(&settings.project_path));
+                current_project_path = Some(String::from(&cli.project_path));
                 p
             }
             Err(e) => {
                 error!(
                     "Failed to load project from path \"{}\"; {:?}",
-                    &settings.project_path, e
+                    &cli.project_path, e
                 );
                 info!("Blank project will be loaded instead.");
                 Project::new()
             }
         };
 
-        let artnet = if settings.artnet_broadcast {
-            warn!("CLI artnetBroadcast flag overrides any project ArtNet settings");
+        let artnet = if cli.artnet_broadcast {
+            warn!("CLI artnetBroadcast flag overrides any Project ArtNet settings");
             Some(ArtNetInterface::new(
                 ArtNetMode::Broadcast,
-                settings.artnet_update_frequency,
+                cli.artnet_update_frequency,
             ))
-        } else if (settings.unicast_src.is_some() && settings.unicast_dst.is_some()) {
-            warn!("CLI unicastSrc + unicaseDst options override any project ArtNet settings");
+        } else if cli.unicast_src.is_some() && cli.unicast_dst.is_some() {
+            warn!("CLI unicastSrc + unicaseDst options override any Project ArtNet settings");
             Some(ArtNetInterface::new(
-                ArtNetMode::Unicast((settings.unicast_src.unwrap(), settings.unicast_dst.unwrap())),
-                settings.artnet_update_frequency,
+                ArtNetMode::Unicast(
+                    SocketAddr::from((cli.unicast_src.unwrap(), 6453)),
+                    SocketAddr::from((cli.unicast_dst.unwrap(), 6454)),
+                ),
+                cli.artnet_update_frequency,
             ))
         } else {
+            debug!("No CLI overrides, attempt to use Project ArtNet config...");
             match &project.artnet_config {
                 Some(artnet_mode) => match artnet_mode {
                     ArtNetConfigMode::Broadcast => Some(ArtNetInterface::new(
                         ArtNetMode::Broadcast,
-                        settings.artnet_update_frequency,
+                        cli.artnet_update_frequency,
                     )),
                     ArtNetConfigMode::Unicast(interface_ip, destination_ip) => {
                         Some(ArtNetInterface::new(
@@ -115,7 +119,7 @@ impl Model {
                                     6454,
                                 )),
                             ),
-                            settings.artnet_update_frequency,
+                            cli.artnet_update_frequency,
                         ))
                     }
                 },
@@ -123,7 +127,7 @@ impl Model {
                     warn!("No artnet settings in Project; will use defaults (broadcast mode)");
                     Some(ArtNetInterface::new(
                         ArtNetMode::Broadcast,
-                        settings.artnet_update_frequency,
+                        cli.artnet_update_frequency,
                     ))
                 }
             }
@@ -144,7 +148,7 @@ impl Model {
 
         let tether_interface = TetherInterface::new();
 
-        let should_auto_connect = !settings.tether_disable_autoconnect;
+        let should_auto_connect = !cli.tether_disable_autoconnect;
 
         let mut model = Model {
             tether_status: TetherStatus::NotConnected,
@@ -152,7 +156,7 @@ impl Model {
             tether_interface,
             channels_state: Vec::new(),
             channels_assigned,
-            settings,
+            settings: cli,
             artnet,
             project,
             current_project_path,

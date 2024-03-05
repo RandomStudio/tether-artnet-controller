@@ -2,6 +2,7 @@ use egui::{Color32, Grid, RichText, ScrollArea, Slider, Ui, Vec2};
 use log::{error, info, warn};
 
 use crate::{
+    artnet::ArtNetMode,
     model::{BehaviourOnExit, Model, TetherStatus},
     project::Project,
     settings::CHANNELS_PER_UNIVERSE,
@@ -256,19 +257,18 @@ fn render_network_controls(model: &mut Model, ui: &mut Ui) {
     ui.horizontal(|ui| {
         ui.heading("ArtNet");
 
-        match &model.project.artnet_config {
-            Some(config) => match config {
-                crate::project::artnetconfig::ArtNetConfigMode::Broadcast => {
+        if let Some(artnet) = &model.artnet {
+            match artnet.mode_in_use() {
+                ArtNetMode::Broadcast => {
                     ui.label(RichText::new("Broadcast Mode").color(Color32::LIGHT_YELLOW));
                 }
-                crate::project::artnetconfig::ArtNetConfigMode::Unicast(src, dst) => {
+                ArtNetMode::Unicast(src, dst) => {
                     ui.horizontal(|ui| {
                         ui.label(RichText::new("Unicast Mode: ").color(Color32::LIGHT_GREEN));
                         ui.label(format!("{} => {}", src, dst));
                     });
                 }
-            },
-            None => todo!(),
+            }
         }
     });
     ui.separator();

@@ -34,6 +34,10 @@ fn main() {
 
     let mut model = Model::new(cli.clone());
 
+    if cli.artnet_broadcast && (cli.unicast_src.is_some() || cli.unicast_dst.is_some()) {
+        panic!("You cannot enabled Broadcast mode AND set Unicast details at the same time");
+    }
+
     if cli.headless_mode {
         info!("Running in headless mode; Ctrl+C to quit");
         let mut should_quit = false;

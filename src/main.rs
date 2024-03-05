@@ -32,21 +32,7 @@ fn main() {
 
     debug!("Started with settings: {:?}", cli);
 
-    let artnet = {
-        if cli.artnet_broadcast {
-            ArtNetInterface::new(ArtNetMode::Broadcast, cli.artnet_update_frequency)
-        } else {
-            ArtNetInterface::new(
-                ArtNetMode::Unicast(
-                    SocketAddr::from((cli.unicast_src, 6453)),
-                    SocketAddr::from((cli.unicast_dst, 6454)),
-                ),
-                cli.artnet_update_frequency,
-            )
-        }
-    };
-
-    let mut model = Model::new(cli.clone(), artnet);
+    let mut model = Model::new(cli.clone());
 
     if cli.headless_mode {
         info!("Running in headless mode; Ctrl+C to quit");

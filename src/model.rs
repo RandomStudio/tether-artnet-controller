@@ -1,4 +1,6 @@
 use std::{
+    net::{Ipv4Addr, SocketAddr},
+    str::FromStr,
     sync::{Arc, Mutex},
     thread::JoinHandle,
     time::{Duration, SystemTime},
@@ -10,9 +12,9 @@ use tween::SineInOut;
 
 use crate::{
     animation::{animate_colour, Animation},
-    artnet::{random, zero, ArtNetInterface},
-    project::{fixture::FixtureMacro, Project, SceneValue},
-    settings::{Cli, CHANNELS_PER_UNIVERSE},
+    artnet::{random, zero, ArtNetInterface, ArtNetMode},
+    project::{artnetconfig::ArtNetConfigMode, fixture::FixtureMacro, Project, SceneValue},
+    settings::{Cli, CHANNELS_PER_UNIVERSE, DEFAULT_ARTNET_HERTZ},
     tether_interface::{
         RemoteControlMessage, RemoteMacroMessage, RemoteMacroValue, RemoteSceneMessage,
         TetherControlChangePayload, TetherInterface, TetherMidiMessage, TetherNotePayload,
@@ -40,7 +42,7 @@ pub struct Model {
     pub tether_interface: TetherInterface,
     pub tether_status: TetherStatus,
     pub settings: Cli,
-    pub artnet: ArtNetInterface,
+    pub artnet: Option<ArtNetInterface>,
     pub project: Project,
     pub current_project_path: Option<String>,
     /// Whether macros should currently be applied
@@ -67,7 +69,7 @@ impl eframe::App for Model {
 }
 
 impl Model {
-    pub fn new(settings: Cli, artnet: ArtNetInterface) -> Model {
+    pub fn new(settings: Cli) -> Model {
         let mut current_project_path = None;
 
         let project = match Project::load(&settings.project_path) {
@@ -82,6 +84,31 @@ impl Model {
                 );
                 info!("Blank project will be loaded instead.");
                 Project::new()
+            }
+        };
+
+        let artnet = match &project.artnet_config {
+            Some(artnet_mode) => match artnet_mode {
+                ArtNetConfigMode::Broadcast => Some(ArtNetInterface::new(
+                    ArtNetMode::Broadcast,
+                    settings.artnet_update_frequency,
+                )),
+                ArtNetConfigMode::Unicast(interface_ip, destination_ip) => {
+                    Some(ArtNetInterface::new(
+                        ArtNetMode::Unicast(
+                            SocketAddr::from((Ipv4Addr::from_str(interface_ip).unwrap(), 6453)),
+                            SocketAddr::from((Ipv4Addr::from_str(destination_ip).unwrap(), 6454)),
+                        ),
+                        settings.artnet_update_frequency,
+                    ))
+                }
+            },
+            None => {
+                warn!("No artnet settings in Project; will use defaults (broadcast mode)");
+                Some(ArtNetInterface::new(
+                    ArtNetMode::Broadcast,
+                    settings.artnet_update_frequency,
+                ))
             }
         };
 
@@ -156,16 +183,22 @@ impl Model {
         } else if self.settings.auto_zero {
             zero(&mut self.channels_state);
         }
-        if self.artnet.update(
-            &self.channels_state,
-            &self.project.fixtures,
-            self.apply_macros,
-        ) {
-            trace!("Artnet did update");
+        if let Some(artnet) = &mut self.artnet {
+            if artnet.update(
+                &self.channels_state,
+                &self.project.fixtures,
+                self.apply_macros,
+            ) {
+                trace!("Artnet did update");
+                work_done = true;
+            }
+        }
+
+        if self.apply_macros {
             work_done = true;
-            if self.apply_macros {
-                self.animate_macros();
-                self.channels_state = self.artnet.get_state().to_vec();
+            self.animate_macros();
+            if let Some(artnet) = &self.artnet {
+                self.channels_state = artnet.get_state().to_vec();
             }
         }
 
@@ -173,9 +206,6 @@ impl Model {
             std::thread::sleep(Duration::from_secs(1));
         }
         if !work_done {
-            // std::thread::sleep(Duration::from_secs_f32(
-            //     1.0 / self.settings.artnet_update_frequency as f32,
-            // ));
             std::thread::sleep(Duration::from_millis(1));
         }
     }

@@ -6,9 +6,13 @@ use serde::{Deserialize, Serialize};
 
 use crate::project::fixture::FixtureConfig;
 
+use self::artnetconfig::ArtNetConfigMode;
 use self::fixture::FixtureInstance;
+use self::midiconfig::MidiConfig;
 
+pub mod artnetconfig;
 pub mod fixture;
+pub mod midiconfig;
 
 #[derive(Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
@@ -17,24 +21,7 @@ pub struct Project {
     pub scenes: Vec<Scene>,
     #[serde(default)]
     pub midi_config: MidiConfig,
-}
-
-#[derive(Serialize, Deserialize, Clone)]
-#[serde(rename_all = "camelCase")]
-pub struct MidiConfig {
-    /// Which controller number counts as the first, i.e. macro index 0
-    pub controller_start: u8,
-    /// Which note count as the first, i.e. fixture index 0
-    pub note_start: u8,
-}
-
-impl Default for MidiConfig {
-    fn default() -> Self {
-        MidiConfig {
-            controller_start: 48,
-            note_start: 49,
-        }
-    }
+    pub artnet_config: Option<ArtNetConfigMode>,
 }
 
 #[derive(Serialize, Deserialize, Clone)]
@@ -63,6 +50,7 @@ impl Project {
             fixtures: Vec::new(),
             scenes: Vec::new(),
             midi_config: MidiConfig::default(),
+            artnet_config: None,
         }
     }
 

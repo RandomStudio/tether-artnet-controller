@@ -1,3 +1,4 @@
+use serde::{Deserialize, Serialize};
 use std::{
     net::{SocketAddr, ToSocketAddrs, UdpSocket},
     time::{Duration, SystemTime},
@@ -20,6 +21,8 @@ pub struct ArtNetInterface {
     last_sent: Option<SystemTime>,
 }
 
+#[derive(Serialize, Deserialize, Clone)]
+#[serde(rename_all = "camelCase")]
 pub enum ArtNetMode {
     Broadcast,
     /// Specify from (interface) + to (destination) addresses

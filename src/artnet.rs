@@ -31,46 +31,42 @@ pub enum ArtNetMode {
 }
 
 impl ArtNetInterface {
-    pub fn new(mode: ArtNetMode, update_frequency: u64) -> Self {
+    pub fn new(mode: ArtNetMode, update_frequency: u64) -> Result<Self, anyhow::Error> {
         let channels = Vec::with_capacity(CHANNELS_PER_UNIVERSE as usize);
 
         let update_interval = Duration::from_secs_f32(1.0 / update_frequency as f32);
 
         match mode {
             ArtNetMode::Broadcast => {
-                let socket = UdpSocket::bind((String::from("0.0.0.0"), 6455)).unwrap();
-                let broadcast_addr = ("255.255.255.255", 6454)
-                    .to_socket_addrs()
-                    .unwrap()
-                    .next()
-                    .unwrap();
+                let socket = UdpSocket::bind((String::from("0.0.0.0"), 6455))?;
+                let broadcast_addr = ("255.255.255.255", 6454).to_socket_addrs()?.next().unwrap();
                 socket.set_broadcast(true).unwrap();
                 debug!("Broadcast mode set up OK");
-                ArtNetInterface {
+                Ok(ArtNetInterface {
                     socket,
                     destination: broadcast_addr,
                     channels,
                     update_interval,
                     last_sent: None,
                     mode_in_use: mode.clone(),
-                }
+                })
             }
             ArtNetMode::Unicast(src, destination) => {
                 debug!(
                     "Will connect from interface {} to destination {}",
                     &src, &destination
                 );
-                let socket = UdpSocket::bind(src).unwrap();
+                let socket = UdpSocket::bind(src)?;
 
-                socket.set_broadcast(false).unwrap();
-                ArtNetInterface {
+                socket.set_broadcast(false)?;
+                Ok(ArtNetInterface {
                     socket,
                     destination,
                     channels,
                     update_interval,
                     last_sent: None,
                     mode_in_use: mode.clone(),
-                }
+                })
             }
         }
     }

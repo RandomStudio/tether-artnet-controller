@@ -269,6 +269,8 @@ fn render_network_controls(model: &mut Model, ui: &mut Ui) {
                     });
                 }
             }
+        } else {
+            ui.label(RichText::new("Not connected").color(Color32::RED));
         }
     });
     ui.separator();

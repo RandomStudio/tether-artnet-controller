@@ -87,28 +87,45 @@ impl Model {
             }
         };
 
-        let artnet = match &project.artnet_config {
-            Some(artnet_mode) => match artnet_mode {
-                ArtNetConfigMode::Broadcast => Some(ArtNetInterface::new(
-                    ArtNetMode::Broadcast,
-                    settings.artnet_update_frequency,
-                )),
-                ArtNetConfigMode::Unicast(interface_ip, destination_ip) => {
+        let artnet = if settings.artnet_broadcast {
+            warn!("CLI artnetBroadcast flag overrides any project ArtNet settings");
+            Some(ArtNetInterface::new(
+                ArtNetMode::Broadcast,
+                settings.artnet_update_frequency,
+            ))
+        } else if (settings.unicast_src.is_some() && settings.unicast_dst.is_some()) {
+            warn!("CLI unicastSrc + unicaseDst options override any project ArtNet settings");
+            Some(ArtNetInterface::new(
+                ArtNetMode::Unicast((settings.unicast_src.unwrap(), settings.unicast_dst.unwrap())),
+                settings.artnet_update_frequency,
+            ))
+        } else {
+            match &project.artnet_config {
+                Some(artnet_mode) => match artnet_mode {
+                    ArtNetConfigMode::Broadcast => Some(ArtNetInterface::new(
+                        ArtNetMode::Broadcast,
+                        settings.artnet_update_frequency,
+                    )),
+                    ArtNetConfigMode::Unicast(interface_ip, destination_ip) => {
+                        Some(ArtNetInterface::new(
+                            ArtNetMode::Unicast(
+                                SocketAddr::from((Ipv4Addr::from_str(interface_ip).unwrap(), 6453)),
+                                SocketAddr::from((
+                                    Ipv4Addr::from_str(destination_ip).unwrap(),
+                                    6454,
+                                )),
+                            ),
+                            settings.artnet_update_frequency,
+                        ))
+                    }
+                },
+                None => {
+                    warn!("No artnet settings in Project; will use defaults (broadcast mode)");
                     Some(ArtNetInterface::new(
-                        ArtNetMode::Unicast(
-                            SocketAddr::from((Ipv4Addr::from_str(interface_ip).unwrap(), 6453)),
-                            SocketAddr::from((Ipv4Addr::from_str(destination_ip).unwrap(), 6454)),
-                        ),
+                        ArtNetMode::Broadcast,
                         settings.artnet_update_frequency,
                     ))
                 }
-            },
-            None => {
-                warn!("No artnet settings in Project; will use defaults (broadcast mode)");
-                Some(ArtNetInterface::new(
-                    ArtNetMode::Broadcast,
-                    settings.artnet_update_frequency,
-                ))
             }
         };
 

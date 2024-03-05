@@ -28,15 +28,15 @@ pub struct Cli {
     pub artnet_broadcast: bool,
 
     /// IP address for ArtNet source interface (ignored if broadcast enabled)
-    #[arg(long = "artnet.interface", default_value_t=UNICAST_SRC)]
-    pub unicast_src: std::net::IpAddr,
+    #[arg(long = "artnet.interface")]
+    pub unicast_src: Option<std::net::IpAddr>,
 
     /// IP address for ArtNet destination node (ignored if broadcast enabled)
-    #[arg(long = "artnet.destination", default_value_t=UNICAST_DST)]
-    pub unicast_dst: std::net::IpAddr,
+    #[arg(long = "artnet.destination")]
+    pub unicast_dst: Option<std::net::IpAddr>,
 
     /// Update frequency, in Hertz, for sending ArtNet data (gets converted to ms)
-    #[arg(long = "artnet.freq", default_value_t=DEFAULT_ARTNET_HERTZ)]
+    #[arg(long = "artnet.freq")]
     pub artnet_update_frequency: u64,
 
     // TODO: split tasks/commands such as "auto" into separate Clap Command

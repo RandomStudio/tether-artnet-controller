@@ -45,7 +45,7 @@ pub fn render_gui(model: &mut Model, ctx: &eframe::egui::Context, frame: &mut ef
     match model.view_mode {
         ViewMode::Advanced => {
             egui::SidePanel::left("LeftPanel").show(ctx, |ui| {
-                render_tether_controls(model, ui);
+                render_network_controls(model, ui);
                 render_macro_controls(model, ui);
             });
 
@@ -59,13 +59,13 @@ pub fn render_gui(model: &mut Model, ctx: &eframe::egui::Context, frame: &mut ef
         }
         ViewMode::Simple => {
             egui::CentralPanel::default().show(ctx, |ui| {
-                render_tether_controls(model, ui);
+                render_network_controls(model, ui);
                 render_macro_controls(model, ui);
             });
         }
         ViewMode::Scenes => {
             egui::SidePanel::left("LeftPanel").show(ctx, |ui| {
-                render_tether_controls(model, ui);
+                render_network_controls(model, ui);
                 render_macro_controls(model, ui);
             });
             egui::CentralPanel::default().show(ctx, |ui| {
@@ -235,7 +235,7 @@ pub fn render_sliders(model: &mut Model, ui: &mut Ui) {
         });
 }
 
-fn render_tether_controls(model: &mut Model, ui: &mut Ui) {
+fn render_network_controls(model: &mut Model, ui: &mut Ui) {
     ui.horizontal(|ui| {
         ui.heading("Tether");
 
@@ -251,6 +251,24 @@ fn render_tether_controls(model: &mut Model, ui: &mut Ui) {
                 ui.label(RichText::new(msg).color(Color32::RED));
                 offer_tether_connect(model, ui);
             }
+        }
+    });
+    ui.horizontal(|ui| {
+        ui.heading("ArtNet");
+
+        match &model.project.artnet_config {
+            Some(config) => match config {
+                crate::project::artnetconfig::ArtNetConfigMode::Broadcast => {
+                    ui.label(RichText::new("Broadcast Mode").color(Color32::LIGHT_YELLOW));
+                }
+                crate::project::artnetconfig::ArtNetConfigMode::Unicast(src, dst) => {
+                    ui.horizontal(|ui| {
+                        ui.label(RichText::new("Unicast Mode: ").color(Color32::LIGHT_GREEN));
+                        ui.label(format!("{} => {}", src, dst));
+                    });
+                }
+            },
+            None => todo!(),
         }
     });
     ui.separator();

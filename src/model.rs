@@ -6,6 +6,7 @@ use std::{
     time::{Duration, SystemTime},
 };
 
+use anyhow::anyhow;
 use egui::Color32;
 use log::{debug, error, info, trace, warn};
 use tween::SineInOut;
@@ -87,43 +88,27 @@ impl Model {
             }
         };
 
-        let artnet = if cli.artnet_broadcast {
+        let artnet: Result<ArtNetInterface, anyhow::Error> = if cli.artnet_broadcast {
             warn!("CLI artnetBroadcast flag overrides any Project ArtNet settings");
-            if let Ok(artnet_interface) =
-                ArtNetInterface::new(ArtNetMode::Broadcast, cli.artnet_update_frequency)
-            {
-                Some(artnet_interface)
-            } else {
-                None
-            }
+            ArtNetInterface::new(ArtNetMode::Broadcast, cli.artnet_update_frequency)
         } else if cli.unicast_src.is_some() && cli.unicast_dst.is_some() {
-            warn!("CLI unicastSrc + unicaseDst options override any Project ArtNet settings");
-            if let Ok(artnet_interface) = ArtNetInterface::new(
+            warn!("CLI unicastSrc + unicastDst options override any Project ArtNet settings");
+            ArtNetInterface::new(
                 ArtNetMode::Unicast(
                     SocketAddr::from((cli.unicast_src.unwrap(), 6453)),
                     SocketAddr::from((cli.unicast_dst.unwrap(), 6454)),
                 ),
                 cli.artnet_update_frequency,
-            ) {
-                Some(artnet_interface)
-            } else {
-                None
-            }
+            )
         } else {
             debug!("No CLI overrides, attempt to use Project ArtNet config...");
             match &project.artnet_config {
                 Some(artnet_mode) => match artnet_mode {
                     ArtNetConfigMode::Broadcast => {
-                        if let Ok(artnet_interface) =
-                            ArtNetInterface::new(ArtNetMode::Broadcast, cli.artnet_update_frequency)
-                        {
-                            Some(artnet_interface)
-                        } else {
-                            None
-                        }
+                        ArtNetInterface::new(ArtNetMode::Broadcast, cli.artnet_update_frequency)
                     }
                     ArtNetConfigMode::Unicast(interface_ip, destination_ip) => {
-                        if let Ok(artnet_interface) = ArtNetInterface::new(
+                        ArtNetInterface::new(
                             ArtNetMode::Unicast(
                                 SocketAddr::from((Ipv4Addr::from_str(interface_ip).unwrap(), 6453)),
                                 SocketAddr::from((
@@ -132,17 +117,12 @@ impl Model {
                                 )),
                             ),
                             cli.artnet_update_frequency,
-                        ) {
-                            Some(artnet_interface)
-                        } else {
-                            None
-                        }
+                        )
                     }
                 },
-                None => {
-                    warn!("No artnet settings in Project; user should connect manually");
-                    None
-                }
+                None => Err(anyhow!(
+                    "No artnet settings in Project or CLI; user should connect manually"
+                )),
             }
         };
 
@@ -170,7 +150,10 @@ impl Model {
             channels_state: Vec::new(),
             channels_assigned,
             settings: cli,
-            artnet,
+            artnet: match artnet {
+                Ok(artnet) => Some(artnet),
+                Err(_) => None,
+            },
             project,
             current_project_path,
             selected_macro_group_index: 0,

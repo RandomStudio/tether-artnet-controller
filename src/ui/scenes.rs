@@ -153,6 +153,7 @@ pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
             }
         }
 
+        // Then mark is_editing exclusively to the target Scene
         for (index, scene) in model.project.scenes.iter_mut().enumerate() {
             scene.is_editing = index == scene_index;
         }

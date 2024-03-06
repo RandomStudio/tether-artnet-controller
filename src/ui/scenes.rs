@@ -1,6 +1,7 @@
 use std::{collections::HashMap, time::SystemTime};
 
 use egui::{Grid, RichText, ScrollArea, Slider, Spinner, Ui};
+use log::debug;
 
 use crate::{
     model::Model,
@@ -13,6 +14,7 @@ pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
     ui.separator();
 
     let mut go_scene: Option<usize> = None;
+    let mut edit_scene: Option<usize> = None;
     let mut update_scene: Option<usize> = None;
     let mut delete_scene: Option<usize> = None;
     let mut add_scene: Option<Scene> = None;
@@ -121,13 +123,16 @@ pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
                     }
                     if ui.button("Save ✅").clicked() {
                         update_scene = Some(scene_index);
-                        scene.is_editing = false;
+                        edit_scene = None;
                     }
                 } else {
                     ui.horizontal(|ui| {
                         if ui.button("✏").clicked() {
-                            scene.is_editing = true;
-                            // go_scene = Some(scene_index);
+                            // scene.is_editing = true;
+                            edit_scene = Some(scene_index);
+
+                            // ...Then go to the
+                            go_scene = Some(scene_index);
                         }
                         if ui.button("🗑").clicked() {
                             delete_scene = Some(scene_index);
@@ -139,17 +144,17 @@ pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
         }
     });
 
-    if let Some(scene_index) = go_scene {
-        model.apply_scene(scene_index, None, None);
+    if let Some(scene_index) = edit_scene {
+        // First, mark any CURRENTLY-edited scene for update (save)
+        for (index, scene) in model.project.scenes.iter_mut().enumerate() {
+            if scene.is_editing {
+                debug!("Scene {} should get saved", index);
+                update_scene = Some(index);
+            }
+        }
 
         for (index, scene) in model.project.scenes.iter_mut().enumerate() {
-            if index == scene_index {
-                // This one
-                scene.last_active = Some(SystemTime::now());
-            } else {
-                // Others
-                scene.is_editing = false;
-            }
+            scene.is_editing = index == scene_index;
         }
     }
 
@@ -175,6 +180,20 @@ pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
                 }
             }
             scene.state.insert(String::from(&fixture.label), m_state);
+        }
+    }
+
+    if let Some(scene_index) = go_scene {
+        model.apply_scene(scene_index, None, None);
+
+        for (index, scene) in model.project.scenes.iter_mut().enumerate() {
+            if index == scene_index {
+                // This one
+                scene.last_active = Some(SystemTime::now());
+            } else {
+                // Others
+                scene.is_editing = false;
+            }
         }
     }
 

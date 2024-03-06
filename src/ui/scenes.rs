@@ -41,7 +41,7 @@ pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
             add_scene = Some(Scene {
                 label,
                 state,
-                is_editing: false,
+                is_editing: true,
                 last_active: None
             });
         }
@@ -119,7 +119,7 @@ pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
                                 });
                         });
                     }
-                    if ui.button("Update ✅").clicked() {
+                    if ui.button("Save ✅").clicked() {
                         update_scene = Some(scene_index);
                         scene.is_editing = false;
                     }

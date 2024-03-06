@@ -1,19 +1,16 @@
 use std::{
-    net::{Ipv4Addr, SocketAddr},
-    str::FromStr,
     sync::{Arc, Mutex},
     thread::JoinHandle,
     time::{Duration, SystemTime},
 };
 
-use anyhow::anyhow;
 use egui::Color32;
 use log::{debug, error, info, trace, warn};
 use tween::SineInOut;
 
 use crate::{
     animation::{animate_colour, Animation},
-    artnet::{random, zero, ArtNetInterface, ArtNetMode},
+    artnet::{random, zero, ArtNetInterface},
     project::{
         artnetconfig::{get_artnet_interface, ArtNetConfigMode},
         fixture::FixtureMacro,
@@ -24,7 +21,7 @@ use crate::{
         RemoteControlMessage, RemoteMacroMessage, RemoteMacroValue, RemoteSceneMessage,
         TetherControlChangePayload, TetherInterface, TetherMidiMessage, TetherNotePayload,
     },
-    ui::{attempt_connection, render_gui, ViewMode},
+    ui::{render_gui, ViewMode},
 };
 
 #[derive(PartialEq)]
@@ -41,13 +38,18 @@ pub enum TetherStatus {
 }
 
 pub struct Model {
+    pub settings: Cli,
     pub handles: Vec<JoinHandle<()>>,
     pub channels_state: Vec<u8>,
     pub channels_assigned: Vec<bool>,
     pub tether_interface: TetherInterface,
     pub tether_status: TetherStatus,
-    pub settings: Cli,
+    /// A working, connected ArtNet interface, or None if disconnected
+    /// and/or currently editing settings
     pub artnet: Option<ArtNetInterface>,
+    /// UI for ArtNet settings; not necessarily the same
+    /// as the ones in use, until actually applied
+    pub artnet_edit_mode: ArtNetConfigMode,
     pub project: Project,
     pub current_project_path: Option<String>,
     /// Whether macros should currently be applied
@@ -122,6 +124,7 @@ impl Model {
                 Ok(artnet) => Some(artnet),
                 Err(_) => None,
             },
+            artnet_edit_mode: ArtNetConfigMode::Broadcast,
             project,
             current_project_path,
             selected_macro_group_index: 0,
@@ -592,5 +595,19 @@ fn fixtures_list_contains(search_list: &Option<Vec<String>>, label_search_string
         false
     } else {
         true
+    }
+}
+
+pub fn attempt_connection(model: &mut Model) {
+    match model.tether_interface.connect(
+        model.should_quit.clone(),
+        model.settings.tether_host.as_deref(),
+    ) {
+        Ok(_) => {
+            model.tether_status = TetherStatus::Connected;
+        }
+        Err(e) => {
+            model.tether_status = TetherStatus::Errored(format!("Error: {e}"));
+        }
     }
 }

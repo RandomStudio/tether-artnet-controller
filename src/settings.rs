@@ -1,9 +1,7 @@
-use std::net::{IpAddr, Ipv4Addr};
-
 use clap::Parser;
 
-const UNICAST_SRC: std::net::IpAddr = IpAddr::V4(Ipv4Addr::new(10, 0, 0, 102));
-const UNICAST_DST: std::net::IpAddr = IpAddr::V4(Ipv4Addr::new(10, 0, 0, 1));
+pub const UNICAST_SRC_STRING: &str = "127.0.0.1";
+pub const UNICAST_DST_STRING: &str = "127.0.0.1";
 
 pub const DEFAULT_ARTNET_HERTZ: u64 = 44;
 
@@ -17,8 +15,8 @@ pub struct Cli {
     #[arg(long = "headless")]
     pub headless_mode: bool,
 
-    #[arg(long = "project",default_value_t=String::from("./example.project.json"))]
-    pub project_path: String,
+    #[arg(long = "project")]
+    pub project_path: Option<String>,
 
     #[arg(long = "loglevel",default_value_t=String::from("info"))]
     pub log_level: String,

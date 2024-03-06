@@ -10,6 +10,7 @@ use crate::{
     artnet::{ArtNetInterface, ArtNetMode},
     model::{attempt_connection, Model, TetherStatus},
     project::artnetconfig::ArtNetConfigMode,
+    settings::{UNICAST_DST_STRING, UNICAST_SRC_STRING},
 };
 use anyhow::anyhow;
 
@@ -69,7 +70,7 @@ pub fn render_network_controls(model: &mut Model, ui: &mut Ui) {
             );
             ui.radio_value(
                 &mut model.artnet_edit_mode,
-                ArtNetConfigMode::Unicast(String::new(), String::new()),
+                ArtNetConfigMode::Unicast(UNICAST_SRC_STRING.into(), UNICAST_DST_STRING.into()),
                 "Unicast mode",
             );
         });
@@ -109,9 +110,9 @@ pub fn render_network_controls(model: &mut Model, ui: &mut Ui) {
                         }
                     }
                 };
-            model.artnet = match new_artnet_interface {
-                Ok(x) => Some(x),
-                Err(_) => None,
+            if let Ok(interface) = new_artnet_interface {
+                model.project.artnet_config = Some(ArtNetConfigMode::from(&interface));
+                model.artnet = Some(interface);
             }
         }
     }

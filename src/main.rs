@@ -1,16 +1,11 @@
-use std::{net::SocketAddr, sync::mpsc, time::Duration};
+use std::{sync::mpsc, time::Duration};
 
 use env_logger::Env;
 use log::{debug, info};
 
 use clap::Parser;
 
-use crate::{
-    artnet::{ArtNetInterface, ArtNetMode},
-    model::Model,
-    settings::Cli,
-    ui::SIMPLE_WIN_SIZE,
-};
+use crate::{model::Model, settings::Cli, ui::SIMPLE_WIN_SIZE};
 
 mod animation;
 mod artnet;

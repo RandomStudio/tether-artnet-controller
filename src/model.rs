@@ -79,15 +79,21 @@ impl Model {
     pub fn new(cli: Cli) -> Model {
         let mut current_project_path = None;
 
-        let project = match Project::load(&cli.project_path) {
+        let project_to_load = String::from(
+            &cli.project_path
+                .clone()
+                .unwrap_or("./example.project.json".into()),
+        );
+
+        let project = match Project::load(&project_to_load) {
             Ok(p) => {
-                current_project_path = Some(String::from(&cli.project_path));
+                current_project_path = Some(project_to_load);
                 p
             }
             Err(e) => {
                 error!(
                     "Failed to load project from path \"{}\"; {:?}",
-                    &cli.project_path, e
+                    project_to_load, e
                 );
                 info!("Blank project will be loaded instead.");
                 Project::new()

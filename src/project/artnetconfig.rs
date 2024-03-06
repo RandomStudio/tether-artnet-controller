@@ -4,7 +4,7 @@ use std::{
     str::FromStr,
 };
 
-use log::{debug, warn};
+use log::{debug, error, info, warn};
 use serde::{Deserialize, Serialize};
 
 use crate::{
@@ -14,7 +14,7 @@ use crate::{
 
 use super::Project;
 
-#[derive(Serialize, Deserialize, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Clone, PartialEq, Debug)]
 pub enum ArtNetConfigMode {
     Broadcast,
     Unicast(String, String),
@@ -24,6 +24,7 @@ pub fn get_artnet_interface(
     cli: &Cli,
     project: &Project,
 ) -> Result<ArtNetInterface, anyhow::Error> {
+    debug!("get_artnet_interface");
     if cli.artnet_broadcast {
         warn!("CLI artnetBroadcast flag overrides any Project ArtNet settings");
         ArtNetInterface::new(ArtNetMode::Broadcast, cli.artnet_update_frequency)
@@ -39,21 +40,43 @@ pub fn get_artnet_interface(
     } else {
         debug!("No CLI overrides, attempt to use Project ArtNet config...");
         match &project.artnet_config {
-            Some(artnet_mode) => match artnet_mode {
-                ArtNetConfigMode::Broadcast => {
-                    ArtNetInterface::new(ArtNetMode::Broadcast, cli.artnet_update_frequency)
+            Some(artnet_mode) => {
+                info!("Using project ArtNet Config {:?}", artnet_mode);
+                match artnet_mode {
+                    ArtNetConfigMode::Broadcast => {
+                        ArtNetInterface::new(ArtNetMode::Broadcast, cli.artnet_update_frequency)
+                    }
+                    ArtNetConfigMode::Unicast(interface_ip, destination_ip) => {
+                        ArtNetInterface::new(
+                            ArtNetMode::Unicast(
+                                SocketAddr::from((Ipv4Addr::from_str(interface_ip).unwrap(), 6453)),
+                                SocketAddr::from((
+                                    Ipv4Addr::from_str(destination_ip).unwrap(),
+                                    6454,
+                                )),
+                            ),
+                            cli.artnet_update_frequency,
+                        )
+                    }
                 }
-                ArtNetConfigMode::Unicast(interface_ip, destination_ip) => ArtNetInterface::new(
-                    ArtNetMode::Unicast(
-                        SocketAddr::from((Ipv4Addr::from_str(interface_ip).unwrap(), 6453)),
-                        SocketAddr::from((Ipv4Addr::from_str(destination_ip).unwrap(), 6454)),
-                    ),
-                    cli.artnet_update_frequency,
-                ),
-            },
-            None => Err(anyhow!(
-                "No artnet settings in Project or CLI; user should connect manually"
-            )),
+            }
+            None => {
+                error!("ArtNet config could not be found or parsed from Project");
+                Err(anyhow!(
+                    "No artnet settings in Project or CLI; user should connect manually"
+                ))
+            }
+        }
+    }
+}
+
+impl From<&ArtNetInterface> for ArtNetConfigMode {
+    fn from(value: &ArtNetInterface) -> Self {
+        match value.mode_in_use() {
+            ArtNetMode::Broadcast => ArtNetConfigMode::Broadcast,
+            ArtNetMode::Unicast(src, dst) => {
+                ArtNetConfigMode::Unicast(src.ip().to_string(), dst.ip().to_string())
+            }
         }
     }
 }

@@ -24,19 +24,19 @@ pub struct Project {
     pub artnet_config: Option<ArtNetConfigMode>,
 }
 
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub enum SceneValue {
     ControlValue(u8),
     ColourValue(Color32),
 }
 
-/// "Macro label": value
+/// { "macro label": value }
 pub type SceneState = HashMap<String, SceneValue>;
 
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct Scene {
     pub label: String,
-    /// "Fixture instance label": { "macro label": value } }
+    /// { "fixture instance label": { "macro label": value } }
     pub state: HashMap<String, SceneState>,
     #[serde(skip)]
     pub is_editing: bool,
@@ -90,6 +90,56 @@ impl Project {
                         );
                     }
                 }
+
+                project.fixtures.sort_by_key(|x| x.label.clone());
+
+                // Sort macros in Fixtures, alphabetically...
+                for fixture in project.fixtures.iter_mut() {
+                    let mut mode_macros_ordered = fixture.config.active_mode.clone();
+                    mode_macros_ordered.macros.sort_by_key(|m| match m {
+                        fixture::FixtureMacro::Control(cm) => cm.label.clone(),
+                        fixture::FixtureMacro::Colour(cm) => cm.label.clone(),
+                    });
+                    fixture.config.active_mode = mode_macros_ordered;
+                }
+
+                // Level 1: Scenes sorted by their labels
+                project.scenes.sort_by_key(|x| x.label.clone());
+
+                // Level 2: Fixture for each Scene sorted by label
+                for scene in project.scenes.iter_mut() {
+                    let mut ordered_scene_vec = Vec::new();
+                    for (fixture_key, scene_value) in scene.state.iter() {
+                        // ordered_scene_vec.push((fixture_key.clone(), scene_value.clone()));
+                        ordered_scene_vec.push((fixture_key.clone(), scene_value.clone()));
+                    }
+                    // debug!("Before: {:?}", ordered_scene_vec);
+                    ordered_scene_vec.sort_by_key(|(k, _v)| k.clone());
+                    debug!("After: {:?}", ordered_scene_vec);
+                    scene.state.clear();
+                    for (fixture_key, scene_value) in ordered_scene_vec.iter() {
+                        debug!("inserting \"{}\"", fixture_key.clone());
+                        scene.state.insert(fixture_key.clone(), scene_value.clone());
+                    }
+                }
+
+                debug!("Final ordered scenes: {:?}", project.scenes);
+
+                // for (_fixture_instance_key, macro_contents) in scene.state.iter_mut() {
+                //     let mut ordered_macros_vec = Vec::new();
+                //     // let ordered_
+                //     for (macro_key, macro_value) in macro_contents.clone() {
+                //         ordered_macros_vec.push((macro_key, macro_value));
+                //     }
+                //     ordered_macros_vec.sort_by_key(|(k, _v)| String::from(k));
+
+                //     macro_contents.clear();
+                //     for (i, (k, v)) in ordered_macros_vec.iter().enumerate() {
+                //         debug!("#{} Insert macro {}", i, k);
+                //         macro_contents.insert((*k).clone(), (*v).clone());
+                //     }
+                //     debug!("Fixtures")
+                // }
 
                 Ok(project)
             }

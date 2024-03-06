@@ -60,7 +60,10 @@ If you have Tether Egui installed (`cargo install tether-egui`) then the easiest
 - [x] Colour conversions should be possible manually, e.g. RGB -> CMY
 - [x] With macros, add some visual indicators of state, e.g. Colour, Brightness and Pan/Tilt
 - [x] Allow the app to launch just fine without Tether
-- [ ] If no ArtNet provided in Project (and no settings provided from CLI), then do NOT connect, but allow editing / manual connect
-- [ ] Allow the app to launch without any project file at all
+- [x] If no ArtNet provided in Project (and no settings provided from CLI), then do NOT connect, but allow editing / manual connect
+- [ ] Allow Tether settings to be saved with project as well
+- [ ] Keep project files sorted, e.g. by fixtures
+- [x] Allow the app to launch without any project file at all
 - [ ] Add 16-bit control, at least for macros (single slider adjusts the two channels as split between first and second 8-bit digits)
 - [ ] ArtNet on separate thread, with more precise timing; this might require some messaging back and forth and/or mutex
+- [ ] It should be possible to add Macros from "Advanced Mode" into the available macros for the fixtures (and therefore the scenes). This would be part of a fixture-editing UI?

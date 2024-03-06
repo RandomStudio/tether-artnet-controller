@@ -101,7 +101,10 @@ impl Project {
     }
 
     pub fn save(path: &str, project: &Project) -> anyhow::Result<()> {
-        let json = serde_json::to_string_pretty(&project)?;
+        let mut new_project = project.clone();
+        new_project.fixtures.sort();
+
+        let json = serde_json::to_string_pretty(&new_project)?;
         debug!("{}", json);
 
         fs::write(path, json)?;

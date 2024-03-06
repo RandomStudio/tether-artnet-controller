@@ -1,3 +1,5 @@
+use std::cmp::Ordering;
+
 use egui::Color32;
 use serde::{Deserialize, Serialize};
 
@@ -5,6 +7,7 @@ use crate::animation::Animation;
 
 #[derive(Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
+/// A Fixture, as configured in a Project file
 pub struct FixtureInstance {
     /// The label (should be unique per project) of this fixture instance
     pub label: String,
@@ -16,6 +19,27 @@ pub struct FixtureInstance {
     #[serde(skip)]
     /// The actual configuration, once loaded via the path
     pub config: FixtureConfig,
+}
+
+impl PartialEq for FixtureInstance {
+    fn eq(&self, other: &Self) -> bool {
+        self.label == other.label
+    }
+}
+impl PartialOrd for FixtureInstance {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(self.cmp(other))
+    }
+}
+impl Eq for FixtureInstance {}
+impl Ord for FixtureInstance {
+    fn cmp(&self, other: &Self) -> Ordering {
+        if self.label > other.label {
+            Ordering::Greater
+        } else {
+            Ordering::Less
+        }
+    }
 }
 
 #[derive(Serialize, Deserialize, Clone, Default)]

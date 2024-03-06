@@ -1,6 +1,7 @@
-use std::{collections::HashMap, time::SystemTime};
+use std::time::SystemTime;
 
 use egui::{Grid, RichText, ScrollArea, Slider, Spinner, Ui};
+use indexmap::IndexMap;
 
 use crate::{
     model::Model,
@@ -21,10 +22,10 @@ pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
         if ui.button("+ Add New").clicked() {
             let label = format!("New Scene {}", model.project.scenes.len());
 
-            let mut state = HashMap::<String, SceneState>::new();
+            let mut state = IndexMap::<String, SceneState>::new();
 
             for fixture in model.project.fixtures.iter() {
-                let mut m_state: HashMap<String, SceneValue> = HashMap::new();
+                let mut m_state: IndexMap<String, SceneValue> = IndexMap::new();
                 for m in fixture.config.active_mode.macros.iter() {
                     match m {
                         FixtureMacro::Control(control_macro) => {
@@ -157,7 +158,7 @@ pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
         let scene = &mut model.project.scenes[scene_index];
 
         for fixture in model.project.fixtures.iter() {
-            let mut m_state: HashMap<String, SceneValue> = HashMap::new();
+            let mut m_state = IndexMap::new();
             for m in fixture.config.active_mode.macros.iter() {
                 match m {
                     FixtureMacro::Control(control_macro) => {

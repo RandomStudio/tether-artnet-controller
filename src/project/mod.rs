@@ -1,6 +1,7 @@
-use std::{collections::HashMap, fs, time::SystemTime};
+use std::{fs, time::SystemTime};
 
 use egui::Color32;
+use indexmap::IndexMap;
 use log::{debug, error, info, warn};
 use serde::{Deserialize, Serialize};
 
@@ -31,13 +32,13 @@ pub enum SceneValue {
 }
 
 /// { "macro label": value }
-pub type SceneState = HashMap<String, SceneValue>;
+pub type SceneState = IndexMap<String, SceneValue>;
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct Scene {
     pub label: String,
     /// { "fixture instance label": { "macro label": value } }
-    pub state: HashMap<String, SceneState>,
+    pub state: IndexMap<String, SceneState>,
     #[serde(skip)]
     pub is_editing: bool,
     #[serde(skip)]
@@ -108,23 +109,18 @@ impl Project {
 
                 // Level 2: Fixture for each Scene sorted by label
                 for scene in project.scenes.iter_mut() {
-                    let mut ordered_scene_vec = Vec::new();
-                    for (fixture_key, scene_value) in scene.state.iter() {
-                        // ordered_scene_vec.push((fixture_key.clone(), scene_value.clone()));
-                        ordered_scene_vec.push((fixture_key.clone(), scene_value.clone()));
-                    }
-                    // debug!("Before: {:?}", ordered_scene_vec);
-                    ordered_scene_vec.sort_by_key(|(k, _v)| k.clone());
-                    debug!("After: {:?}", ordered_scene_vec);
-                    scene.state.clear();
-                    for (fixture_key, scene_value) in ordered_scene_vec.iter() {
-                        debug!("inserting \"{}\"", fixture_key.clone());
-                        scene.state.insert(fixture_key.clone(), scene_value.clone());
+                    scene.state.sort_keys();
+                    for (_fixture_key, macro_key) in scene.state.iter_mut() {
+                        macro_key.sort_keys();
                     }
                 }
 
                 debug!("Final ordered scenes: {:?}", project.scenes);
 
+                // Level 3: Sort each Macro entry within each Scene Fixture entry
+                // for scene in project.scenes.iter_mut() {
+                //     for fixture in scene.state.iter_mut() {}
+                // }
                 // for (_fixture_instance_key, macro_contents) in scene.state.iter_mut() {
                 //     let mut ordered_macros_vec = Vec::new();
                 //     // let ordered_

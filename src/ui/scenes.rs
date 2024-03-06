@@ -75,7 +75,7 @@ pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
                     for (fixture_index, s) in scene.state.iter_mut().enumerate() {
                         let (fixture_label, states) = s;
                         ui.label(fixture_label);
-                        ui.add_enabled_ui(false, |ui| {
+                        ui.add_enabled_ui(true, |ui| {
                             Grid::new(format!("scene-{}-state-{}", scene_index, fixture_index))
                                 .num_columns(2)
                                 .show(ui, |ui| {
@@ -86,14 +86,14 @@ pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
                                         if let Some(matched_fixture) = model
                                             .project
                                             .fixtures
-                                            .iter()
+                                            .iter_mut()
                                             .find(|x| x.label.eq(fixture_label))
                                         {
                                             if let Some(matched_macro) = matched_fixture
                                                 .config
                                                 .active_mode
                                                 .macros
-                                                .iter()
+                                                .iter_mut()
                                                 .find(|x|  match x {
                                                     FixtureMacro::Control(m) => m.label.eq(macro_label),
                                                     FixtureMacro::Colour(m) => m.label.eq(macro_label),
@@ -103,13 +103,13 @@ pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
                                             {
                                                 match matched_macro {
                                                     FixtureMacro::Control(m) => {
-                                                        let mut dummy_value = m.current_value;
-                                                        ui.add(Slider::new(&mut dummy_value, 0..=255));
+                                                        // let mut dummy_value = m.current_value;
+                                                        ui.add(Slider::new(&mut m.current_value, 0..=255));
 
                                                     } ,
                                                     FixtureMacro::Colour(m) => {
-                                                        let mut dummy_value = m.current_value;
-                                                        ui.color_edit_button_srgba(&mut dummy_value);
+                                                        // let mut dummy_value = m.current_value;
+                                                        ui.color_edit_button_srgba(&mut m.current_value);
                                                     }
                                                 };
                                                 ui.small("Adjust values in Macros panel");

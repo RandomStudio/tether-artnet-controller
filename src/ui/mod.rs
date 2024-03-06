@@ -67,7 +67,6 @@ pub fn render_gui(model: &mut Model, ctx: &eframe::egui::Context, frame: &mut ef
         ViewMode::Scenes => {
             egui::SidePanel::left("LeftPanel").show(ctx, |ui| {
                 render_network_controls(model, ui);
-                render_macro_controls(model, ui);
             });
             egui::CentralPanel::default().show(ctx, |ui| {
                 render_scenes(model, ui);

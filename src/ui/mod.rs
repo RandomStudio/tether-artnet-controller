@@ -17,16 +17,15 @@ mod macro_controls;
 mod network_controls;
 mod scenes;
 
-pub const SIMPLE_WIN_SIZE: Vec2 = Vec2::new(400., 1024.0);
-pub const ADVANCED_WIN_SIZE: Vec2 = Vec2::new(1280., 900.);
+pub const NARROW_WINDOW: Vec2 = Vec2::new(800., 1024.0);
+pub const WIDER_WINDOW: Vec2 = Vec2::new(1280., 900.);
 
 // const WINDOW_RESET_POSITION: [f32; 2] = [32.0, 32.0];
 
 #[derive(PartialEq)]
 pub enum ViewMode {
-    Simple,
-    Advanced,
     Scenes,
+    Setup,
 }
 
 pub fn render_gui(model: &mut Model, ctx: &eframe::egui::Context, frame: &mut eframe::Frame) {
@@ -44,7 +43,16 @@ pub fn render_gui(model: &mut Model, ctx: &eframe::egui::Context, frame: &mut ef
     render_mode_switcher(model, ctx, frame);
 
     match model.view_mode {
-        ViewMode::Advanced => {
+        ViewMode::Scenes => {
+            egui::SidePanel::left("LeftPanel").show(ctx, |ui| {
+                render_network_controls(model, ui);
+                render_macro_controls(model, ui);
+            });
+            egui::CentralPanel::default().show(ctx, |ui| {
+                render_scenes(model, ui);
+            });
+        }
+        ViewMode::Setup => {
             egui::SidePanel::left("LeftPanel").show(ctx, |ui| {
                 render_network_controls(model, ui);
                 render_macro_controls(model, ui);
@@ -56,20 +64,6 @@ pub fn render_gui(model: &mut Model, ctx: &eframe::egui::Context, frame: &mut ef
 
             egui::CentralPanel::default().show(ctx, |ui| {
                 render_fixture_controls(model, ui);
-            });
-        }
-        ViewMode::Simple => {
-            egui::CentralPanel::default().show(ctx, |ui| {
-                render_network_controls(model, ui);
-                render_macro_controls(model, ui);
-            });
-        }
-        ViewMode::Scenes => {
-            egui::SidePanel::left("LeftPanel").show(ctx, |ui| {
-                render_network_controls(model, ui);
-            });
-            egui::CentralPanel::default().show(ctx, |ui| {
-                render_scenes(model, ui);
             });
         }
     }
@@ -126,22 +120,16 @@ pub fn render_mode_switcher(
             ui.horizontal(|ui| {
                 ui.heading("🗖");
                 if ui
-                    .selectable_value(&mut model.view_mode, ViewMode::Simple, "Simple")
-                    .clicked()
-                {
-                    ctx.send_viewport_cmd(egui::ViewportCommand::InnerSize(SIMPLE_WIN_SIZE));
-                };
-                if ui
-                    .selectable_value(&mut model.view_mode, ViewMode::Advanced, "Advanced")
-                    .clicked()
-                {
-                    ctx.send_viewport_cmd(egui::ViewportCommand::InnerSize(ADVANCED_WIN_SIZE));
-                }
-                if ui
                     .selectable_value(&mut model.view_mode, ViewMode::Scenes, "Scenes")
                     .clicked()
                 {
-                    ctx.send_viewport_cmd(egui::ViewportCommand::InnerSize(ADVANCED_WIN_SIZE));
+                    ctx.send_viewport_cmd(egui::ViewportCommand::InnerSize(WIDER_WINDOW));
+                }
+                if ui
+                    .selectable_value(&mut model.view_mode, ViewMode::Setup, "Setup")
+                    .clicked()
+                {
+                    ctx.send_viewport_cmd(egui::ViewportCommand::InnerSize(WIDER_WINDOW));
                 }
                 ui.label("|");
                 if ui.button("New").clicked() {

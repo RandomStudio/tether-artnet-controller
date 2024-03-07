@@ -74,14 +74,18 @@ pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
                 if scene.is_editing {
                     for (fixture_index, s) in scene.state.iter_mut().enumerate() {
                         let (fixture_label, states) = s;
-                        ui.label(fixture_label);
+                        // ----------------
+                        ui.heading(fixture_label);
+                        // ----------------
                         ui.add_enabled_ui(true, |ui| {
                             Grid::new(format!("scene-{}-state-{}", scene_index, fixture_index))
                                 .num_columns(2)
                                 .show(ui, |ui| {
                                     for m in states.iter_mut() {
                                         let (macro_label, _scene_value) = m;
+                                        // ----------------
                                         ui.label(macro_label);
+                                        // ----------------
                                         // ui.add(Slider::new(scene_value, 0..=255));
                                         if let Some(matched_fixture) = model
                                             .project

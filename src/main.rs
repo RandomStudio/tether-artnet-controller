@@ -5,7 +5,7 @@ use log::{debug, info};
 
 use clap::Parser;
 
-use crate::{model::Model, settings::Cli, ui::SIMPLE_WIN_SIZE};
+use crate::{model::Model, settings::Cli, ui::NARROW_WINDOW};
 
 mod animation;
 mod artnet;
@@ -56,7 +56,7 @@ fn main() {
     } else {
         info!("Running graphics mode; close the window to quit");
         let options = eframe::NativeOptions {
-            viewport: egui::ViewportBuilder::default().with_inner_size(SIMPLE_WIN_SIZE),
+            viewport: egui::ViewportBuilder::default().with_inner_size(NARROW_WINDOW),
             run_and_return: true,
             ..Default::default()
         };

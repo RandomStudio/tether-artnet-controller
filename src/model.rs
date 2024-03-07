@@ -135,7 +135,7 @@ impl Model {
             current_project_path,
             selected_macro_group_index: 0,
             apply_macros: false,
-            view_mode: ViewMode::Simple,
+            view_mode: ViewMode::Scenes,
             exit_mode: BehaviourOnExit::Home,
             save_on_exit: true,
             show_confirm_exit: false,

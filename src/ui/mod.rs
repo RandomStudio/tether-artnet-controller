@@ -189,10 +189,22 @@ pub fn render_mode_switcher(
                         }
                     }
                 }
+                if let Some(existing_project_path) = &model.current_project_path {
+                    ui.label(
+                        RichText::new(existing_project_path)
+                            .color(Color32::WHITE)
+                            .italics()
+                            .small(),
+                    );
+                } else {
+                    ui.label(
+                        RichText::new("No project file")
+                            .color(Color32::GRAY)
+                            .italics()
+                            .small(),
+                    );
+                }
             });
-            if let Some(existing_project_path) = &model.current_project_path {
-                ui.label(RichText::new(existing_project_path).italics().small());
-            }
         });
 }
 

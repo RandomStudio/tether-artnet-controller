@@ -68,20 +68,32 @@ pub fn render_fixture_controls(model: &mut Model, ui: &mut Ui) {
 fn fixture_controls_in_project(model: &mut Model, ui: &mut Ui) {
     let mut remove_index = None;
 
-    for (i, fixture) in model.project.fixtures.iter().enumerate() {
+    for (i, fixture) in model.project.fixtures.iter_mut().enumerate() {
         let config = &fixture.config;
         // ----------------
         ui.horizontal(|ui| {
-            ui.heading(format!("{} +{}", &fixture.label, fixture.offset_channels));
+            ui.heading(&fixture.label);
             if ui.button("🗑").clicked() {
                 remove_index = Some(i);
             }
         });
         // ----------------
-        ui.label((config.name).to_string());
-        ui.hyperlink_to("Reference/manual", &config.reference);
-        let current_mode = &config.modes[fixture.mode_index];
+        ui.horizontal(|ui| {
+            ui.label((config.name).to_string());
+            ui.hyperlink_to("Reference/manual", &config.reference);
+        });
+        // ----------------
+        ui.horizontal(|ui| {
+            ui.label("Offset channels:");
+            ui.add(
+                DragValue::new(&mut fixture.offset_channels)
+                    .clamp_range(0..=255)
+                    .speed(1),
+            );
+        });
 
+        // ----------------
+        let current_mode = &config.modes[fixture.mode_index];
         ui.heading("Mappings");
 
         Grid::new(format!("mappings_{}", i))

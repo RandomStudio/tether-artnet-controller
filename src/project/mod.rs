@@ -42,7 +42,7 @@ pub struct Scene {
     #[serde(skip)]
     pub is_editing: bool,
     #[serde(skip)]
-    pub last_active: Option<SystemTime>,
+    pub last_active: bool,
 }
 
 impl Project {

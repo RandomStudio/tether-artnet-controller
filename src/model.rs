@@ -1,7 +1,7 @@
 use std::{
     sync::{Arc, Mutex},
     thread::JoinHandle,
-    time::{Duration, SystemTime},
+    time::Duration,
 };
 
 use egui::Color32;
@@ -425,7 +425,7 @@ impl Model {
         {
             Some((index, scene)) => {
                 debug!("Found scene \"{}\" at index {}", &scene.label, index);
-                scene.last_active = Some(SystemTime::now());
+                scene.last_active = true;
                 self.apply_scene(index, msg.ms, msg.fixture_labels);
             }
             None => error!("Failed to find matching scene for \"{}\"", &msg.scene_label),

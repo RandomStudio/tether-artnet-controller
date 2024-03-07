@@ -45,7 +45,7 @@ pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
                 label,
                 state,
                 is_editing: true,
-                last_active: None
+                last_active: false
             });
         }
 
@@ -63,12 +63,12 @@ pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
                         {
                             go_scene = Some((scene_index, None)); // go to scene "immediately"
                         };
-                        if let Some(t) = scene.last_active {
-                            let progress = t.elapsed().unwrap().as_secs_f32() / 1.0;
-                            if progress >= 1.0 { scene.last_active = None; }
-                            ui.add(Spinner::new());
+                        if scene.last_active {
+                            ui.label("★");
                         }
                     });
+                    ui.separator();
+
                     ui.horizontal(|ui| {
                         ui.label("Transition:");
                     if ui.button("1s").clicked() {
@@ -138,10 +138,16 @@ pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
                                 });
                         });
                     }
-                    if ui.button("Save ✅").clicked() {
-                        update_scene = Some(scene_index);
-                        edit_scene = None;
-                    }
+                    ui.horizontal(|ui| {
+                        if ui.button("Save ✅").clicked() {
+                            update_scene = Some(scene_index);
+                            edit_scene = None;
+                        }
+                        if ui.button("Cancel ❌").clicked() {
+                            edit_scene = None;
+                            scene.is_editing = false;
+                        }
+                    });
                 } else {
                     ui.horizontal(|ui| {
                         if ui.button("✏").clicked() {
@@ -155,7 +161,6 @@ pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
                         }
                     });
                 }
-                ui.separator();
             });
         }
     });
@@ -207,9 +212,10 @@ pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
         for (index, scene) in model.project.scenes.iter_mut().enumerate() {
             if index == scene_index {
                 // This one
-                scene.last_active = Some(SystemTime::now());
+                scene.last_active = true;
             } else {
                 // Others
+                scene.last_active = false;
                 scene.is_editing = false;
             }
         }

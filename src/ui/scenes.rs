@@ -14,7 +14,7 @@ pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
 
     ui.separator();
 
-    let mut go_scene: Option<usize> = None;
+    let mut go_scene: Option<(usize, Option<u64>)> = None;
     let mut edit_scene: Option<usize> = None;
     let mut update_scene: Option<usize> = None;
     let mut delete_scene: Option<usize> = None;
@@ -61,13 +61,25 @@ pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
                             .button(RichText::new(&scene.label).size(24.0))
                             .clicked()
                         {
-                            go_scene = Some(scene_index);
+                            go_scene = Some((scene_index, None)); // go to scene "immediately"
                         };
                         if let Some(t) = scene.last_active {
                             let progress = t.elapsed().unwrap().as_secs_f32() / 1.0;
                             if progress >= 1.0 { scene.last_active = None; }
                             ui.add(Spinner::new());
                         }
+                    });
+                    ui.horizontal(|ui| {
+                        ui.label("Transition:");
+                    if ui.button("1s").clicked() {
+                        go_scene = Some((scene_index, Some(1000)));
+                    }
+                    if ui.button("3s").clicked() {
+                        go_scene = Some((scene_index, Some(3000)));
+                    }
+                    if ui.button("10s").clicked() {
+                        go_scene = Some((scene_index, Some(10000)));
+                    }
                     });
                 }
 
@@ -133,11 +145,10 @@ pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
                 } else {
                     ui.horizontal(|ui| {
                         if ui.button("✏").clicked() {
-                            // scene.is_editing = true;
+                            // Mark scene for editing
                             edit_scene = Some(scene_index);
-
-                            // ...Then go to the
-                            go_scene = Some(scene_index);
+                            // Also go to this scene (immediately)
+                            go_scene = Some((scene_index, None));
                         }
                         if ui.button("🗑").clicked() {
                             delete_scene = Some(scene_index);
@@ -190,8 +201,8 @@ pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
         }
     }
 
-    if let Some(scene_index) = go_scene {
-        model.apply_scene(scene_index, None, None);
+    if let Some((scene_index, ms)) = go_scene {
+        model.apply_scene(scene_index, ms, None);
 
         for (index, scene) in model.project.scenes.iter_mut().enumerate() {
             if index == scene_index {

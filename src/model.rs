@@ -19,7 +19,8 @@ use crate::{
     settings::{Cli, CHANNELS_PER_UNIVERSE},
     tether_interface::{
         RemoteControlMessage, RemoteMacroMessage, RemoteMacroValue, RemoteSceneMessage,
-        TetherControlChangePayload, TetherInterface, TetherMidiMessage, TetherNotePayload,
+        TetherControlChangePayload, TetherInterface, TetherKnobPayload, TetherMidiMessage,
+        TetherNotePayload,
     },
     ui::{render_gui, ViewMode},
 };
@@ -313,6 +314,24 @@ impl Model {
                             },
                             None => {
                                 error!("Failed to match macro control");
+                            }
+                        }
+                    }
+                }
+            }
+            TetherMidiMessage::Knob(TetherKnobPayload { index, position }) => {
+                let mut macro_index = 0;
+                for fixture in self.project.fixtures.iter_mut() {
+                    for m in fixture.config.active_mode.macros.iter_mut() {
+                        match m {
+                            FixtureMacro::Control(control_macro) => {
+                                if index == macro_index {
+                                    control_macro.current_value = (255.0 * position) as u8;
+                                }
+                                macro_index += 1;
+                            }
+                            FixtureMacro::Colour(_colour_macro) => {
+                                // Ignore colour macros for now
                             }
                         }
                     }

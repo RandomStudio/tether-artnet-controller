@@ -31,7 +31,7 @@
       "state": {
         "Hero North": {
           "brightness": {
-            "ControlValue": 0
+            "ControlValue": 255
           },
           "colour": {
             "ColourValue": [
@@ -45,15 +45,15 @@
             "ControlValue": 0
           },
           "tilt": {
-            "ControlValue": 127
+            "ControlValue": 95
           },
           "zoom": {
-            "ControlValue": 255
+            "ControlValue": 153
           }
         },
         "Hero South": {
           "brightness": {
-            "ControlValue": 0
+            "ControlValue": 255
           },
           "colour": {
             "ColourValue": [
@@ -67,15 +67,15 @@
             "ControlValue": 0
           },
           "tilt": {
-            "ControlValue": 140
+            "ControlValue": 105
           },
           "zoom": {
-            "ControlValue": 255
+            "ControlValue": 123
           }
         },
         "Hex East": {
           "brightness": {
-            "ControlValue": 0
+            "ControlValue": 255
           },
           "colour": {
             "ColourValue": [
@@ -92,12 +92,12 @@
             "ControlValue": 150
           },
           "zoom": {
-            "ControlValue": 255
+            "ControlValue": 130
           }
         },
         "Hex West": {
           "brightness": {
-            "ControlValue": 0
+            "ControlValue": 255
           },
           "colour": {
             "ColourValue": [
@@ -114,7 +114,7 @@
             "ControlValue": 130
           },
           "zoom": {
-            "ControlValue": 255
+            "ControlValue": 120
           }
         }
       }
@@ -138,10 +138,10 @@
             "ControlValue": 193
           },
           "tilt": {
-            "ControlValue": 150
+            "ControlValue": 117
           },
           "zoom": {
-            "ControlValue": 0
+            "ControlValue": 118
           }
         },
         "Hero South": {
@@ -163,7 +163,7 @@
             "ControlValue": 127
           },
           "zoom": {
-            "ControlValue": 0
+            "ControlValue": 110
           }
         },
         "Hex East": {
@@ -185,7 +185,7 @@
             "ControlValue": 128
           },
           "zoom": {
-            "ControlValue": 0
+            "ControlValue": 255
           }
         },
         "Hex West": {
@@ -201,13 +201,13 @@
             ]
           },
           "pan": {
-            "ControlValue": 77
+            "ControlValue": 82
           },
           "tilt": {
-            "ControlValue": 120
+            "ControlValue": 117
           },
           "zoom": {
-            "ControlValue": 0
+            "ControlValue": 255
           }
         }
       }

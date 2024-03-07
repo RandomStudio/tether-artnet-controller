@@ -67,17 +67,20 @@ impl Project {
                     project.fixtures.len()
                 );
 
-                let all_fixtures_json = include_str!("../all_fixtures.json");
-                let all_fixtures = serde_json::from_str::<Vec<FixtureConfig>>(all_fixtures_json)
-                    .expect("failed to parse all_fixtures JSON");
+                // let all_fixtures_json = include_str!("../all_fixtures.json");
+                // let all_fixture_configs =
+                //     serde_json::from_str::<Vec<FixtureConfig>>(all_fixtures_json)
+                //         .expect("failed to parse all_fixtures JSON");
 
-                debug!(
-                    "Loaded {} fixtures from all_fixtures JSON",
-                    all_fixtures.len(),
-                );
+                // debug!(
+                //     "Loaded {} fixtures from all_fixtures JSON",
+                //     all_fixture_configs.len(),
+                // );
+
+                let all_fixture_configs = load_all_fixture_configs();
 
                 for fixture_ref in project.fixtures.iter_mut() {
-                    if let Some(fixture_config) = all_fixtures
+                    if let Some(fixture_config) = all_fixture_configs
                         .iter()
                         .find(|x| x.name.eq_ignore_ascii_case(&fixture_ref.config_name))
                     {
@@ -165,4 +168,20 @@ impl Default for Project {
     fn default() -> Self {
         Self::new()
     }
+}
+
+/// Get the statically-defined DMX fixture configurations known to the system. This
+/// list is built at compile-time using the JSON definitions found in the `fixtures` folder;
+/// these are automatically concatenated into the file `all_fixtures.json` by the
+/// build script.
+pub fn load_all_fixture_configs() -> Vec<FixtureConfig> {
+    let all_fixtures_json = include_str!("../all_fixtures.json");
+    let all_fixture_configs = serde_json::from_str::<Vec<FixtureConfig>>(all_fixtures_json)
+        .expect("failed to parse all_fixtures JSON");
+
+    debug!(
+        "Loaded {} fixtures from all_fixtures JSON",
+        all_fixture_configs.len(),
+    );
+    all_fixture_configs
 }

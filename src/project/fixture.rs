@@ -42,7 +42,23 @@ impl Ord for FixtureInstance {
     }
 }
 
+impl From<&FixtureConfig> for FixtureInstance {
+    fn from(config: &FixtureConfig) -> Self {
+        FixtureInstance {
+            label: format!("My {}", config.name),
+            config_name: String::from(&config.name),
+            offset_channels: 0,
+            mode_index: 0,
+            config: config.clone(),
+        }
+    }
+}
+
 #[derive(Serialize, Deserialize, Clone, Default)]
+/// Stores the underlying configuration for a specific model of DMX fixture.
+///
+/// Unlike a FixtureInstance which could appear multiple times in a single Project,
+/// there can only be one static FixtureConfig per type of fixture.
 pub struct FixtureConfig {
     pub name: String,
     pub reference: String,

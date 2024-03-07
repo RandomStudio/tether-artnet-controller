@@ -13,8 +13,8 @@ use crate::{
     artnet::{random, zero, ArtNetInterface},
     project::{
         artnetconfig::{get_artnet_interface, ArtNetConfigMode},
-        fixture::FixtureMacro,
-        Project, SceneValue,
+        fixture::{FixtureConfig, FixtureInstance, FixtureMacro},
+        load_all_fixture_configs, Project, SceneValue,
     },
     settings::{Cli, CHANNELS_PER_UNIVERSE},
     tether_interface::{
@@ -51,8 +51,15 @@ pub struct Model {
     /// as the ones in use, until actually applied
     pub artnet_edit_mode: ArtNetConfigMode,
     pub project: Project,
+    /// If None, we are in a New/Unsaved project
     pub current_project_path: Option<String>,
-    /// Whether macros should currently be applied
+    pub adding_new_fixture: bool,
+    pub new_fixture_to_add: Option<FixtureInstance>,
+    pub known_fixtures: Vec<FixtureConfig>,
+
+    /// Whether macros should currently be applied via ArtNet output.
+    /// It is important that this is _disabled_ when adjusting channel
+    /// values directly, e.g. in Setup mode.
     pub apply_macros: bool,
     /// Determines which macros are adjusted via MIDI
     pub selected_macro_group_index: usize,
@@ -132,6 +139,11 @@ impl Model {
             },
             artnet_edit_mode: ArtNetConfigMode::Broadcast,
             project,
+            // ----
+            known_fixtures: load_all_fixture_configs(),
+            adding_new_fixture: false,
+            new_fixture_to_add: None,
+            // ----
             current_project_path,
             selected_macro_group_index: 0,
             apply_macros: false,

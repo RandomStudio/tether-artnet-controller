@@ -320,15 +320,13 @@ impl Model {
                 }
             }
             TetherMidiMessage::Knob(TetherKnobPayload { index, position }) => {
-                let mut macro_index = 0;
                 for fixture in self.project.fixtures.iter_mut() {
                     for m in fixture.config.active_mode.macros.iter_mut() {
                         match m {
                             FixtureMacro::Control(control_macro) => {
-                                if index == macro_index {
+                                if index == control_macro.global_index {
                                     control_macro.current_value = (255.0 * position) as u8;
                                 }
-                                macro_index += 1;
                             }
                             FixtureMacro::Colour(_colour_macro) => {
                                 // Ignore colour macros for now

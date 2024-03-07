@@ -92,6 +92,8 @@ pub struct ChannelMacro {
     pub current_value: u8,
     #[serde(skip)]
     pub animation: Option<Animation>,
+    #[serde(skip)]
+    pub global_index: u8,
 }
 
 // Cloning an Animation is tricky, and we don't need it anyway
@@ -102,6 +104,7 @@ impl Clone for ChannelMacro {
             channels: self.channels.clone(),
             current_value: self.current_value,
             animation: None, // Just ignore
+            global_index: self.global_index,
         }
     }
 }

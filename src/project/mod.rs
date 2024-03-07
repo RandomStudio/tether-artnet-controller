@@ -5,7 +5,7 @@ use indexmap::IndexMap;
 use log::{debug, error, info, warn};
 use serde::{Deserialize, Serialize};
 
-use crate::project::fixture::FixtureConfig;
+use crate::project::fixture::{FixtureConfig, FixtureMacro};
 
 use self::artnetconfig::ArtNetConfigMode;
 use self::fixture::FixtureInstance;
@@ -56,8 +56,7 @@ impl Project {
     }
 
     pub fn load(path: &str) -> anyhow::Result<Project> {
-        let text = fs::read_to_string(path);
-        match text {
+        match fs::read_to_string(path) {
             Ok(d) => {
                 info!("Found project {}; parsing...", &path);
                 let mut project =
@@ -79,6 +78,8 @@ impl Project {
 
                 let all_fixture_configs = load_all_fixture_configs();
 
+                let mut global_index = 0;
+
                 for fixture_ref in project.fixtures.iter_mut() {
                     if let Some(fixture_config) = all_fixture_configs
                         .iter()
@@ -87,6 +88,18 @@ impl Project {
                         fixture_ref.config = fixture_config.clone();
                         fixture_ref.config.active_mode =
                             fixture_ref.config.modes[fixture_ref.mode_index].clone();
+
+                        for m in fixture_ref.config.active_mode.macros.iter_mut() {
+                            match m {
+                                FixtureMacro::Control(control_macro) => {
+                                    control_macro.global_index = global_index;
+                                    global_index += 1;
+                                }
+                                FixtureMacro::Colour(_colour_macro) => {
+                                    // Ignore colour macros for now
+                                }
+                            }
+                        }
                     } else {
                         error!(
                             "Failed to match config name \"{}\" with any known fixtures",
@@ -143,7 +156,7 @@ impl Project {
                 Ok(project)
             }
             Err(e) => {
-                warn!("Failed to load widgets from disk: {:?}", e);
+                warn!("Failed to load Project from disk: {:?}", e);
                 Err(e.into())
             }
         }

@@ -79,6 +79,7 @@ pub fn render_macro_controls(model: &mut Model, ui: &mut Ui) {
                                         {
                                             model.apply_macros = true;
                                         };
+                                        ui.small(control_macro.global_index.to_string());
 
                                         if let Some(animation) = &mut control_macro.animation {
                                             ui.label(

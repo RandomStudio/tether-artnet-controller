@@ -43,6 +43,8 @@ pub struct Scene {
     pub is_editing: bool,
     #[serde(skip)]
     pub last_active: bool,
+    #[serde(skip)]
+    pub next_transition: f32,
 }
 
 impl Project {

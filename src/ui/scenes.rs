@@ -1,7 +1,6 @@
 use indexmap::IndexMap;
-use std::time::SystemTime;
 
-use egui::{Grid, RichText, ScrollArea, Slider, Spinner, Ui};
+use egui::{Grid, RichText, ScrollArea, Slider, Ui};
 use log::debug;
 
 use crate::{
@@ -45,7 +44,8 @@ pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
                 label,
                 state,
                 is_editing: true,
-                last_active: false
+                last_active: false,
+                next_transition: 0.
             });
         }
 
@@ -71,15 +71,22 @@ pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
 
                     ui.horizontal(|ui| {
                         ui.label("Transition:");
-                    if ui.button("1s").clicked() {
-                        go_scene = Some((scene_index, Some(1000)));
-                    }
-                    if ui.button("3s").clicked() {
-                        go_scene = Some((scene_index, Some(3000)));
-                    }
-                    if ui.button("10s").clicked() {
-                        go_scene = Some((scene_index, Some(10000)));
-                    }
+                        if ui.button("1s").clicked() {
+                            go_scene = Some((scene_index, Some(1000)));
+                        }
+                        if ui.button("3s").clicked() {
+                            go_scene = Some((scene_index, Some(3000)));
+                        }
+                        if ui.button("10s").clicked() {
+                            go_scene = Some((scene_index, Some(10000)));
+                        }
+                        ui.horizontal(|ui| {
+                           ui.label("Custom (s)");
+                          ui.add(Slider::new(&mut scene.next_transition, 0. ..=10.0).step_by(0.1));
+                          if ui.button("Go").clicked() {
+                              go_scene = Some((scene_index, Some((scene.next_transition * 1000.) as u64)));
+                          }
+                        });
                     });
                 }
 

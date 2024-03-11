@@ -2,8 +2,9 @@ use egui::{Color32, Grid, RichText, ScrollArea, Slider, Ui, Vec2};
 use log::{error, info, warn};
 
 use crate::{
+    artnet::ArtNetInterface,
     model::{BehaviourOnExit, Model},
-    project::Project,
+    project::{artnetconfig::get_artnet_interface, Project},
     settings::CHANNELS_PER_UNIVERSE,
 };
 
@@ -178,6 +179,11 @@ pub fn render_mode_switcher(
                             Ok(p) => {
                                 model.project = p;
                                 model.current_project_path = Some(path.display().to_string());
+                                model.artnet =
+                                    match get_artnet_interface(&model.settings, &model.project) {
+                                        Ok(a) => Some(a),
+                                        Err(_e) => None,
+                                    }
                             }
                             Err(e) => {
                                 error!(

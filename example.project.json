@@ -217,5 +217,10 @@
     "controllerStart": 48,
     "noteStart": 49
   },
-  "artnetConfig": null
+  "artnetConfig": {
+    "Unicast": [
+      "127.0.0.1",
+      "127.0.0.1"
+    ]
+  }
 }

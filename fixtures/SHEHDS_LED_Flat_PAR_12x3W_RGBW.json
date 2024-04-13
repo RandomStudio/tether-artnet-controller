@@ -1,0 +1,87 @@
+{
+  "name": "SHEHDS LED Flat PAR 12x3W RGBW",
+  "reference": "https://images.thomann.de/pics/atg/atgdata/document/manual/449224_c_449223_v2_en_online.pdf",
+  "modes": [
+    {
+      "name": "8-channel mode",
+      "mappings": [
+        {
+          "channel": 1,
+          "label": "Intensity dimmer",
+          "notes": "from dark (0) to bright (255)"
+        },
+        {
+          "channel": 2,
+          "label": "Intensity red",
+          "notes": "from dark (0) to bright (255)"
+        },
+        {
+          "channel": 3,
+          "label": "Intensity green",
+          "notes": "from dark (0) to bright (255)"
+        },
+        {
+          "channel": 4,
+          "label": "Intensity blue",
+          "notes": "from dark (0) to bright (255)"
+        },
+        {
+          "channel": 5,
+          "label": "Intensity white",
+          "notes": "from dark (0) to bright (255)"
+        },
+        {
+          "channel": 6,
+          "label": "Strobe",
+          "notes": "from fast (0) to slow (255)"
+        },
+        {
+          "channel": 7,
+          "label": "Intensity red",
+          "notes": "from dark (0) to bright (255)"
+        },
+        {
+          "channel": 7,
+          "label": "Auto and sound programs",
+          "home": 0,
+          "ranges": [
+            {
+              "range": [0, 250],
+              "label": "Auto modes"
+            },
+            {
+              "range": [251, 255],
+              "label": "Sound modes"
+            }
+          ]
+        },
+        {
+          "channel": 8,
+          "label": "Control speed for auto + sound programs",
+          "notes": "from slow (0) to fast (255)"
+        }
+      ],
+      "macros": [
+        {
+          "control": {
+            "label": "brightness",
+            "channels": [1]
+          }
+        },
+        {
+          "colour": {
+            "label": "colour",
+            "channels": {
+              "additive": {
+                "red": [2],
+                "green": [3],
+                "blue": [4],
+                "white": [5]
+              }
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 {
   "name": "SHEHDS LED Flat PAR 12x3W RGBW",
-  "reference": "https://images.thomann.de/pics/atg/atgdata/document/manual/449224_c_449223_v2_en_online.pdf",
+  "reference": "https://open-fixture-library.org/shehds/led-flat-par-12x3w-rgbw",
   "modes": [
     {
       "name": "8-channel mode",

@@ -2,7 +2,6 @@ use egui::{Color32, Grid, RichText, ScrollArea, Slider, Ui, Vec2};
 use log::{error, info, warn};
 
 use crate::{
-    artnet::ArtNetInterface,
     model::{BehaviourOnExit, Model},
     project::{artnetconfig::get_artnet_interface, Project},
     settings::CHANNELS_PER_UNIVERSE,

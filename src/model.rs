@@ -13,7 +13,9 @@ use crate::{
     project::{
         artnetconfig::{get_artnet_interface, ArtNetConfigMode},
         fixture::{FixtureConfig, FixtureInstance, FixtureMacro},
-        load_all_fixture_configs, Project, SceneValue,
+        load_all_fixture_configs,
+        scene::SceneValue,
+        Project,
     },
     settings::{Cli, CHANNELS_PER_UNIVERSE},
     tether_interface::{

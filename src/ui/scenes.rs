@@ -1,11 +1,14 @@
 use indexmap::IndexMap;
 
-use egui::{Grid, RichText, ScrollArea, Slider, Ui};
+use egui::{RichText, ScrollArea, Slider, Ui};
 use log::debug;
 
 use crate::{
     model::Model,
-    project::{fixture::FixtureMacro, Scene, SceneState, SceneValue},
+    project::{
+        fixture::FixtureMacro,
+        scene::{Scene, SceneState, SceneValue},
+    },
 };
 
 pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
@@ -30,11 +33,17 @@ pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
                 for m in fixture.config.active_mode.macros.iter() {
                     match m {
                         FixtureMacro::Control(control_macro) => {
-                            m_state.insert(String::from(&control_macro.label), SceneValue::ControlValue(control_macro.current_value));
-                        },
+                            m_state.insert(
+                                String::from(&control_macro.label),
+                                SceneValue::ControlValue(control_macro.current_value),
+                            );
+                        }
                         FixtureMacro::Colour(colour_macro) => {
-                            m_state.insert(String::from(&colour_macro.label), SceneValue::ColourValue(colour_macro.current_value));
-                        },
+                            m_state.insert(
+                                String::from(&colour_macro.label),
+                                SceneValue::ColourValue(colour_macro.current_value),
+                            );
+                        }
                     };
                 }
                 state.insert(String::from(&fixture.label), m_state);
@@ -45,7 +54,7 @@ pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
                 state,
                 is_editing: true,
                 last_active: false,
-                next_transition: 0.
+                next_transition: 0.,
             });
         }
 
@@ -54,13 +63,13 @@ pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
         for (scene_index, scene) in model.project.scenes.iter_mut().enumerate() {
             ui.group(|ui| {
                 if scene.is_editing {
-                    ui.text_edit_singleline(&mut scene.label);
+                    ui.horizontal(|ui| {
+                        ui.label("Name");
+                        ui.text_edit_singleline(&mut scene.label);
+                    });
                 } else {
                     ui.horizontal(|ui| {
-                        if ui
-                            .button(RichText::new(&scene.label).size(24.0))
-                            .clicked()
-                        {
+                        if ui.button(RichText::new(&scene.label).size(24.0)).clicked() {
                             go_scene = Some((scene_index, None)); // go to scene "immediately"
                         };
                         if scene.last_active {
@@ -81,70 +90,22 @@ pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
                             go_scene = Some((scene_index, Some(10000)));
                         }
                         ui.horizontal(|ui| {
-                           ui.label("Custom (s)");
-                          ui.add(Slider::new(&mut scene.next_transition, 0. ..=10.0).step_by(0.1));
-                          if ui.button("Go").clicked() {
-                              go_scene = Some((scene_index, Some((scene.next_transition * 1000.) as u64)));
-                          }
+                            ui.label("Custom (s)");
+                            ui.add(
+                                Slider::new(&mut scene.next_transition, 0. ..=10.0).step_by(0.1),
+                            );
+                            if ui.button("Go").clicked() {
+                                go_scene = Some((
+                                    scene_index,
+                                    Some((scene.next_transition * 1000.) as u64),
+                                ));
+                            }
                         });
                     });
                 }
 
                 if scene.is_editing {
-                    for (fixture_index, s) in scene.state.iter_mut().enumerate() {
-                        let (fixture_label, states) = s;
-                        // ----------------
-                        ui.heading(fixture_label);
-                        // ----------------
-                        ui.add_enabled_ui(true, |ui| {
-                            Grid::new(format!("scene-{}-state-{}", scene_index, fixture_index))
-                                .num_columns(2)
-                                .show(ui, |ui| {
-                                    for m in states.iter_mut() {
-                                        let (macro_label, _scene_value) = m;
-                                        // ----------------
-                                        ui.label(macro_label);
-                                        // ----------------
-                                        // ui.add(Slider::new(scene_value, 0..=255));
-                                        if let Some(matched_fixture) = model
-                                            .project
-                                            .fixtures
-                                            .iter_mut()
-                                            .find(|x| x.label.eq(fixture_label))
-                                        {
-                                            if let Some(matched_macro) = matched_fixture
-                                                .config
-                                                .active_mode
-                                                .macros
-                                                .iter_mut()
-                                                .find(|x|  match x {
-                                                    FixtureMacro::Control(m) => m.label.eq(macro_label),
-                                                    FixtureMacro::Colour(m) => m.label.eq(macro_label),
-                                                }
-
-                                            )
-                                            {
-                                                match matched_macro {
-                                                    FixtureMacro::Control(m) => {
-                                                        // let mut dummy_value = m.current_value;
-                                                        ui.add(Slider::new(&mut m.current_value, 0..=255));
-
-                                                    } ,
-                                                    FixtureMacro::Colour(m) => {
-                                                        // let mut dummy_value = m.current_value;
-                                                        ui.color_edit_button_srgba(&mut m.current_value);
-                                                    }
-                                                };
-                                                ui.small("Adjust values in Macros panel");
-                                            }
-                                        } else {
-                                            ui.label("Something went wrong matching fixture macros to scene macros!");
-                                        }
-                                        ui.end_row();
-                                    }
-                                });
-                        });
-                    }
+                    ui.label("Edit values in Macro panel, then click Save.");
                     ui.horizontal(|ui| {
                         if ui.button("Save ✅").clicked() {
                             update_scene = Some(scene_index);

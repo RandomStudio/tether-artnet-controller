@@ -1,8 +1,7 @@
 use std::fs;
 
-use egui::Color32;
-use indexmap::IndexMap;
 use log::{debug, error, info, warn};
+use scene::Scene;
 use serde::{Deserialize, Serialize};
 
 use crate::project::fixture::{FixtureConfig, FixtureMacro};
@@ -14,6 +13,7 @@ use self::midiconfig::MidiConfig;
 pub mod artnetconfig;
 pub mod fixture;
 pub mod midiconfig;
+pub mod scene;
 
 #[derive(Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
@@ -23,28 +23,6 @@ pub struct Project {
     #[serde(default)]
     pub midi_config: MidiConfig,
     pub artnet_config: Option<ArtNetConfigMode>,
-}
-
-#[derive(Serialize, Deserialize, Clone, Debug)]
-pub enum SceneValue {
-    ControlValue(u8),
-    ColourValue(Color32),
-}
-
-/// { "macro label": value }
-pub type SceneState = IndexMap<String, SceneValue>;
-
-#[derive(Serialize, Deserialize, Clone, Debug)]
-pub struct Scene {
-    pub label: String,
-    /// { "fixture instance label": { "macro label": value } }
-    pub state: IndexMap<String, SceneState>,
-    #[serde(skip)]
-    pub is_editing: bool,
-    #[serde(skip)]
-    pub last_active: bool,
-    #[serde(skip)]
-    pub next_transition: f32,
 }
 
 impl Project {

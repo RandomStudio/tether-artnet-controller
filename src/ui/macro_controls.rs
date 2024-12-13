@@ -50,6 +50,8 @@ pub fn render_macro_controls(model: &mut Model, ui: &mut Ui) {
                     ui.label(&fixture.config.name);
                     let current_mode = &mut fixture.config.active_mode;
 
+                    let mut any_changed = false;
+
                     Grid::new(format!("macros_{}", i))
                         .num_columns(3)
                         .show(ui, |ui| {
@@ -78,6 +80,7 @@ pub fn render_macro_controls(model: &mut Model, ui: &mut Ui) {
                                             .changed()
                                         {
                                             model.apply_macros = true;
+                                            any_changed = true;
                                         };
                                         ui.small(control_macro.global_index.to_string());
 
@@ -104,6 +107,7 @@ pub fn render_macro_controls(model: &mut Model, ui: &mut Ui) {
                                                 .changed()
                                             {
                                                 model.apply_macros = true;
+                                                any_changed = true;
                                             }
                                         });
                                         {};
@@ -127,6 +131,13 @@ pub fn render_macro_controls(model: &mut Model, ui: &mut Ui) {
                                 ui.end_row();
                             }
                         });
+
+                    if any_changed {
+                        if let Some(scene) = model.project.scenes.iter_mut().find(|x| x.last_active)
+                        {
+                            scene.is_editing = true;
+                        }
+                    }
                 });
             }
         });

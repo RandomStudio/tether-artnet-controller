@@ -52,7 +52,7 @@ pub struct RemoteMacroMessage {
     /// Animation duration in ms
     pub ms: Option<u64>,
 }
-#[derive(Debug)]
+#[allow(dead_code)]
 pub enum TetherMidiMessage {
     /// Already-encoded payload
     // Raw(Vec<u8>),
@@ -79,20 +79,17 @@ pub enum RemoteControlMessage {
 
 pub struct TetherInterface {
     pub message_rx: Receiver<RemoteControlMessage>,
-    pub quit_channel: (Sender<()>, Receiver<()>),
-    // ---
     message_tx: Sender<RemoteControlMessage>,
 }
 
 impl TetherInterface {
     pub fn new() -> Self {
         let (message_tx, message_rx) = sync::mpsc::channel();
-        let (quit_tx, quit_rx) = sync::mpsc::channel();
+        // let (quit_tx, quit_rx) = sync::mpsc::channel();
 
         TetherInterface {
             message_tx,
             message_rx,
-            quit_channel: (quit_tx, quit_rx),
         }
     }
 

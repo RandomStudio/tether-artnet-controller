@@ -1,6 +1,5 @@
 use std::{
     sync::{Arc, Mutex},
-    thread::JoinHandle,
     time::Duration,
 };
 
@@ -40,7 +39,6 @@ pub enum TetherStatus {
 
 pub struct Model {
     pub settings: Cli,
-    pub handles: Vec<JoinHandle<()>>,
     pub channels_state: Vec<u8>,
     pub channels_assigned: Vec<bool>,
     pub tether_interface: TetherInterface,
@@ -129,7 +127,6 @@ impl Model {
 
         let mut model = Model {
             tether_status: TetherStatus::NotConnected,
-            handles: Vec::new(),
             tether_interface,
             channels_state: Vec::new(),
             channels_assigned,

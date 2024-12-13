@@ -75,6 +75,21 @@ pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
                         if scene.last_active {
                             ui.label("★");
                         }
+                        for (_fixture_instance_label, macros_used) in scene.state.iter() {
+                            for (_macro_name, value) in macros_used.iter() {
+                                match value {
+                                    SceneValue::ControlValue(_) => {}
+                                    SceneValue::ColourValue(c) => {
+                                        // TODO: good idea, but maybe just used coloured icons instead of full colour pickers
+                                        // which are disabled anyway!
+                                        let mut copy_c = *c;
+                                        ui.add_enabled_ui(false, |ui| {
+                                            ui.color_edit_button_srgba(&mut copy_c);
+                                        });
+                                    }
+                                }
+                            }
+                        }
                     });
                     ui.separator();
 

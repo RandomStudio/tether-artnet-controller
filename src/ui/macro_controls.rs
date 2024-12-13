@@ -40,13 +40,12 @@ pub fn render_macro_controls(model: &mut Model, ui: &mut Ui) {
             for (i, fixture) in model.project.fixtures.iter_mut().enumerate() {
                 ui.group(|ui| {
                     let mut this_selected = model.selected_macro_group_index == i;
-                    if ui
-                        .toggle_value(&mut this_selected, "MIDI Control Target")
-                        .clicked()
-                    {
-                        model.selected_macro_group_index = i;
-                    }
-                    ui.heading(&fixture.label);
+                    ui.horizontal(|ui| {
+                        if ui.toggle_value(&mut this_selected, "🎹").clicked() {
+                            model.selected_macro_group_index = i;
+                        }
+                        ui.heading(&fixture.label);
+                    });
                     ui.label(&fixture.config.name);
                     let current_mode = &mut fixture.config.active_mode;
 

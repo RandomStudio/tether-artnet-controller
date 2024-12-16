@@ -5,6 +5,7 @@ use std::{
 
 use egui::Color32;
 use log::{debug, error, info, trace, warn};
+use serde::{Deserialize, Serialize};
 use tween::SineInOut;
 
 use crate::{
@@ -26,7 +27,7 @@ use crate::{
     ui::{render_gui, ViewMode},
 };
 
-#[derive(PartialEq)]
+#[derive(PartialEq, Deserialize, Serialize)]
 pub enum BehaviourOnExit {
     DoNothing,
     Home,

@@ -1,6 +1,6 @@
 use indexmap::IndexMap;
 
-use egui::{RichText, ScrollArea, Slider, Ui};
+use egui::{Color32, RichText, ScrollArea, Slider, Ui};
 use log::debug;
 
 use crate::{
@@ -80,12 +80,15 @@ pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
                                 match value {
                                     SceneValue::ControlValue(_) => {}
                                     SceneValue::ColourValue(c) => {
-                                        // TODO: good idea, but maybe just used coloured icons instead of full colour pickers
-                                        // which are disabled anyway!
-                                        let mut copy_c = *c;
-                                        ui.add_enabled_ui(false, |ui| {
-                                            ui.color_edit_button_srgba(&mut copy_c);
-                                        });
+                                        let [r, g, b, a] = c.to_array();
+                                        let text_color = {
+                                            if a == 0 {
+                                                Color32::from_rgba_unmultiplied(255, 255, 255, 255)
+                                            } else {
+                                                Color32::from_rgba_unmultiplied(r, g, b, 255)
+                                            }
+                                        };
+                                        ui.label(RichText::new("💡").color(text_color));
                                     }
                                 }
                             }

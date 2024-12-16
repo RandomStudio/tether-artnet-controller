@@ -15,8 +15,8 @@ pub struct Cli {
     #[arg(long = "headless")]
     pub headless_mode: bool,
 
-    #[arg(long = "project")]
-    pub project_path: Option<String>,
+    #[arg(default_value_t=String::from("./example.project.json"))]
+    pub project_path: String,
 
     #[arg(long = "loglevel",default_value_t=String::from("info"))]
     pub log_level: String,

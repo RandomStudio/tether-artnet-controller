@@ -53,7 +53,7 @@ pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
                 label,
                 state,
                 is_editing: true,
-                last_active: false,
+                last_active: true,
                 next_transition: 0.,
             });
         }
@@ -213,5 +213,15 @@ pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
 
     if let Some(scene) = add_scene {
         model.project.scenes.push(scene);
+
+        let new_scene_index = model.project.scenes.len() - 1;
+
+        // Also, mark all other scenes as not-editing and not-active...
+        for (index, scene) in model.project.scenes.iter_mut().enumerate() {
+            if index != new_scene_index {
+                scene.last_active = false;
+                scene.is_editing = false;
+            }
+        }
     }
 }

@@ -52,7 +52,7 @@ pub fn render_macro_controls(model: &mut Model, ui: &mut Ui) {
                     let mut any_changed = false;
 
                     Grid::new(format!("macros_{}", i))
-                        .num_columns(3)
+                        .num_columns(4)
                         .show(ui, |ui| {
                             for m in current_mode.macros.iter_mut() {
                                 match m {
@@ -109,7 +109,7 @@ pub fn render_macro_controls(model: &mut Model, ui: &mut Ui) {
                                                 any_changed = true;
                                             }
                                         });
-                                        {};
+                                        ui.label(" "); // placeholder to make columns line up
                                         if let Some((animation, _start, _end)) =
                                             &mut colour_macro.animation
                                         {

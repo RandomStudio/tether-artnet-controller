@@ -69,12 +69,18 @@ pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
                     });
                 } else {
                     ui.horizontal(|ui| {
-                        if ui.button(RichText::new(&scene.label).size(24.0)).clicked() {
+                        if ui
+                            .button(RichText::new(&scene.label).size(24.0).color({
+                                if scene.last_active {
+                                    Color32::WHITE
+                                } else {
+                                    Color32::GRAY
+                                }
+                            }))
+                            .clicked()
+                        {
                             go_scene = Some((scene_index, None)); // go to scene "immediately"
                         };
-                        if scene.last_active {
-                            ui.label("★");
-                        }
                         for (_fixture_instance_label, macros_used) in scene.state.iter() {
                             for (_macro_name, value) in macros_used.iter() {
                                 match value {

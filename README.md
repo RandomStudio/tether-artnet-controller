@@ -23,18 +23,18 @@ Use this application for your lighting design in GUI mode, then run with `--head
 
 ## CLI
 
-Get all the available options by appending `--help`.
+Get all the available options by appending `--help`
 
 Example: start with connected interface:
 
 ```
-cargo run --release -- --artnet.interface 10.0.0.100 --artnet.destination 10.0.0.99
+tether-artnet-controller myproject.json --artnet.interface 10.0.0.100 --artnet.destination 10.0.0.99
 ```
 
 Example: start with local testing for ArtnetView:
 
 ```
-cargo run -- --artnet.interface 10.112.10.187 --artnet.destination 10.112.10.187 --loglevel debug
+tether-artnet-controller --artnet.interface 10.112.10.187 --artnet.destination 10.112.10.187 --loglevel debug
 ```
 
 ## Test Tether control using Tether Egui

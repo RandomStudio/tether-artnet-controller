@@ -379,7 +379,8 @@ impl Model {
                                             "No animation; immediately go to Control Macro value"
                                         );
                                         control_macro.animation = None; // cancel first
-                                        control_macro.current_value = target_value;
+                                        control_macro.current_value =
+                                            (target_value * (u16::MAX as f64)) as u16;
                                     }
                                 }
                                 RemoteMacroValue::ColourValue(_) => {

@@ -344,7 +344,7 @@
         {
           "control": {
             "label": "brightness",
-            "channels": [{ "LoRes": 19 }]
+            "channels": [{ "HiRes": [19, 20] }]
           }
         },
         {

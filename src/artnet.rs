@@ -9,7 +9,10 @@ use log::{debug, trace};
 use rand::Rng;
 
 use crate::{
-    project::fixture::{CMYChannels, ChannelList, FixtureInstance, FixtureMacro, RGBWChannels},
+    project::fixture::{
+        CMYChannels, ChannelList, ChannelWithResolution, FixtureInstance, FixtureMacro,
+        RGBWChannels,
+    },
     settings::CHANNELS_PER_UNIVERSE,
 };
 
@@ -95,8 +98,25 @@ impl ArtNetInterface {
                     match m {
                         FixtureMacro::Control(control_macro) => {
                             for c in &control_macro.channels {
-                                self.channels[(*c - 1 + f.offset_channels) as usize] =
-                                    control_macro.current_value;
+                                match c {
+                                    ChannelWithResolution::LoRes(single_channel) => {
+                                        let target_channel =
+                                            (*single_channel - 1 + f.offset_channels) as usize;
+                                        debug!(
+                                            "Apply LoRes value to single fixture macro (channel {}) => {}, value {}",
+                                            single_channel,
+                                            target_channel,
+                                            control_macro.current_value
+                                        );
+                                        self.channels[target_channel] =
+                                            control_macro.current_value as u8;
+                                    }
+                                    ChannelWithResolution::HiRes((c1, c2)) => {
+                                        let [b1, b2] = control_macro.current_value.to_be_bytes();
+                                        self.channels[(*c1 - 1 + f.offset_channels) as usize] = b1;
+                                        self.channels[(*c2 - 1 + f.offset_channels) as usize] = b2;
+                                    }
+                                }
                             }
                         }
                         FixtureMacro::Colour(colour_macro) => {

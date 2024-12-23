@@ -57,44 +57,45 @@ pub fn render_macro_controls(model: &mut Model, ui: &mut Ui) {
                             for m in current_mode.macros.iter_mut() {
                                 match m {
                                     FixtureMacro::Control(control_macro) => {
-                                        let remapped_channels: Vec<u16> = control_macro
-                                            .channels
-                                            .iter()
-                                            .map(|c| c + fixture.offset_channels)
-                                            .collect();
-                                        let channel_list = format!(
-                                            "{:?} => {:?}",
-                                            &control_macro.channels, remapped_channels
-                                        );
-                                        ui.label(&control_macro.label).on_hover_text(channel_list);
-                                        if ui
-                                            .add_enabled(
-                                                control_macro.animation.is_none(),
-                                                Slider::new(
-                                                    &mut control_macro.current_value,
-                                                    0..=255,
-                                                )
-                                                .step_by(1.0),
-                                            )
-                                            .changed()
-                                        {
-                                            model.apply_macros = true;
-                                            any_changed = true;
-                                        };
-                                        ui.small(control_macro.global_index.to_string());
+                                        todo!("Need to handle lores and hires values");
+                                        // let remapped_channels: Vec<u16> = control_macro
+                                        //     .channels
+                                        //     .iter()
+                                        //     .map(|c| c + fixture.offset_channels)
+                                        //     .collect();
+                                        // let channel_list = format!(
+                                        //     "{:?} => {:?}",
+                                        //     &control_macro.channels, remapped_channels
+                                        // );
+                                        // ui.label(&control_macro.label).on_hover_text(channel_list);
+                                        // if ui
+                                        //     .add_enabled(
+                                        //         control_macro.animation.is_none(),
+                                        //         Slider::new(
+                                        //             &mut control_macro.current_value,
+                                        //             0..=255,
+                                        //         )
+                                        //         .step_by(1.0),
+                                        //     )
+                                        //     .changed()
+                                        // {
+                                        //     model.apply_macros = true;
+                                        //     any_changed = true;
+                                        // };
+                                        // ui.small(control_macro.global_index.to_string());
 
-                                        if let Some(animation) = &mut control_macro.animation {
-                                            ui.label(
-                                                RichText::new(format!(
-                                                    "{}%",
-                                                    (animation.get_progress() * 100.) as u8
-                                                ))
-                                                .color(Color32::GREEN)
-                                                .small(),
-                                            );
-                                        } else {
-                                            ui.label("");
-                                        }
+                                        // if let Some(animation) = &mut control_macro.animation {
+                                        //     ui.label(
+                                        //         RichText::new(format!(
+                                        //             "{}%",
+                                        //             (animation.get_progress() * 100.) as u8
+                                        //         ))
+                                        //         .color(Color32::GREEN)
+                                        //         .small(),
+                                        //     );
+                                        // } else {
+                                        //     ui.label("");
+                                        // }
                                     }
                                     FixtureMacro::Colour(colour_macro) => {
                                         ui.label(&colour_macro.label);

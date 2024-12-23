@@ -218,8 +218,9 @@ impl Model {
                     FixtureMacro::Control(control_macro) => {
                         if let Some(animation) = &mut control_macro.animation {
                             let (value, is_done) = animation.get_value_and_done();
-                            let dmx_value = (value * 255.0) as u8;
-                            control_macro.current_value = dmx_value;
+                            let int_value = (value * 255.0) as u16;
+
+                            control_macro.current_value = int_value;
 
                             // NB: Check if done AFTER applying value
                             if is_done {
@@ -293,7 +294,7 @@ impl Model {
                                 FixtureMacro::Control(control_macro) => {
                                     let value = value * 2;
                                     debug!("Adjust {} to {}", &control_macro.label, value);
-                                    control_macro.current_value = value;
+                                    control_macro.current_value = value as u16;
                                 }
                                 FixtureMacro::Colour(colour_macro) => {
                                     let value = value * 2;
@@ -319,7 +320,7 @@ impl Model {
                         match m {
                             FixtureMacro::Control(control_macro) => {
                                 if index == control_macro.global_index {
-                                    control_macro.current_value = (255.0 * position) as u8;
+                                    control_macro.current_value = (255.0 * position) as u16;
                                 }
                             }
                             FixtureMacro::Colour(_colour_macro) => {

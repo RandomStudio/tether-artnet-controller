@@ -169,7 +169,7 @@
         {
           "control": {
             "label": "brightness",
-            "channels": [6]
+            "channels": [{ "LoRes": 6 }]
           }
         },
         {
@@ -189,19 +189,19 @@
         {
           "control": {
             "label": "pan",
-            "channels": [1]
+            "channels": [{ "LoRes": 1 }]
           }
         },
         {
           "control": {
             "label": "tilt",
-            "channels": [3]
+            "channels": [{ "LoRes": 3 }]
           }
         },
         {
           "control": {
             "label": "zoom",
-            "channels": [14]
+            "channels": [{ "LoRes": 14 }]
           }
         }
       ]

@@ -344,25 +344,25 @@
         {
           "control": {
             "label": "brightness",
-            "channels": [19]
+            "channels": [{ "LoRes": 19 }]
           }
         },
         {
           "control": {
             "label": "pan",
-            "channels": [1]
+            "channels": [{ "LoRes": 1 }]
           }
         },
         {
           "control": {
             "label": "tilt",
-            "channels": [3]
+            "channels": [{ "LoRes": 3 }]
           }
         },
         {
           "control": {
             "label": "zoom",
-            "channels": [21]
+            "channels": [{ "LoRes": 21 }]
           }
         }
       ]

@@ -589,7 +589,7 @@
         {
           "control": {
             "label": "brightness",
-            "channels": [5]
+            "channels": [{ "HiRes": [5, 6] }]
           }
         },
         {
@@ -608,25 +608,25 @@
         {
           "control": {
             "label": "pan",
-            "channels": [1]
+            "channels": [{ "HiRes": [1, 2] }]
           }
         },
         {
           "control": {
             "label": "tilt",
-            "channels": [3]
+            "channels": [{ "HiRes": [3, 4] }]
           }
         },
         {
           "control": {
             "label": "zoom",
-            "channels": [8]
+            "channels": [{ "LoRes": 8 }]
           }
         },
         {
           "control": {
             "label": "shutter",
-            "channels": [7]
+            "channels": [{ "LoRes": 7 }]
           }
         }
       ]

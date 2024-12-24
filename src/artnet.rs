@@ -116,8 +116,11 @@ impl ArtNetInterface {
                                         self.channels[target_channel] = scaled_value;
                                     }
                                     ChannelWithResolution::HiRes((c1, c2)) => {
+                                        // Assume coarse+fine 16-bit values are "big endian" (be):
                                         let [b1, b2] = control_macro.current_value.to_be_bytes();
+                                        // coarse channel:
                                         self.channels[(*c1 - 1 + f.offset_channels) as usize] = b1;
+                                        // fine channel:
                                         self.channels[(*c2 - 1 + f.offset_channels) as usize] = b2;
                                     }
                                 }

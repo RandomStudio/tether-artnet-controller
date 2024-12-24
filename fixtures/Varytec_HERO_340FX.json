@@ -189,13 +189,13 @@
         {
           "control": {
             "label": "pan",
-            "channels": [{ "LoRes": 1 }]
+            "channels": [{ "HiRes": [1, 2] }]
           }
         },
         {
           "control": {
             "label": "tilt",
-            "channels": [{ "LoRes": 3 }]
+            "channels": [{ "HiRes": [3, 4] }]
           }
         },
         {

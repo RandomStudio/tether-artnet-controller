@@ -31,10 +31,15 @@
       "state": {
         "Hero Left": {
           "brightness": {
-            "ControlValue": 195
+            "ControlValue": 46000
           },
           "colour": {
-            "ColourValue": [255, 0, 245, 255]
+            "ColourValue": [
+              255,
+              0,
+              245,
+              255
+            ]
           },
           "pan": {
             "ControlValue": 50
@@ -43,15 +48,20 @@
             "ControlValue": 30
           },
           "zoom": {
-            "ControlValue": 255
+            "ControlValue": 65
           }
         },
         "Hero Right": {
           "brightness": {
-            "ControlValue": 255
+            "ControlValue": 65535
           },
           "colour": {
-            "ColourValue": [49, 81, 255, 255]
+            "ColourValue": [
+              49,
+              81,
+              255,
+              255
+            ]
           },
           "pan": {
             "ControlValue": 155
@@ -64,37 +74,47 @@
           }
         },
         "Hex Left": {
-          "brightness": {
-            "ControlValue": 255
+          "Brightness": {
+            "ControlValue": 35000
           },
-          "colour": {
-            "ColourValue": [0, 104, 255, 255]
+          "Colour": {
+            "ColourValue": [
+              255,
+              255,
+              224,
+              255
+            ]
           },
-          "pan": {
-            "ControlValue": 105
+          "Pan": {
+            "ControlValue": 0
           },
-          "tilt": {
-            "ControlValue": 80
+          "Tilt": {
+            "ControlValue": 0
           },
-          "zoom": {
-            "ControlValue": 255
+          "Zoom": {
+            "ControlValue": 0
           }
         },
         "Hex Right": {
-          "brightness": {
-            "ControlValue": 255
+          "Brightness": {
+            "ControlValue": 41000
           },
-          "colour": {
-            "ColourValue": [243, 0, 255, 255]
+          "Colour": {
+            "ColourValue": [
+              255,
+              255,
+              224,
+              255
+            ]
           },
-          "pan": {
-            "ControlValue": 60
+          "Pan": {
+            "ControlValue": 0
           },
-          "tilt": {
-            "ControlValue": 25
+          "Tilt": {
+            "ControlValue": 0
           },
-          "zoom": {
-            "ControlValue": 255
+          "Zoom": {
+            "ControlValue": 0
           }
         }
       }
@@ -104,10 +124,15 @@
       "state": {
         "Hero Left": {
           "brightness": {
-            "ControlValue": 255
+            "ControlValue": 65535
           },
           "colour": {
-            "ColourValue": [37, 0, 243, 255]
+            "ColourValue": [
+              37,
+              0,
+              243,
+              255
+            ]
           },
           "pan": {
             "ControlValue": 67
@@ -121,10 +146,15 @@
         },
         "Hero Right": {
           "brightness": {
-            "ControlValue": 255
+            "ControlValue": 65535
           },
           "colour": {
-            "ColourValue": [237, 255, 0, 255]
+            "ColourValue": [
+              237,
+              255,
+              0,
+              255
+            ]
           },
           "pan": {
             "ControlValue": 15
@@ -137,37 +167,47 @@
           }
         },
         "Hex Left": {
-          "brightness": {
-            "ControlValue": 15
+          "Brightness": {
+            "ControlValue": 35000
           },
-          "colour": {
-            "ColourValue": [244, 222, 159, 255]
+          "Colour": {
+            "ColourValue": [
+              255,
+              255,
+              224,
+              255
+            ]
           },
-          "pan": {
-            "ControlValue": 60
+          "Pan": {
+            "ControlValue": 0
           },
-          "tilt": {
-            "ControlValue": 75
+          "Tilt": {
+            "ControlValue": 0
           },
-          "zoom": {
-            "ControlValue": 120
+          "Zoom": {
+            "ControlValue": 0
           }
         },
         "Hex Right": {
-          "brightness": {
-            "ControlValue": 15
+          "Brightness": {
+            "ControlValue": 41000
           },
-          "colour": {
-            "ColourValue": [255, 237, 220, 255]
+          "Colour": {
+            "ColourValue": [
+              255,
+              255,
+              224,
+              255
+            ]
           },
-          "pan": {
-            "ControlValue": 30
+          "Pan": {
+            "ControlValue": 0
           },
-          "tilt": {
-            "ControlValue": 180
+          "Tilt": {
+            "ControlValue": 0
           },
-          "zoom": {
-            "ControlValue": 108
+          "Zoom": {
+            "ControlValue": 0
           }
         }
       }
@@ -177,70 +217,90 @@
       "state": {
         "Hero Left": {
           "brightness": {
-            "ControlValue": 255
+            "ControlValue": 65535
           },
           "colour": {
-            "ColourValue": [0, 0, 0, 0]
+            "ColourValue": [
+              0,
+              0,
+              0,
+              0
+            ]
           },
           "pan": {
-            "ControlValue": 193
+            "ControlValue": 56500
           },
           "tilt": {
-            "ControlValue": 117
+            "ControlValue": 36000
           },
           "zoom": {
-            "ControlValue": 118
+            "ControlValue": 54000
           }
         },
         "Hero Right": {
           "brightness": {
-            "ControlValue": 255
+            "ControlValue": 65535
           },
           "colour": {
-            "ColourValue": [0, 0, 0, 0]
+            "ColourValue": [
+              0,
+              0,
+              0,
+              0
+            ]
           },
           "pan": {
-            "ControlValue": 205
+            "ControlValue": 57500
           },
           "tilt": {
-            "ControlValue": 127
+            "ControlValue": 35500
           },
           "zoom": {
-            "ControlValue": 110
+            "ControlValue": 41000
           }
         },
         "Hex Left": {
-          "brightness": {
-            "ControlValue": 255
+          "Brightness": {
+            "ControlValue": 35000
           },
-          "colour": {
-            "ColourValue": [0, 0, 0, 0]
+          "Colour": {
+            "ColourValue": [
+              255,
+              255,
+              224,
+              255
+            ]
           },
-          "pan": {
-            "ControlValue": 82
+          "Pan": {
+            "ControlValue": 0
           },
-          "tilt": {
-            "ControlValue": 117
+          "Tilt": {
+            "ControlValue": 34500
           },
-          "zoom": {
-            "ControlValue": 255
+          "Zoom": {
+            "ControlValue": 0
           }
         },
         "Hex Right": {
-          "brightness": {
-            "ControlValue": 255
+          "Brightness": {
+            "ControlValue": 41000
           },
-          "colour": {
-            "ColourValue": [0, 0, 0, 0]
+          "Colour": {
+            "ColourValue": [
+              255,
+              255,
+              224,
+              255
+            ]
           },
-          "pan": {
-            "ControlValue": 165
+          "Pan": {
+            "ControlValue": 0
           },
-          "tilt": {
-            "ControlValue": 128
+          "Tilt": {
+            "ControlValue": 37000
           },
-          "zoom": {
-            "ControlValue": 255
+          "Zoom": {
+            "ControlValue": 0
           }
         }
       }
@@ -251,6 +311,9 @@
     "noteStart": 49
   },
   "artnetConfig": {
-    "Unicast": ["127.0.0.1", "127.0.0.1"]
+    "Unicast": [
+      "127.0.0.1",
+      "127.0.0.1"
+    ]
   }
 }

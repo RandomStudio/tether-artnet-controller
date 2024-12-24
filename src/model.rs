@@ -218,7 +218,7 @@ impl Model {
                     FixtureMacro::Control(control_macro) => {
                         if let Some(animation) = &mut control_macro.animation {
                             let (value, is_done) = animation.get_value_and_done();
-                            let int_value = (value * 255.0) as u16;
+                            let int_value = (value * u16::MAX as f32) as u16;
 
                             control_macro.current_value = int_value;
 
@@ -365,8 +365,8 @@ impl Model {
                                     if let Some(ms) = msg.ms {
                                         let duration = Duration::from_millis(ms);
                                         let start_value =
-                                            control_macro.current_value as f32 / 255.0;
-                                        let end_value = target_value as f32 / 255.0;
+                                            control_macro.current_value as f32 / u16::MAX as f32;
+                                        let end_value = target_value as f32 / u16::MAX as f32;
 
                                         control_macro.animation = Some(Animation::new(
                                             duration,
@@ -387,7 +387,7 @@ impl Model {
                                         );
                                         control_macro.animation = None; // cancel first
                                         control_macro.current_value =
-                                            (target_value * (u16::MAX as f64)) as u16;
+                                            (target_value * (u16::MAX as f32)) as u16;
                                     }
                                 }
                                 RemoteMacroValue::ColourValue(_) => {

@@ -57,17 +57,7 @@ pub fn render_macro_controls(model: &mut Model, ui: &mut Ui) {
                             for m in current_mode.macros.iter_mut() {
                                 match m {
                                     FixtureMacro::Control(control_macro) => {
-                                        // let remapped_channels: Vec<u16> = control_macro
-                                        //     .channels
-                                        //     .iter()
-                                        //     .map(|c| c + fixture.offset_channels)
-                                        //     .collect();
-                                        // let channel_list = format!(
-                                        //     "{:?} => {:?}",
-                                        //     &control_macro.channels, remapped_channels
-                                        // );
                                         ui.label(&control_macro.label);
-                                        // .on_hover_text(channel_list);
                                         if ui
                                             .add_enabled(
                                                 control_macro.animation.is_none(),

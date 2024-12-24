@@ -292,9 +292,14 @@ impl Model {
                         {
                             Some(m) => match m {
                                 FixtureMacro::Control(control_macro) => {
-                                    let value = value * 2;
-                                    debug!("Adjust {} to {}", &control_macro.label, value);
-                                    control_macro.current_value = value as u16;
+                                    // MIDI uses 7-bit, i.e. 0-127
+                                    let converted_value: u16 =
+                                        ((value as f32 / 127.0) * u16::MAX as f32) as u16;
+                                    debug!(
+                                        "Adjust {} to {}",
+                                        &control_macro.label, converted_value
+                                    );
+                                    control_macro.current_value = converted_value;
                                 }
                                 FixtureMacro::Colour(colour_macro) => {
                                     let value = value * 2;
@@ -320,7 +325,8 @@ impl Model {
                         match m {
                             FixtureMacro::Control(control_macro) => {
                                 if index == control_macro.global_index {
-                                    control_macro.current_value = (255.0 * position) as u16;
+                                    control_macro.current_value =
+                                        (u16::MAX as f32 * position) as u16;
                                 }
                             }
                             FixtureMacro::Colour(_colour_macro) => {

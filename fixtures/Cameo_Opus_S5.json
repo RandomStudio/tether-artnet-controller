@@ -99,14 +99,14 @@
         {
           "channel": 18,
           "label": "Focus",
-          "notes": "0% to 100% "
+          "notes": "0% to 100%"
         }
       ],
       "macros": [
         {
           "control": {
             "label": "brightness",
-            "channels": [5]
+            "channels": [{ "HiRes": [5, 6] }]
           }
         },
         {
@@ -125,25 +125,25 @@
         {
           "control": {
             "label": "pan",
-            "channels": [1]
+            "channels": [{ "HiRes": [1, 2] }]
           }
         },
         {
           "control": {
             "label": "tilt",
-            "channels": [3]
+            "channels": [{ "HiRes": [3, 4] }]
           }
         },
         {
           "control": {
             "label": "zoom",
-            "channels": [17]
+            "channels": [{ "LoRes": 17 }]
           }
         },
         {
           "control": {
             "label": "focus",
-            "channels": [18]
+            "channels": [{ "LoRes": 18 }]
           }
         }
       ]

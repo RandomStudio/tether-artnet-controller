@@ -218,8 +218,9 @@ impl Model {
                     FixtureMacro::Control(control_macro) => {
                         if let Some(animation) = &mut control_macro.animation {
                             let (value, is_done) = animation.get_value_and_done();
-                            let dmx_value = (value * 255.0) as u8;
-                            control_macro.current_value = dmx_value;
+                            let int_value = (value * u16::MAX as f32) as u16;
+
+                            control_macro.current_value = int_value;
 
                             // NB: Check if done AFTER applying value
                             if is_done {
@@ -291,9 +292,15 @@ impl Model {
                         {
                             Some(m) => match m {
                                 FixtureMacro::Control(control_macro) => {
-                                    let value = value * 2;
-                                    debug!("Adjust {} to {}", &control_macro.label, value);
-                                    control_macro.current_value = value;
+                                    // MIDI uses 7-bit, i.e. 0-127
+                                    let percentage = value as f32 / 127.0;
+                                    let converted_value: u16 =
+                                        (percentage * u16::MAX as f32) as u16;
+                                    debug!(
+                                        "Adjust {} to {}",
+                                        &control_macro.label, converted_value
+                                    );
+                                    control_macro.current_value = converted_value;
                                 }
                                 FixtureMacro::Colour(colour_macro) => {
                                     let value = value * 2;
@@ -319,7 +326,8 @@ impl Model {
                         match m {
                             FixtureMacro::Control(control_macro) => {
                                 if index == control_macro.global_index {
-                                    control_macro.current_value = (255.0 * position) as u8;
+                                    control_macro.current_value =
+                                        (u16::MAX as f32 * position) as u16;
                                 }
                             }
                             FixtureMacro::Colour(_colour_macro) => {
@@ -357,8 +365,8 @@ impl Model {
                                     if let Some(ms) = msg.ms {
                                         let duration = Duration::from_millis(ms);
                                         let start_value =
-                                            control_macro.current_value as f32 / 255.0;
-                                        let end_value = target_value as f32 / 255.0;
+                                            control_macro.current_value as f32 / u16::MAX as f32;
+                                        let end_value = target_value as f32 / u16::MAX as f32;
 
                                         control_macro.animation = Some(Animation::new(
                                             duration,
@@ -378,7 +386,8 @@ impl Model {
                                             "No animation; immediately go to Control Macro value"
                                         );
                                         control_macro.animation = None; // cancel first
-                                        control_macro.current_value = target_value;
+                                        control_macro.current_value =
+                                            (target_value * (u16::MAX as f32)) as u16;
                                     }
                                 }
                                 RemoteMacroValue::ColourValue(_) => {

@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub enum SceneValue {
-    ControlValue(u8),
+    ControlValue(u16),
     ColourValue(Color32),
 }
 

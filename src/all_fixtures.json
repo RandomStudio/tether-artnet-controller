@@ -100,14 +100,14 @@
         {
           "channel": 18,
           "label": "Focus",
-          "notes": "0% to 100% "
+          "notes": "0% to 100%"
         }
       ],
       "macros": [
         {
           "control": {
             "label": "brightness",
-            "channels": [5]
+            "channels": [{ "HiRes": [5, 6] }]
           }
         },
         {
@@ -126,25 +126,25 @@
         {
           "control": {
             "label": "pan",
-            "channels": [1]
+            "channels": [{ "HiRes": [1, 2] }]
           }
         },
         {
           "control": {
             "label": "tilt",
-            "channels": [3]
+            "channels": [{ "HiRes": [3, 4] }]
           }
         },
         {
           "control": {
             "label": "zoom",
-            "channels": [17]
+            "channels": [{ "LoRes": 17 }]
           }
         },
         {
           "control": {
             "label": "focus",
-            "channels": [18]
+            "channels": [{ "LoRes": 18 }]
           }
         }
       ]
@@ -742,7 +742,7 @@
         {
           "control": {
             "label": "brightness",
-            "channels": [5]
+            "channels": [{ "HiRes": [5, 6] }]
           }
         },
         {
@@ -761,25 +761,25 @@
         {
           "control": {
             "label": "pan",
-            "channels": [1]
+            "channels": [{ "HiRes": [1, 2] }]
           }
         },
         {
           "control": {
             "label": "tilt",
-            "channels": [3]
+            "channels": [{ "HiRes": [3, 4] }]
           }
         },
         {
           "control": {
             "label": "zoom",
-            "channels": [8]
+            "channels": [{ "LoRes": 8 }]
           }
         },
         {
           "control": {
             "label": "shutter",
-            "channels": [7]
+            "channels": [{ "LoRes": 7 }]
           }
         }
       ]
@@ -795,322 +795,322 @@
       "mappings": [
         {
           "channel": 1,
-          "label": "PAN MOVEMENT 8bit",
+          "label": "Pan Movement 8 Bit",
           "notes": "(540° or 630°)"
         },
         {
           "channel": 2,
-          "label": "PAN MOVEMENT FINE 16bit"
+          "label": "Pan Movement Fine 16 Bit"
         },
         {
           "channel": 3,
-          "label": "TILT MOVEMENT 8bit",
+          "label": "Tilt Movement 8 Bit",
           "home": 128
         },
         {
           "channel": 4,
-          "label": "TILT MOVEMENT FINE 16bit"
+          "label": "Tilt Movement Fine 16 Bit"
         },
         {
           "channel": 5,
-          "label": "RED CENTER LED",
+          "label": "Red Center LED",
           "notes": "0% - 100%"
         },
         {
           "channel": 6,
-          "label": "GREEN CENTER LED",
+          "label": "Green Center LED",
           "notes": "0% - 100%"
         },
         {
           "channel": 7,
-          "label": "BLUE CENTER LED",
+          "label": "Blue Center LED",
           "notes": "0% - 100%"
         },
         {
           "channel": 8,
-          "label": "WHITE CENTER LED",
+          "label": "White Center LED",
           "notes": "0% - 100%"
         },
         {
           "channel": 9,
-          "label": "AMBER CENTER LED",
+          "label": "Amber Center LED",
           "notes": "0% - 100%"
         },
         {
           "channel": 10,
-          "label": "UV CENTER LED",
+          "label": "Uv Center LED",
           "notes": "0% - 100%"
         },
         {
           "channel": 11,
-          "label": "RED OUTER LEDs",
+          "label": "Red Outer LEDs",
           "notes": "0% - 100%"
         },
         {
           "channel": 12,
-          "label": "GREEN OUTER LEDs",
+          "label": "Green Outer LEDs",
           "notes": "0% - 100%"
         },
         {
           "channel": 13,
-          "label": "BLUE OUTER LEDs",
+          "label": "Blue Outer LEDs",
           "notes": "0% - 100%"
         },
         {
           "channel": 14,
-          "label": "WHITE OUTER LEDs",
+          "label": "White Outer LEDs",
           "notes": "0% - 100%"
         },
         {
           "channel": 15,
-          "label": "AMBER OUTER LEDs",
+          "label": "Amber Outer LEDs",
           "notes": "0% - 100%"
         },
         {
           "channel": 16,
-          "label": "UV OUTER LEDs",
+          "label": "Uv Outer LEDs",
           "notes": "0% - 100%"
         },
         {
           "channel": 17,
-          "label": "COLOR MACROS"
+          "label": "Color Macros"
         },
         {
           "channel": 18,
-          "label": "SHUTTER/STROBE",
+          "label": "Shutter/strobe",
           "home": 255,
           "ranges": [
             {
               "range": [0, 31],
-              "label": "LED OFF"
+              "label": "LED Off"
             },
             {
               "range": [32, 63],
-              "label": "LED ON"
+              "label": "LED On"
             },
             {
               "range": [64, 95],
-              "label": "STROBING SPEED",
+              "label": "Strobing Speed",
               "notes": "SLOW - FAST"
             },
             {
               "range": [96, 127],
-              "label": "LED ON"
+              "label": "LED On"
             },
             {
               "range": [128, 159],
-              "label": "STROBE PULSE SPEED",
+              "label": "Strobe Pulse Speed",
               "notes": "SLOW - FAST"
             },
             {
               "range": [160, 191],
-              "label": "LED ON"
+              "label": "LED On"
             },
             {
               "range": [192, 223],
-              "label": "RANDOM STROBE SPEED",
+              "label": "Random Strobe Speed",
               "notes": "SLOW - FAST"
             },
             {
               "range": [224, 255],
-              "label": "LED ON"
+              "label": "LED On"
             }
           ]
         },
         {
           "channel": 19,
-          "label": "MASTER DIMMER",
+          "label": "Master Dimmer",
           "home": 0
         },
         {
           "channel": 20,
-          "label": "DIMMER FINE"
+          "label": "Dimmer Fine"
         },
         {
           "channel": 21,
-          "label": "ZOOM",
+          "label": "Zoom",
           "notes": "7° - 58°"
         },
         {
           "channel": 22,
-          "label": "AUTO PROGRAMS",
+          "label": "Auto Programs",
           "ranges": [
             {
               "range": [0, 0],
-              "label": "OFF"
+              "label": "Off"
             },
             {
               "range": [1, 20],
-              "label": "PROGRAM 1"
+              "label": "Program 1"
             },
             {
               "range": [1, 20],
-              "label": "PROGRAM 2"
+              "label": "Program 2"
             },
             {
               "range": [21, 40],
-              "label": "PROGRAM 3"
+              "label": "Program 3"
             },
             {
               "range": [61, 80],
-              "label": "PROGRAM 4"
+              "label": "Program 4"
             },
             {
               "range": [81, 100],
-              "label": "PROGRAM 5"
+              "label": "Program 5"
             },
             {
               "range": [101, 120],
-              "label": "PROGRAM 6"
+              "label": "Program 6"
             },
             {
               "range": [121, 140],
-              "label": "PROGRAM 7"
+              "label": "Program 7"
             },
             {
               "range": [141, 160],
-              "label": "PROGRAM 8"
+              "label": "Program 8"
             },
             {
               "range": [161, 180],
-              "label": "PROGRAM 9"
+              "label": "Program 9"
             },
             {
               "range": [181, 200],
-              "label": "PROGRAM 10"
+              "label": "Program 10"
             },
             {
               "range": [201, 220],
-              "label": "PROGRAM 11"
+              "label": "Program 11"
             },
             {
               "range": [221, 240],
-              "label": "PROGRAM 12"
+              "label": "Program 12"
             },
             {
               "range": [241, 250],
-              "label": "PROGRAM 13"
+              "label": "Program 13"
             },
             {
               "range": [251, 255],
-              "label": "PROGRAM 14"
+              "label": "Program 14"
             }
           ]
         },
         {
           "channel": 23,
-          "label": "PROGRAM SPEED",
+          "label": "Program Speed",
           "notes": "SLOW - FAST"
         },
         {
           "channel": 24,
-          "label": "AUTO PROGRAM FADE",
+          "label": "Auto Program Fade",
           "ranges": [
             {
               "range": [0, 0],
-              "label": "NORMAL"
+              "label": "Normal"
             },
             {
               "range": [1, 255],
-              "label": "SLOW - FAST"
+              "label": "Slow Fast"
             }
           ]
         },
         {
           "channel": 25,
-          "label": "DIMMER MODE",
+          "label": "Dimmer Mode",
           "ranges": [
             {
               "range": [0, 20],
-              "label": "STANDARD"
+              "label": "Standard"
             },
             {
               "range": [21, 40],
-              "label": "STAGE"
+              "label": "Stage"
             },
             {
               "range": [41, 60],
-              "label": "TV"
+              "label": "Tv"
             },
             {
               "range": [61, 80],
-              "label": "ARCHITECTRUAL"
+              "label": "Architectrual"
             },
             {
               "range": [81, 100],
-              "label": "THEATRE"
+              "label": "Theatre"
             },
             {
               "range": [100, 255],
-              "label": "DEFAULT DIMMER SETTING"
+              "label": "Default Dimmer Setting"
             }
           ]
         },
         {
           "channel": 26,
-          "label": "PAN/TILT SPEED",
+          "label": "Pan/tilt Speed",
           "ranges": [
             {
               "range": [0, 225],
-              "label": "FAST - SLOW"
+              "label": "Fast Slow"
             },
             {
               "range": [226, 235],
-              "label": "BLACKOUT BY MOVEMENT"
+              "label": "Blackout By Movement"
             },
             {
               "range": [236, 255],
-              "label": "NO FUNCTION"
+              "label": "No Function"
             }
           ]
         },
         {
           "channel": 27,
-          "label": "AUTO PROGRAMS",
+          "label": "Auto Programs",
           "ranges": [
             {
               "range": [0, 79],
-              "label": "NORMAL"
+              "label": "Normal"
             },
             {
               "range": [80, 84],
-              "label": "ALL MOTOR RESET"
+              "label": "All Motor Reset"
             },
             {
               "range": [85, 99],
-              "label": "NO FUNCTION"
+              "label": "No Function"
             },
             {
               "range": [101, 119],
-              "label": "INTERNAL PROGRAM 1"
+              "label": "Internal Program 1"
             },
             {
               "range": [120, 139],
-              "label": "INTERNAL PROGRAM 2"
+              "label": "Internal Program 2"
             },
             {
               "range": [130, 159],
-              "label": "INTERNAL PROGRAM 3"
+              "label": "Internal Program 3"
             },
             {
               "range": [160, 179],
-              "label": "INTERNAL PROGRAM 4"
+              "label": "Internal Program 4"
             },
             {
               "range": [180, 199],
-              "label": "INTERNAL PROGRAM 5"
+              "label": "Internal Program 5"
             },
             {
               "range": [200, 219],
-              "label": "INTERNAL PROGRAM 6"
+              "label": "Internal Program 6"
             },
             {
               "range": [220, 239],
-              "label": "INTERNAL PROGRAM 7"
+              "label": "Internal Program 7"
             },
             {
               "range": [240, 255],
-              "label": "NO FUNCTION"
+              "label": "No Function"
             }
           ]
         }
@@ -1118,7 +1118,7 @@
       "macros": [
         {
           "colour": {
-            "label": "colour",
+            "label": "Colour",
             "channels": {
               "additive": {
                 "red": [5, 11],
@@ -1131,26 +1131,26 @@
         },
         {
           "control": {
-            "label": "brightness",
-            "channels": [19]
+            "label": "Brightness",
+            "channels": [{ "HiRes": [19, 20] }]
           }
         },
         {
           "control": {
-            "label": "pan",
-            "channels": [1]
+            "label": "Pan",
+            "channels": [{ "HiRes": [1, 2] }]
           }
         },
         {
           "control": {
-            "label": "tilt",
-            "channels": [3]
+            "label": "Tilt",
+            "channels": [{ "HiRes": [3, 4] }]
           }
         },
         {
           "control": {
-            "label": "zoom",
-            "channels": [21]
+            "label": "Zoom",
+            "channels": [{ "LoRes": 21 }]
           }
         }
       ]
@@ -1224,7 +1224,7 @@
         {
           "control": {
             "label": "brightness",
-            "channels": [1]
+            "channels": [{ "LoRes": 1 }]
           }
         },
         {
@@ -1415,7 +1415,7 @@
         {
           "control": {
             "label": "brightness",
-            "channels": [6]
+            "channels": [{ "LoRes": 6 }]
           }
         },
         {
@@ -1435,19 +1435,19 @@
         {
           "control": {
             "label": "pan",
-            "channels": [1]
+            "channels": [{ "HiRes": [1, 2] }]
           }
         },
         {
           "control": {
             "label": "tilt",
-            "channels": [3]
+            "channels": [{ "HiRes": [3, 4] }]
           }
         },
         {
           "control": {
             "label": "zoom",
-            "channels": [14]
+            "channels": [{ "LoRes": 14 }]
           }
         }
       ]

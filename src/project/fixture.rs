@@ -84,12 +84,18 @@ pub struct Mapping {
     pub ranges: Option<Vec<RangeDescription>>,
 }
 
+#[derive(Serialize, Deserialize, Clone)]
+pub enum ChannelWithResolution {
+    LoRes(u16),
+    HiRes((u16, u16)),
+}
+
 #[derive(Serialize, Deserialize)]
-pub struct ChannelMacro {
+pub struct ValueMacro {
     pub label: String,
-    pub channels: Vec<u16>,
+    pub channels: Vec<ChannelWithResolution>,
     #[serde(skip)]
-    pub current_value: u8,
+    pub current_value: u16,
     #[serde(skip)]
     pub animation: Option<Animation>,
     #[serde(skip)]
@@ -97,7 +103,7 @@ pub struct ChannelMacro {
 }
 
 // Cloning an Animation is tricky, and we don't need it anyway
-impl Clone for ChannelMacro {
+impl Clone for ValueMacro {
     fn clone(&self) -> Self {
         Self {
             label: self.label.clone(),
@@ -160,7 +166,7 @@ impl Clone for ColourMacro {
 #[derive(Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub enum FixtureMacro {
-    Control(ChannelMacro),
+    Control(ValueMacro),
     Colour(ColourMacro),
 }
 

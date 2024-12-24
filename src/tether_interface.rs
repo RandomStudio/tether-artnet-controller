@@ -36,7 +36,7 @@ pub struct TetherKnobPayload {
 
 #[derive(Serialize, Deserialize, Debug)]
 pub enum RemoteMacroValue {
-    ControlValue(u8),
+    ControlValue(f32),
     ColourValue(Color32),
 }
 

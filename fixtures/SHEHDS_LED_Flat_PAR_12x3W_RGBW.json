@@ -65,7 +65,7 @@
         {
           "control": {
             "label": "brightness",
-            "channels": [1]
+            "channels": [{ "LoRes": 1 }]
           }
         },
         {

@@ -17,18 +17,20 @@ fn main() {
 
     for (index, fixture_path) in entries.iter().enumerate() {
         println!("Fixture file: {:?}", fixture_path);
-        match fs::read_to_string(fixture_path) {
-            Ok(d) => {
-                entire_string.push_str(&d);
-                if index < (entries.len() - 1) {
-                    entire_string.push(',');
+        if fixture_path.is_file() {
+            match fs::read_to_string(fixture_path) {
+                Ok(d) => {
+                    entire_string.push_str(&d);
+                    if index < (entries.len() - 1) {
+                        entire_string.push(',');
+                    }
                 }
-            }
-            Err(e) => {
-                panic!(
-                    "Something went wrong reading the contents of the fixture file: {}",
-                    e
-                );
+                Err(e) => {
+                    panic!(
+                        "Something went wrong reading the contents of the fixture file: {}",
+                        e
+                    );
+                }
             }
         }
     }

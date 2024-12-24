@@ -293,8 +293,9 @@ impl Model {
                             Some(m) => match m {
                                 FixtureMacro::Control(control_macro) => {
                                     // MIDI uses 7-bit, i.e. 0-127
+                                    let percentage = value as f32 / 127.0;
                                     let converted_value: u16 =
-                                        ((value as f32 / 127.0) * u16::MAX as f32) as u16;
+                                        (percentage * u16::MAX as f32) as u16;
                                     debug!(
                                         "Adjust {} to {}",
                                         &control_macro.label, converted_value

@@ -1,6 +1,6 @@
 [package]
 name = "tether-artnet-controller"
-version = "0.8.1"
+version = "0.8.2"
 edition = "2021"
 repository = "https://github.com/RandomStudio/tether-artnet-controller"
 homepage = "https://github.com/RandomStudio/tether-artnet-controller"
@@ -17,7 +17,7 @@ eula = false
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-tether-agent = "0.12.1"
+tether-agent = "0.14"
 artnet_protocol = "0.4.1"
 tween = "2.0.0"
 rand = "0.8.5"

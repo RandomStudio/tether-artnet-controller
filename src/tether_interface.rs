@@ -100,28 +100,28 @@ impl TetherInterface {
     ) -> Result<(), anyhow::Error> {
         info!("Attempt to connect Tether Agent...");
 
-        if let Ok(tether_agent) = TetherAgentOptionsBuilder::new("ArtnetController")
+        if let Ok(mut tether_agent) = TetherAgentOptionsBuilder::new("ArtnetController")
             .host(tether_host)
             .build()
         {
             let input_midi_cc = PlugOptionsBuilder::create_input("controlChange")
-                .build(&tether_agent)
+                .build(&mut tether_agent)
                 .expect("failed to create Input Plug");
 
             let input_midi_notes = PlugOptionsBuilder::create_input("notesOn")
-                .build(&tether_agent)
+                .build(&mut tether_agent)
                 .expect("failed to create Input Plug");
 
             let input_midi_kobs = PlugOptionsBuilder::create_input("knobs")
-                .build(&tether_agent)
+                .build(&mut tether_agent)
                 .expect("failed to create Input Plug");
 
             let input_macros = PlugOptionsBuilder::create_input("macros")
-                .build(&tether_agent)
+                .build(&mut tether_agent)
                 .expect("failed to create Input Plug");
 
             let input_scenes = PlugOptionsBuilder::create_input("scenes")
-                .build(&tether_agent)
+                .build(&mut tether_agent)
                 .expect("failed to create Input Plug");
 
             let tx = self.message_tx.clone();
@@ -142,29 +142,25 @@ impl TetherInterface {
                         }
                         if input_midi_notes.matches(&topic) {
                             debug!("MIDI Note");
-                            let m = rmp_serde::from_slice::<TetherNotePayload>(message.payload())
-                                .unwrap();
+                            let m = rmp_serde::from_slice::<TetherNotePayload>(&message).unwrap();
                             tx.send(RemoteControlMessage::Midi(TetherMidiMessage::NoteOn(m)))
                                 .expect("failed to send from Tether Interface thread")
                         }
                         if input_macros.matches(&topic) {
                             debug!("Macro (direct) control message");
-                            let m = rmp_serde::from_slice::<RemoteMacroMessage>(message.payload())
-                                .unwrap();
+                            let m = rmp_serde::from_slice::<RemoteMacroMessage>(&message).unwrap();
                             tx.send(RemoteControlMessage::MacroAnimation(m))
                                 .expect("failed to send from Tether Interface thread");
                         }
                         if input_scenes.matches(&topic) {
                             debug!("Remote Scene message");
-                            let m = rmp_serde::from_slice::<RemoteSceneMessage>(message.payload())
-                                .unwrap();
+                            let m = rmp_serde::from_slice::<RemoteSceneMessage>(&message).unwrap();
                             tx.send(RemoteControlMessage::SceneAnimation(m))
                                 .expect("failed to send from Tether Interface thread");
                         }
                         if input_midi_kobs.matches(&topic) {
                             debug!("Remote Knobs (MIDI) message");
-                            let m = rmp_serde::from_slice::<TetherKnobPayload>(message.payload())
-                                .unwrap();
+                            let m = rmp_serde::from_slice::<TetherKnobPayload>(&message).unwrap();
                             tx.send(RemoteControlMessage::Midi(TetherMidiMessage::Knob(m)))
                                 .expect("failed to send from Tether Interface thread");
                         }

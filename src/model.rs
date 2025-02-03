@@ -336,6 +336,11 @@ impl Model {
                         }
                     }
                 }
+                self.project.scenes.iter_mut().for_each(|scene| {
+                    if scene.last_active {
+                        scene.is_editing = true;
+                    }
+                });
             }
         }
     }

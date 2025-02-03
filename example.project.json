@@ -42,13 +42,13 @@
             ]
           },
           "pan": {
-            "ControlValue": 50
+            "ControlValue": 37669
           },
           "tilt": {
-            "ControlValue": 30
+            "ControlValue": 29
           },
           "zoom": {
-            "ControlValue": 65
+            "ControlValue": 65535
           }
         },
         "Hero Right": {
@@ -64,13 +64,13 @@
             ]
           },
           "pan": {
-            "ControlValue": 155
+            "ControlValue": 4128
           },
           "tilt": {
             "ControlValue": 80
           },
           "zoom": {
-            "ControlValue": 123
+            "ControlValue": 122
           }
         },
         "Hex Left": {
@@ -86,13 +86,13 @@
             ]
           },
           "Pan": {
-            "ControlValue": 0
+            "ControlValue": 17544
           },
           "Tilt": {
             "ControlValue": 0
           },
           "Zoom": {
-            "ControlValue": 0
+            "ControlValue": 22189
           }
         },
         "Hex Right": {
@@ -108,7 +108,7 @@
             ]
           },
           "Pan": {
-            "ControlValue": 0
+            "ControlValue": 25801
           },
           "Tilt": {
             "ControlValue": 0

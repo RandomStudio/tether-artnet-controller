@@ -366,7 +366,7 @@ impl Model {
                                         let duration = Duration::from_millis(ms);
                                         let start_value =
                                             control_macro.current_value as f32 / u16::MAX as f32;
-                                        let end_value = target_value as f32 / u16::MAX as f32;
+                                        let end_value = target_value / u16::MAX as f32;
 
                                         control_macro.animation = Some(Animation::new(
                                             duration,
@@ -500,9 +500,9 @@ impl Model {
                                                                 control_macro_in_fixture
                                                                     .current_value
                                                                     as f32
-                                                                    / 255.0,
+                                                                    / u16::MAX as f32,
                                                                 *control_macro_in_scene as f32
-                                                                    / 255.0,
+                                                                    / u16::MAX as f32,
                                                                 Box::new(SineInOut),
                                                             ))
                                                     } else {

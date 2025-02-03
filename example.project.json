@@ -135,13 +135,13 @@
             ]
           },
           "pan": {
-            "ControlValue": 67
+            "ControlValue": 17028
           },
           "tilt": {
-            "ControlValue": 92
+            "ControlValue": 24253
           },
           "zoom": {
-            "ControlValue": 255
+            "ControlValue": 61406
           }
         },
         "Hero Right": {
@@ -157,13 +157,13 @@
             ]
           },
           "pan": {
-            "ControlValue": 15
+            "ControlValue": 46958
           },
           "tilt": {
-            "ControlValue": 73
+            "ControlValue": 23221
           },
           "zoom": {
-            "ControlValue": 255
+            "ControlValue": 46958
           }
         },
         "Hex Left": {
@@ -179,18 +179,18 @@
             ]
           },
           "Pan": {
-            "ControlValue": 0
+            "ControlValue": 13932
           },
           "Tilt": {
-            "ControlValue": 0
+            "ControlValue": 25801
           },
           "Zoom": {
-            "ControlValue": 0
+            "ControlValue": 65535
           }
         },
         "Hex Right": {
           "Brightness": {
-            "ControlValue": 41000
+            "ControlValue": 65535
           },
           "Colour": {
             "ColourValue": [
@@ -201,13 +201,13 @@
             ]
           },
           "Pan": {
-            "ControlValue": 0
+            "ControlValue": 29413
           },
           "Tilt": {
-            "ControlValue": 0
+            "ControlValue": 26317
           },
           "Zoom": {
-            "ControlValue": 0
+            "ControlValue": 41797
           }
         }
       }
@@ -228,13 +228,13 @@
             ]
           },
           "pan": {
-            "ControlValue": 56500
+            "ControlValue": 0
           },
           "tilt": {
-            "ControlValue": 36000
+            "ControlValue": 32509
           },
           "zoom": {
-            "ControlValue": 54000
+            "ControlValue": 45410
           }
         },
         "Hero Right": {
@@ -250,18 +250,18 @@
             ]
           },
           "pan": {
-            "ControlValue": 57500
+            "ControlValue": 0
           },
           "tilt": {
-            "ControlValue": 35500
+            "ControlValue": 30445
           },
           "zoom": {
-            "ControlValue": 41000
+            "ControlValue": 39217
           }
         },
         "Hex Left": {
           "Brightness": {
-            "ControlValue": 35000
+            "ControlValue": 65535
           },
           "Colour": {
             "ColourValue": [
@@ -275,15 +275,15 @@
             "ControlValue": 0
           },
           "Tilt": {
-            "ControlValue": 34500
+            "ControlValue": 34057
           },
           "Zoom": {
-            "ControlValue": 0
+            "ControlValue": 38701
           }
         },
         "Hex Right": {
           "Brightness": {
-            "ControlValue": 41000
+            "ControlValue": 65535
           },
           "Colour": {
             "ColourValue": [
@@ -297,10 +297,10 @@
             "ControlValue": 0
           },
           "Tilt": {
-            "ControlValue": 37000
+            "ControlValue": 31993
           },
           "Zoom": {
-            "ControlValue": 0
+            "ControlValue": 31477
           }
         }
       }
@@ -312,8 +312,8 @@
   },
   "artnetConfig": {
     "Unicast": [
-      "127.0.0.1",
-      "127.0.0.1"
+      "10.0.0.105",
+      "10.0.0.99"
     ]
   }
 }

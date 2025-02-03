@@ -6,7 +6,7 @@ use std::{
 use egui::Color32;
 use log::{debug, error, info, trace, warn};
 use serde::{Deserialize, Serialize};
-use tween::SineInOut;
+use tween::QuadInOut;
 
 use crate::{
     animation::{animate_colour, Animation},
@@ -372,7 +372,7 @@ impl Model {
                                             duration,
                                             start_value,
                                             end_value,
-                                            Box::new(SineInOut),
+                                            Box::new(QuadInOut),
                                         ));
 
                                         debug!(
@@ -409,7 +409,7 @@ impl Model {
                                         duration,
                                         start_value,
                                         end_value,
-                                        Box::new(SineInOut),
+                                        Box::new(QuadInOut),
                                     );
                                     let start_colour = colour_macro.current_value;
                                     let end_colour = target_colour;
@@ -503,7 +503,7 @@ impl Model {
                                                                     / u16::MAX as f32,
                                                                 *control_macro_in_scene as f32
                                                                     / u16::MAX as f32,
-                                                                Box::new(SineInOut),
+                                                                Box::new(QuadInOut),
                                                             ))
                                                     } else {
                                                         debug!("No Animation specified; change Control Value immediately");
@@ -537,7 +537,7 @@ impl Model {
                                                             Duration::from_millis(ms),
                                                             0.0,
                                                             1.0,
-                                                            Box::new(SineInOut),
+                                                            Box::new(QuadInOut),
                                                         );
                                                         let start_colour =
                                                             colour_macro_in_fixture.current_value;

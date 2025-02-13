@@ -1,61 +1,109 @@
 use std::{
-    sync::mpsc::Receiver,
-    time::{Duration, SystemTime},
+    sync::{Arc, Mutex},
+    time::Duration,
 };
 
 use egui::Color32;
-use log::{debug, error, info};
-use tween::SineInOut;
+use log::{debug, error, info, trace, warn};
+use serde::{Deserialize, Serialize};
+use tween::QuadInOut;
 
 use crate::{
     animation::{animate_colour, Animation},
     artnet::{random, zero, ArtNetInterface},
-    project::{FixtureInstance, Project},
+    project::{
+        artnetconfig::{get_artnet_interface, ArtNetConfigMode},
+        fixture::{FixtureConfig, FixtureInstance, FixtureMacro},
+        load_all_fixture_configs,
+        scene::SceneValue,
+        Project,
+    },
     settings::{Cli, CHANNELS_PER_UNIVERSE},
     tether_interface::{
         RemoteControlMessage, RemoteMacroMessage, RemoteMacroValue, RemoteSceneMessage,
-        TetherControlChangePayload, TetherMidiMessage, TetherNotePayload,
+        TetherControlChangePayload, TetherInterface, TetherKnobPayload, TetherMidiMessage,
+        TetherNotePayload,
     },
     ui::{render_gui, ViewMode},
 };
 
+#[derive(PartialEq, Deserialize, Serialize)]
+pub enum BehaviourOnExit {
+    DoNothing,
+    Home,
+    Zero,
+}
+
+pub enum TetherStatus {
+    NotConnected,
+    Connected,
+    Errored(String),
+}
+
 pub struct Model {
+    pub settings: Cli,
     pub channels_state: Vec<u8>,
     pub channels_assigned: Vec<bool>,
-    pub tether_rx: Receiver<RemoteControlMessage>,
-    pub settings: Cli,
-    pub artnet: ArtNetInterface,
+    pub tether_interface: TetherInterface,
+    pub tether_status: TetherStatus,
+    /// A working, connected ArtNet interface, or None if disconnected
+    /// and/or currently editing settings
+    pub artnet: Option<ArtNetInterface>,
+    /// UI for ArtNet settings; not necessarily the same
+    /// as the ones in use, until actually applied
+    pub artnet_edit_mode: ArtNetConfigMode,
     pub project: Project,
-    /// Whether macros should currently be applied
+    /// If None, we are in a New/Unsaved project
+    pub current_project_path: Option<String>,
+    pub adding_new_fixture: bool,
+    pub new_fixture_to_add: Option<FixtureInstance>,
+    pub known_fixtures: Vec<FixtureConfig>,
+
+    /// Whether macros should currently be applied via ArtNet output.
+    /// It is important that this is _disabled_ when adjusting channel
+    /// values directly, e.g. in Setup mode.
     pub apply_macros: bool,
     /// Determines which macros are adjusted via MIDI
     pub selected_macro_group_index: usize,
     pub view_mode: ViewMode,
+    pub exit_mode: BehaviourOnExit,
+    pub save_on_exit: bool,
+    pub show_confirm_exit: bool,
+    pub allowed_to_close: bool,
+    pub should_quit: Arc<Mutex<bool>>,
 }
 
 impl eframe::App for Model {
-    fn update(&mut self, ctx: &egui::Context, frame: &mut eframe::Frame) {
+    fn update(&mut self, ctx: &eframe::egui::Context, frame: &mut eframe::Frame) {
         render_gui(self, ctx, frame);
+    }
+
+    fn on_exit(&mut self, _gl: Option<&eframe::glow::Context>) {
+        debug!("eframe On exit");
+        self.reset_before_quit();
     }
 }
 
 impl Model {
-    pub fn new(
-        tether_rx: Receiver<RemoteControlMessage>,
-        settings: Cli,
-        artnet: ArtNetInterface,
-    ) -> Model {
-        let project = match Project::load(&settings.project_path) {
-            Ok(p) => p,
+    pub fn new(cli: Cli) -> Model {
+        let mut current_project_path = None;
+
+        let project = match Project::load(&cli.project_path) {
+            Ok(p) => {
+                current_project_path = Some(String::from(&cli.project_path));
+                p
+            }
             Err(e) => {
                 error!(
                     "Failed to load project from path \"{}\"; {:?}",
-                    &settings.project_path, e
+                    &cli.project_path, e
                 );
                 info!("Blank project will be loaded instead.");
                 Project::new()
             }
         };
+
+        let artnet = get_artnet_interface(&cli, &project);
 
         let fixtures_clone = project.clone().fixtures;
 
@@ -68,17 +116,44 @@ impl Model {
             }
         }
 
+        let should_quit = Arc::new(Mutex::new(false));
+
+        let tether_interface = TetherInterface::new();
+
+        let should_auto_connect = !cli.tether_disable_autoconnect;
+
         let mut model = Model {
-            tether_rx,
+            tether_status: TetherStatus::NotConnected,
+            tether_interface,
             channels_state: Vec::new(),
             channels_assigned,
-            settings,
-            artnet,
+            settings: cli,
+            artnet: match artnet {
+                Ok(artnet) => Some(artnet),
+                Err(_) => None,
+            },
+            artnet_edit_mode: ArtNetConfigMode::Broadcast,
             project,
+            // ----
+            known_fixtures: load_all_fixture_configs(),
+            adding_new_fixture: false,
+            new_fixture_to_add: None,
+            // ----
+            current_project_path,
             selected_macro_group_index: 0,
             apply_macros: false,
-            view_mode: ViewMode::Simple,
+            view_mode: ViewMode::Scenes,
+            exit_mode: BehaviourOnExit::Home,
+            save_on_exit: true,
+            show_confirm_exit: false,
+            allowed_to_close: false,
+            should_quit,
         };
+
+        if should_auto_connect {
+            info!("Auto connect Tether enabled; will attempt to connect now...");
+            attempt_connection(&mut model)
+        }
 
         model.apply_home_values();
 
@@ -88,7 +163,7 @@ impl Model {
     pub fn update(&mut self) {
         let mut work_done = false;
 
-        while let Ok(m) = self.tether_rx.try_recv() {
+        while let Ok(m) = self.tether_interface.message_rx.try_recv() {
             work_done = true;
             self.apply_macros = true;
             match m {
@@ -108,27 +183,31 @@ impl Model {
             random(&mut self.channels_state);
         } else if self.settings.auto_zero {
             zero(&mut self.channels_state);
-        } else {
-            if self.artnet.update(
+        }
+        if let Some(artnet) = &mut self.artnet {
+            if artnet.update(
                 &self.channels_state,
                 &self.project.fixtures,
                 self.apply_macros,
             ) {
+                trace!("Artnet did update");
                 work_done = true;
-                if self.apply_macros {
-                    self.animate_macros();
-                    self.channels_state = self.artnet.get_state().to_vec();
-                }
+            }
+        }
+
+        if self.apply_macros {
+            work_done = true;
+            self.animate_macros();
+            if let Some(artnet) = &self.artnet {
+                self.channels_state = artnet.get_state().to_vec();
             }
         }
 
         if self.settings.auto_random || self.settings.auto_zero {
             std::thread::sleep(Duration::from_secs(1));
-        } else {
-            if !work_done {
-                // std::thread::sleep(Duration::from_millis(self.settings.artnet_update_frequency));
-                std::thread::sleep(Duration::from_millis(1));
-            }
+        }
+        if !work_done {
+            std::thread::sleep(Duration::from_millis(1));
         }
     }
 
@@ -136,11 +215,12 @@ impl Model {
         for fixture in self.project.fixtures.iter_mut() {
             for m in fixture.config.active_mode.macros.iter_mut() {
                 match m {
-                    crate::project::FixtureMacro::Control(control_macro) => {
+                    FixtureMacro::Control(control_macro) => {
                         if let Some(animation) = &mut control_macro.animation {
                             let (value, is_done) = animation.get_value_and_done();
-                            let dmx_value = (value * 255.0) as u8;
-                            control_macro.current_value = dmx_value;
+                            let int_value = (value * u16::MAX as f32) as u16;
+
+                            control_macro.current_value = int_value;
 
                             // NB: Check if done AFTER applying value
                             if is_done {
@@ -149,7 +229,7 @@ impl Model {
                             }
                         }
                     }
-                    crate::project::FixtureMacro::Colour(colour_macro) => {
+                    FixtureMacro::Colour(colour_macro) => {
                         if let Some((animation, start_colour, end_colour)) =
                             &mut colour_macro.animation
                         {
@@ -198,7 +278,7 @@ impl Model {
                 }
 
                 for (i, fixture) in self.project.fixtures.iter_mut().enumerate() {
-                    if self.selected_macro_group_index as usize == i {
+                    if self.selected_macro_group_index == i {
                         let target_macro_index = controller - controller_start;
                         debug!(
                             "Controller number {} => target macro index {}",
@@ -211,12 +291,18 @@ impl Model {
                             .get_mut(target_macro_index as usize)
                         {
                             Some(m) => match m {
-                                crate::project::FixtureMacro::Control(control_macro) => {
-                                    let value = value * 2;
-                                    debug!("Adjust {} to {}", &control_macro.label, value);
-                                    control_macro.current_value = value;
+                                FixtureMacro::Control(control_macro) => {
+                                    // MIDI uses 7-bit, i.e. 0-127
+                                    let percentage = value as f32 / 127.0;
+                                    let converted_value: u16 =
+                                        (percentage * u16::MAX as f32) as u16;
+                                    debug!(
+                                        "Adjust {} to {}",
+                                        &control_macro.label, converted_value
+                                    );
+                                    control_macro.current_value = converted_value;
                                 }
-                                crate::project::FixtureMacro::Colour(colour_macro) => {
+                                FixtureMacro::Colour(colour_macro) => {
                                     let value = value * 2;
 
                                     let [r, g, b, a] = colour_macro.current_value.to_array();
@@ -234,19 +320,34 @@ impl Model {
                     }
                 }
             }
+            TetherMidiMessage::Knob(TetherKnobPayload { index, position }) => {
+                for fixture in self.project.fixtures.iter_mut() {
+                    for m in fixture.config.active_mode.macros.iter_mut() {
+                        match m {
+                            FixtureMacro::Control(control_macro) => {
+                                if index == control_macro.global_index {
+                                    control_macro.current_value =
+                                        (u16::MAX as f32 * position) as u16;
+                                }
+                            }
+                            FixtureMacro::Colour(_colour_macro) => {
+                                // Ignore colour macros for now
+                            }
+                        }
+                    }
+                }
+                self.project.scenes.iter_mut().for_each(|scene| {
+                    if scene.last_active {
+                        scene.is_editing = true;
+                    }
+                });
+            }
         }
     }
 
     pub fn handle_macro_message(&mut self, msg: RemoteMacroMessage) {
-        let target_fixtures = get_target_fixtures_list(&self.project.fixtures, &msg.fixture_label);
-
-        debug!(
-            "Applying animation message to {} fixtures...",
-            target_fixtures.len()
-        );
-
-        for (i, fixture) in self.project.fixtures.iter_mut().enumerate() {
-            if target_fixtures.contains(&i) {
+        for fixture in self.project.fixtures.iter_mut() {
+            if fixtures_list_contains(&msg.fixture_labels, &fixture.label) {
                 if let Some(target_macro) =
                     fixture
                         .config
@@ -254,29 +355,29 @@ impl Model {
                         .macros
                         .iter_mut()
                         .find(|m| match m {
-                            crate::project::FixtureMacro::Control(m) => {
+                            FixtureMacro::Control(m) => {
                                 m.label.eq_ignore_ascii_case(&msg.macro_label)
                             }
-                            crate::project::FixtureMacro::Colour(m) => {
+                            FixtureMacro::Colour(m) => {
                                 m.label.eq_ignore_ascii_case(&msg.macro_label)
                             }
                         })
                 {
                     match target_macro {
-                        crate::project::FixtureMacro::Control(control_macro) => {
+                        FixtureMacro::Control(control_macro) => {
                             match msg.value {
                                 RemoteMacroValue::ControlValue(target_value) => {
-                                    if let Some(ms) = msg.duration {
+                                    if let Some(ms) = msg.ms {
                                         let duration = Duration::from_millis(ms);
                                         let start_value =
-                                            control_macro.current_value as f32 / 255.0;
-                                        let end_value = target_value as f32 / 255.0;
+                                            control_macro.current_value as f32 / u16::MAX as f32;
+                                        let end_value = target_value / u16::MAX as f32;
 
                                         control_macro.animation = Some(Animation::new(
                                             duration,
                                             start_value,
                                             end_value,
-                                            Box::new(SineInOut),
+                                            Box::new(QuadInOut),
                                         ));
 
                                         debug!(
@@ -290,7 +391,8 @@ impl Model {
                                             "No animation; immediately go to Control Macro value"
                                         );
                                         control_macro.animation = None; // cancel first
-                                        control_macro.current_value = target_value;
+                                        control_macro.current_value =
+                                            (target_value * (u16::MAX as f32)) as u16;
                                     }
                                 }
                                 RemoteMacroValue::ColourValue(_) => {
@@ -298,12 +400,12 @@ impl Model {
                                 }
                             }
                         }
-                        crate::project::FixtureMacro::Colour(colour_macro) => match msg.value {
+                        FixtureMacro::Colour(colour_macro) => match msg.value {
                             RemoteMacroValue::ControlValue(_) => {
                                 error!("Remote Animation Message targets Colour Macro, but provices Control Value instead");
                             }
                             RemoteMacroValue::ColourValue(target_colour) => {
-                                if let Some(ms) = msg.duration {
+                                if let Some(ms) = msg.ms {
                                     let duration = Duration::from_millis(ms);
                                     let start_value = 0.;
                                     let end_value = 1.0;
@@ -312,7 +414,7 @@ impl Model {
                                         duration,
                                         start_value,
                                         end_value,
-                                        Box::new(SineInOut),
+                                        Box::new(QuadInOut),
                                     );
                                     let start_colour = colour_macro.current_value;
                                     let end_colour = target_colour;
@@ -348,8 +450,8 @@ impl Model {
         {
             Some((index, scene)) => {
                 debug!("Found scene \"{}\" at index {}", &scene.label, index);
-                scene.last_active = Some(SystemTime::now());
-                self.apply_scene(index, msg.ms, msg.fixture_filters);
+                scene.last_active = true;
+                self.apply_scene(index, msg.ms, msg.fixture_labels);
             }
             None => error!("Failed to find matching scene for \"{}\"", &msg.scene_label),
         }
@@ -382,14 +484,12 @@ impl Model {
                             );
                             for m in fixture.config.active_mode.macros.iter_mut() {
                                 match m {
-                                    crate::project::FixtureMacro::Control(
-                                        control_macro_in_fixture,
-                                    ) => {
+                                    FixtureMacro::Control(control_macro_in_fixture) => {
                                         if let Some(macro_in_scene) = fixture_state_in_scene
                                             .get(&control_macro_in_fixture.label)
                                         {
                                             match macro_in_scene {
-                                                crate::project::SceneValue::ControlValue(
+                                                SceneValue::ControlValue(
                                                     control_macro_in_scene,
                                                 ) => {
                                                     debug!(
@@ -405,10 +505,10 @@ impl Model {
                                                                 control_macro_in_fixture
                                                                     .current_value
                                                                     as f32
-                                                                    / 255.0,
+                                                                    / u16::MAX as f32,
                                                                 *control_macro_in_scene as f32
-                                                                    / 255.0,
-                                                                Box::new(SineInOut),
+                                                                    / u16::MAX as f32,
+                                                                Box::new(QuadInOut),
                                                             ))
                                                     } else {
                                                         debug!("No Animation specified; change Control Value immediately");
@@ -416,25 +516,21 @@ impl Model {
                                                             *control_macro_in_scene;
                                                     }
                                                 }
-                                                crate::project::SceneValue::ColourValue(_) => {
+                                                SceneValue::ColourValue(_) => {
                                                     debug!("This is Colour Macro for fixture; Control Macro from scene will not apply");
                                                 }
                                             }
                                         }
                                     }
-                                    crate::project::FixtureMacro::Colour(
-                                        colour_macro_in_fixture,
-                                    ) => {
+                                    FixtureMacro::Colour(colour_macro_in_fixture) => {
                                         if let Some(macro_in_scene) = fixture_state_in_scene
                                             .get(&colour_macro_in_fixture.label)
                                         {
                                             match macro_in_scene {
-                                                crate::project::SceneValue::ControlValue(_) => {
+                                                SceneValue::ControlValue(_) => {
                                                     debug!("This is Control Macro for fixture; Colour Macro from scene will not apply");
                                                 }
-                                                crate::project::SceneValue::ColourValue(
-                                                    colour_macro_in_scene,
-                                                ) => {
+                                                SceneValue::ColourValue(colour_macro_in_scene) => {
                                                     debug!(
                                                         "With fixture {}, Scene sets colour macro {} to {:?}",
                                                         &fixture.label,
@@ -446,7 +542,7 @@ impl Model {
                                                             Duration::from_millis(ms),
                                                             0.0,
                                                             1.0,
-                                                            Box::new(SineInOut),
+                                                            Box::new(QuadInOut),
                                                         );
                                                         let start_colour =
                                                             colour_macro_in_fixture.current_value;
@@ -479,6 +575,9 @@ impl Model {
     }
 
     pub fn apply_home_values(&mut self) {
+        debug!("Apply home values");
+        debug!("Before: {:?}", self.channels_state);
+
         self.channels_state = [0].repeat(CHANNELS_PER_UNIVERSE as usize); // init zeroes
 
         let fixtures_clone = self.project.fixtures.clone();
@@ -491,23 +590,67 @@ impl Model {
                 }
             }
         }
+        debug!("After: {:?}", self.channels_state);
+    }
+
+    pub fn reset_before_quit(&mut self) {
+        *self.should_quit.lock().unwrap() = true;
+        if self.save_on_exit {
+            info!("Save-on-exit enabled; will save current project if loaded...");
+            if let Some(existing_project_path) = &self.current_project_path {
+                match Project::save(existing_project_path, &self.project) {
+                    Ok(_) => info!("...Saved current project \"{}\" OK", &existing_project_path),
+                    Err(e) => error!("...Something went wrong saving: {}", e),
+                }
+            } else {
+                warn!("...No project was loaded; nothing saved")
+            }
+        }
+        match self.exit_mode {
+            BehaviourOnExit::DoNothing => {
+                warn!("Exit behaviour explicitly set to do Nothing; will just quit")
+            }
+            BehaviourOnExit::Home => {
+                info!("Exit Behaviour: All fixtures Go Home");
+                self.apply_macros = false;
+                self.apply_home_values();
+                self.update();
+            }
+            BehaviourOnExit::Zero => {
+                info!("Exit Behaviour: All fixtures Go Zero");
+                self.apply_macros = false;
+                zero(&mut self.channels_state);
+                self.update();
+            }
+        }
+        std::thread::sleep(Duration::from_millis(500));
+        info!("...reset before quit done");
     }
 }
 
-fn get_target_fixtures_list(
-    fixtures: &[FixtureInstance],
-    label_search_string: &Option<String>,
-) -> Vec<usize> {
-    fixtures
-        .iter()
-        .enumerate()
-        .filter(|(_i, f)| {
-            if let Some(label) = label_search_string {
-                f.label.eq_ignore_ascii_case(&label)
-            } else {
-                true // match all
+fn fixtures_list_contains(search_list: &Option<Vec<String>>, label_search_string: &str) -> bool {
+    if let Some(list) = search_list {
+        for label in list.iter() {
+            if label.eq_ignore_ascii_case(label_search_string) {
+                return true;
             }
-        })
-        .filter_map(|(i, _f)| Some(i))
-        .collect()
+        }
+        false
+    } else {
+        true
+    }
+}
+
+pub fn attempt_connection(model: &mut Model) {
+    match model.tether_interface.connect(
+        model.should_quit.clone(),
+        model.settings.tether_host.as_deref(),
+    ) {
+        Ok(_) => {
+            model.tether_status = TetherStatus::Connected;
+        }
+        Err(e) => {
+            model.tether_status = TetherStatus::Errored(format!("Error: {e}"));
+        }
+    }
 }

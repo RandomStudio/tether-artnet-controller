@@ -1,13 +1,18 @@
+use serde::{Deserialize, Serialize};
 use std::{
     net::{SocketAddr, ToSocketAddrs, UdpSocket},
     time::{Duration, SystemTime},
 };
 
 use artnet_protocol::{ArtCommand, Output};
+use log::{debug, trace};
 use rand::Rng;
 
 use crate::{
-    project::{CMYChannels, FixtureInstance, RGBWChannels},
+    project::fixture::{
+        CMYChannels, ChannelList, ChannelWithResolution, FixtureInstance, FixtureMacro,
+        RGBWChannels,
+    },
     settings::CHANNELS_PER_UNIVERSE,
 };
 
@@ -17,8 +22,11 @@ pub struct ArtNetInterface {
     channels: Vec<u8>,
     update_interval: Duration,
     last_sent: Option<SystemTime>,
+    mode_in_use: ArtNetMode,
 }
 
+#[derive(Serialize, Deserialize, Clone)]
+#[serde(rename_all = "camelCase")]
 pub enum ArtNetMode {
     Broadcast,
     /// Specify from (interface) + to (destination) addresses
@@ -26,39 +34,42 @@ pub enum ArtNetMode {
 }
 
 impl ArtNetInterface {
-    pub fn new(mode: ArtNetMode, update_frequency: u64) -> Self {
+    pub fn new(mode: ArtNetMode, update_frequency: u64) -> Result<Self, anyhow::Error> {
         let channels = Vec::with_capacity(CHANNELS_PER_UNIVERSE as usize);
 
         let update_interval = Duration::from_secs_f32(1.0 / update_frequency as f32);
 
         match mode {
             ArtNetMode::Broadcast => {
-                let socket = UdpSocket::bind((String::from("0.0.0.0"), 6455)).unwrap();
-                let broadcast_addr = ("255.255.255.255", 6454)
-                    .to_socket_addrs()
-                    .unwrap()
-                    .next()
-                    .unwrap();
+                let socket = UdpSocket::bind((String::from("0.0.0.0"), 6455))?;
+                let broadcast_addr = ("255.255.255.255", 6454).to_socket_addrs()?.next().unwrap();
                 socket.set_broadcast(true).unwrap();
-                ArtNetInterface {
+                debug!("Broadcast mode set up OK");
+                Ok(ArtNetInterface {
                     socket,
                     destination: broadcast_addr,
                     channels,
                     update_interval,
                     last_sent: None,
-                }
+                    mode_in_use: mode.clone(),
+                })
             }
             ArtNetMode::Unicast(src, destination) => {
-                let socket = UdpSocket::bind(src).unwrap();
+                debug!(
+                    "Will connect from interface {} to destination {}",
+                    &src, &destination
+                );
+                let socket = UdpSocket::bind(src)?;
 
-                socket.set_broadcast(false).unwrap();
-                ArtNetInterface {
+                socket.set_broadcast(false)?;
+                Ok(ArtNetInterface {
                     socket,
                     destination,
                     channels,
                     update_interval,
                     last_sent: None,
-                }
+                    mode_in_use: mode.clone(),
+                })
             }
         }
     }
@@ -85,15 +96,39 @@ impl ArtNetInterface {
             for f in fixtures {
                 for m in &f.config.active_mode.macros {
                     match m {
-                        crate::project::FixtureMacro::Control(control_macro) => {
+                        FixtureMacro::Control(control_macro) => {
                             for c in &control_macro.channels {
-                                self.channels[(*c - 1 + f.offset_channels) as usize] =
-                                    control_macro.current_value;
+                                match c {
+                                    ChannelWithResolution::LoRes(single_channel) => {
+                                        let target_channel =
+                                            (*single_channel - 1 + f.offset_channels) as usize;
+                                        let scaled_value = ((control_macro.current_value as f32
+                                            / u16::MAX as f32)
+                                            * 255.0)
+                                            as u8;
+                                        debug!(
+                                            "Apply LoRes value to single fixture macro (channel {}) => {}, value {} => {}",
+                                            single_channel,
+                                            target_channel,
+                                            control_macro.current_value,
+                                            scaled_value
+                                        );
+                                        self.channels[target_channel] = scaled_value;
+                                    }
+                                    ChannelWithResolution::HiRes((c1, c2)) => {
+                                        // Assume coarse+fine 16-bit values are "big endian" (be):
+                                        let [b1, b2] = control_macro.current_value.to_be_bytes();
+                                        // coarse channel:
+                                        self.channels[(*c1 - 1 + f.offset_channels) as usize] = b1;
+                                        // fine channel:
+                                        self.channels[(*c2 - 1 + f.offset_channels) as usize] = b2;
+                                    }
+                                }
                             }
                         }
-                        crate::project::FixtureMacro::Colour(colour_macro) => {
+                        FixtureMacro::Colour(colour_macro) => {
                             match &colour_macro.channels {
-                                crate::project::ChannelList::Additive(rgba) => {
+                                ChannelList::Additive(rgba) => {
                                     let RGBWChannels {
                                         red,
                                         green,
@@ -125,7 +160,7 @@ impl ArtNetInterface {
                                             white_inverse;
                                     }
                                 }
-                                crate::project::ChannelList::Subtractive(cmy) => {
+                                ChannelList::Subtractive(cmy) => {
                                     let CMYChannels {
                                         cyan,
                                         magenta,
@@ -163,6 +198,7 @@ impl ArtNetInterface {
             }
         }
 
+        trace!("Channel state {:?}", self.channels);
         let command = ArtCommand::Output(Output {
             port_address: 0.into(),
             data: self.channels.clone().into(), // make temp copy of self channel state (?)
@@ -178,13 +214,17 @@ impl ArtNetInterface {
     pub fn get_state(&self) -> &[u8] {
         &self.channels
     }
+
+    pub fn mode_in_use(&self) -> &ArtNetMode {
+        &self.mode_in_use
+    }
 }
 
 pub fn zero(channels: &mut Vec<u8>) {
     *channels = [0].repeat(CHANNELS_PER_UNIVERSE as usize);
 }
 
-pub fn random(channels: &mut Vec<u8>) {
+pub fn random(channels: &mut [u8]) {
     let mut rng = rand::thread_rng();
     for c in channels.iter_mut() {
         *c = rng.gen::<u8>();

@@ -3,7 +3,7 @@
   "reference": "https://www.cameolight.com/de/loesungen/dj-musiker/bewegtes-licht/moving-heads/25591/movo-beam-200#detail-description",
   "modes": [
     {
-      "name": "27H Mode Standard",
+      "name": "27CH Mode Standard",
       "mappings": [
         {
           "channel": 1,
@@ -23,7 +23,8 @@
         },
         {
           "channel": 5,
-          "label": "Dimmer"
+          "label": "Dimmer",
+          "home": 0
         },
         {
           "channel": 6,
@@ -89,9 +90,25 @@
           "channel": 11,
           "label": "CTO",
           "notes": "Colour Temperature Orange"
+        },
+        {
+          "channel": 17,
+          "label": "Zoom",
+          "notes": "Narrow to wide"
+        },
+        {
+          "channel": 18,
+          "label": "Focus",
+          "notes": "0% to 100%"
         }
       ],
       "macros": [
+        {
+          "control": {
+            "label": "brightness",
+            "channels": [{ "HiRes": [5, 6] }]
+          }
+        },
         {
           "colour": {
             "label": "colour",
@@ -108,13 +125,25 @@
         {
           "control": {
             "label": "pan",
-            "channels": [1]
+            "channels": [{ "HiRes": [1, 2] }]
           }
         },
         {
           "control": {
             "label": "tilt",
-            "channels": [3]
+            "channels": [{ "HiRes": [3, 4] }]
+          }
+        },
+        {
+          "control": {
+            "label": "zoom",
+            "channels": [{ "LoRes": 17 }]
+          }
+        },
+        {
+          "control": {
+            "label": "focus",
+            "channels": [{ "LoRes": 18 }]
           }
         }
       ]

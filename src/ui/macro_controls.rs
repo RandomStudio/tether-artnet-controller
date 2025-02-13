@@ -3,11 +3,12 @@ use egui::{Color32, Grid, RichText, ScrollArea, Slider, Ui};
 use crate::{
     artnet::{random, zero},
     model::Model,
+    project::fixture::FixtureMacro,
 };
 
 pub fn render_macro_controls(model: &mut Model, ui: &mut Ui) {
-    ui.heading("All");
     ui.horizontal(|ui| {
+        ui.heading("All");
         if ui.button("HOME").clicked() {
             model.apply_macros = false;
             model.apply_home_values();
@@ -39,44 +40,38 @@ pub fn render_macro_controls(model: &mut Model, ui: &mut Ui) {
             for (i, fixture) in model.project.fixtures.iter_mut().enumerate() {
                 ui.group(|ui| {
                     let mut this_selected = model.selected_macro_group_index == i;
-                    if ui
-                        .toggle_value(&mut this_selected, "MIDI Control Target")
-                        .clicked()
-                    {
-                        model.selected_macro_group_index = i;
-                    }
-                    ui.heading(&fixture.label);
+                    ui.horizontal(|ui| {
+                        if ui.toggle_value(&mut this_selected, "🎹").clicked() {
+                            model.selected_macro_group_index = i;
+                        }
+                        ui.heading(&fixture.label);
+                    });
                     ui.label(&fixture.config.name);
                     let current_mode = &mut fixture.config.active_mode;
 
+                    let mut any_changed = false;
+
                     Grid::new(format!("macros_{}", i))
-                        .num_columns(3)
+                        .num_columns(4)
                         .show(ui, |ui| {
                             for m in current_mode.macros.iter_mut() {
                                 match m {
-                                    crate::project::FixtureMacro::Control(control_macro) => {
-                                        let remapped_channels: Vec<u16> = control_macro
-                                            .channels
-                                            .iter()
-                                            .map(|c| c + fixture.offset_channels)
-                                            .collect();
-                                        let channel_list = format!(
-                                            "{:?} => {:?}",
-                                            &control_macro.channels, remapped_channels
-                                        );
-                                        ui.label(&control_macro.label).on_hover_text(channel_list);
+                                    FixtureMacro::Control(control_macro) => {
+                                        ui.label(&control_macro.label);
                                         if ui
                                             .add_enabled(
                                                 control_macro.animation.is_none(),
                                                 Slider::new(
                                                     &mut control_macro.current_value,
-                                                    0..=255,
+                                                    0..=u16::MAX,
                                                 ),
                                             )
                                             .changed()
                                         {
                                             model.apply_macros = true;
+                                            any_changed = true;
                                         };
+                                        ui.small(control_macro.global_index.to_string());
 
                                         if let Some(animation) = &mut control_macro.animation {
                                             ui.label(
@@ -91,7 +86,7 @@ pub fn render_macro_controls(model: &mut Model, ui: &mut Ui) {
                                             ui.label("");
                                         }
                                     }
-                                    crate::project::FixtureMacro::Colour(colour_macro) => {
+                                    FixtureMacro::Colour(colour_macro) => {
                                         ui.label(&colour_macro.label);
                                         ui.add_enabled_ui(colour_macro.animation.is_none(), |ui| {
                                             if ui
@@ -101,9 +96,10 @@ pub fn render_macro_controls(model: &mut Model, ui: &mut Ui) {
                                                 .changed()
                                             {
                                                 model.apply_macros = true;
+                                                any_changed = true;
                                             }
                                         });
-                                        {};
+                                        ui.label(" "); // placeholder to make columns line up
                                         if let Some((animation, _start, _end)) =
                                             &mut colour_macro.animation
                                         {
@@ -124,6 +120,13 @@ pub fn render_macro_controls(model: &mut Model, ui: &mut Ui) {
                                 ui.end_row();
                             }
                         });
+
+                    if any_changed {
+                        if let Some(scene) = model.project.scenes.iter_mut().find(|x| x.last_active)
+                        {
+                            scene.is_editing = true;
+                        }
+                    }
                 });
             }
         });

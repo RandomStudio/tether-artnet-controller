@@ -645,6 +645,7 @@ pub fn attempt_connection(model: &mut Model) {
     match model.tether_interface.connect(
         model.should_quit.clone(),
         model.settings.tether_host.as_deref(),
+        model.settings.tether_subscribe_id.as_deref(),
     ) {
         Ok(_) => {
             model.tether_status = TetherStatus::Connected;

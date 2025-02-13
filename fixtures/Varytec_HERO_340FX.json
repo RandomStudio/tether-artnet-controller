@@ -203,6 +203,12 @@
             "label": "zoom",
             "channels": [{ "LoRes": 14 }]
           }
+        },
+        {
+          "control": {
+            "label": "beamsplit",
+            "channels": [{ "LoRes": 15 }]
+          }
         }
       ]
     }

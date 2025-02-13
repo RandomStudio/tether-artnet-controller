@@ -1131,25 +1131,25 @@
         },
         {
           "control": {
-            "label": "Brightness",
+            "label": "brightness",
             "channels": [{ "HiRes": [19, 20] }]
           }
         },
         {
           "control": {
-            "label": "Pan",
+            "label": "pan",
             "channels": [{ "HiRes": [1, 2] }]
           }
         },
         {
           "control": {
-            "label": "Tilt",
+            "label": "tilt",
             "channels": [{ "HiRes": [3, 4] }]
           }
         },
         {
           "control": {
-            "label": "Zoom",
+            "label": "zoom",
             "channels": [{ "LoRes": 21 }]
           }
         }
@@ -1448,6 +1448,12 @@
           "control": {
             "label": "zoom",
             "channels": [{ "LoRes": 14 }]
+          }
+        },
+        {
+          "control": {
+            "label": "beamsplit",
+            "channels": [{ "LoRes": 15 }]
           }
         }
       ]

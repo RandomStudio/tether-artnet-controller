@@ -48,6 +48,11 @@ pub struct Cli {
     #[arg(long = "tether.noAutoConnect")]
     pub tether_disable_autoconnect: bool,
 
+    /// Optionally set an ID/group for lighting-related Input Plugs (macros, scenes); useful for separating messages.
+    /// Essentially defaults to wildcard (+) if omitted. Does NOT affect Tether MIDI subscriptions.
+    #[arg(long = "tether.subscribe.id")]
+    pub tether_subscribe_id: Option<String>,
+
     /// Host/IP for Tether MQTT Broker
     #[arg(long = "tether.host")]
     pub tether_host: Option<String>,

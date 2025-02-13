@@ -97,6 +97,7 @@ impl TetherInterface {
         &mut self,
         should_quit: Arc<Mutex<bool>>,
         tether_host: Option<&str>,
+        lighting_id: Option<&str>,
     ) -> Result<(), anyhow::Error> {
         info!("Attempt to connect Tether Agent...");
 
@@ -117,10 +118,12 @@ impl TetherInterface {
                 .expect("failed to create Input Plug");
 
             let input_macros = PlugOptionsBuilder::create_input("macros")
+                .id(lighting_id)
                 .build(&mut tether_agent)
                 .expect("failed to create Input Plug");
 
             let input_scenes = PlugOptionsBuilder::create_input("scenes")
+                .id(lighting_id)
                 .build(&mut tether_agent)
                 .expect("failed to create Input Plug");
 

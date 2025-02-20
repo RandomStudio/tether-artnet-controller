@@ -453,7 +453,16 @@ impl Model {
                 scene.last_active = true;
                 self.apply_scene(index, msg.ms, msg.fixture_labels);
             }
-            None => error!("Failed to find matching scene for \"{}\"", &msg.scene_label),
+            None => {
+                error!("Failed to find matching scene for \"{}\"", &msg.scene_label);
+            }
+        }
+
+        // If we are in GUI mode, mark all scenes as active/not active depending on match
+        if !self.settings.headless_mode {
+            for scene in self.project.scenes.iter_mut() {
+                scene.last_active = scene.label.eq_ignore_ascii_case(&msg.scene_label);
+            }
         }
     }
 

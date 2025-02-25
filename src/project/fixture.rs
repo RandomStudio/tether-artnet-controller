@@ -99,7 +99,7 @@ pub struct ValueMacro {
     #[serde(skip)]
     pub animation: Option<Animation>,
     #[serde(skip)]
-    pub global_index: u8,
+    pub midi_knob_index: Option<usize>,
 }
 
 // Cloning an Animation is tricky, and we don't need it anyway
@@ -110,7 +110,7 @@ impl Clone for ValueMacro {
             channels: self.channels.clone(),
             current_value: self.current_value,
             animation: None, // Just ignore
-            global_index: self.global_index,
+            midi_knob_index: self.midi_knob_index,
         }
     }
 }

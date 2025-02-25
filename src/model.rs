@@ -325,9 +325,11 @@ impl Model {
                     for m in fixture.config.active_mode.macros.iter_mut() {
                         match m {
                             FixtureMacro::Control(control_macro) => {
-                                if index == control_macro.global_index {
-                                    control_macro.current_value =
-                                        (u16::MAX as f32 * position) as u16;
+                                if let Some(global_index) = control_macro.midi_knob_index {
+                                    if (index as usize) == global_index {
+                                        control_macro.current_value =
+                                            (u16::MAX as f32 * position) as u16;
+                                    }
                                 }
                             }
                             FixtureMacro::Colour(_colour_macro) => {

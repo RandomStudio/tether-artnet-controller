@@ -210,9 +210,10 @@ impl ArtNetInterface {
         });
 
         let buff = command.write_to_buffer().unwrap();
-        self.socket
-            .send_to(&buff, self.destination)
-            .expect("failed on socket.send_to");
+        match self.socket.send_to(&buff, self.destination) {
+            Ok(_) => {}
+            Err(e) => error!("Error sending ArtNet: {}", e),
+        }
 
         true
     }

@@ -4,8 +4,9 @@ use std::{
     time::{Duration, SystemTime},
 };
 
+use anyhow::anyhow;
 use artnet_protocol::{ArtCommand, Output};
-use log::{debug, trace};
+use log::*;
 use rand::Rng;
 
 use crate::{
@@ -34,7 +35,7 @@ pub enum ArtNetMode {
 }
 
 impl ArtNetInterface {
-    pub fn new(mode: ArtNetMode, update_frequency: u64) -> Result<Self, anyhow::Error> {
+    pub fn new(mode: ArtNetMode, update_frequency: u64) -> anyhow::Result<Self> {
         let channels = Vec::with_capacity(CHANNELS_PER_UNIVERSE as usize);
 
         let update_interval = Duration::from_secs_f32(1.0 / update_frequency as f32);
@@ -55,21 +56,24 @@ impl ArtNetInterface {
                 })
             }
             ArtNetMode::Unicast(src, destination) => {
-                debug!(
+                info!(
                     "Will connect from interface {} to destination {}",
                     &src, &destination
                 );
-                let socket = UdpSocket::bind(src)?;
-
-                socket.set_broadcast(false)?;
-                Ok(ArtNetInterface {
-                    socket,
-                    destination,
-                    channels,
-                    update_interval,
-                    last_sent: None,
-                    mode_in_use: mode.clone(),
-                })
+                match UdpSocket::bind(src) {
+                    Ok(socket) => {
+                        socket.set_broadcast(false)?;
+                        Ok(ArtNetInterface {
+                            socket,
+                            destination,
+                            channels,
+                            update_interval,
+                            last_sent: None,
+                            mode_in_use: mode.clone(),
+                        })
+                    }
+                    Err(e) => Err(anyhow!("Error binding socket: {}", e)),
+                }
             }
         }
     }

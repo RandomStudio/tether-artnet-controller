@@ -72,8 +72,16 @@ impl Project {
                         for m in fixture_ref.config.active_mode.macros.iter_mut() {
                             match m {
                                 FixtureMacro::Control(control_macro) => {
-                                    control_macro.global_index = global_index;
-                                    global_index += 1;
+                                    if control_macro.label == "brightness"
+                                        || control_macro.label == "pan"
+                                        || control_macro.label == "tilt"
+                                        || control_macro.label == "zoom"
+                                    {
+                                        control_macro.midi_knob_index = Some(global_index);
+                                        global_index += 1;
+                                    } else {
+                                        control_macro.midi_knob_index = None;
+                                    }
                                 }
                                 FixtureMacro::Colour(_colour_macro) => {
                                     // Ignore colour macros for now

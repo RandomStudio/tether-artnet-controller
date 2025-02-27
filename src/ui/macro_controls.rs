@@ -71,7 +71,12 @@ pub fn render_macro_controls(model: &mut Model, ui: &mut Ui) {
                                             model.apply_macros = true;
                                             any_changed = true;
                                         };
-                                        ui.small(control_macro.global_index.to_string());
+
+                                        if let Some(global_index) = control_macro.midi_knob_index {
+                                            ui.small(global_index.to_string());
+                                        } else {
+                                            ui.small("");
+                                        }
 
                                         if let Some(animation) = &mut control_macro.animation {
                                             ui.label(

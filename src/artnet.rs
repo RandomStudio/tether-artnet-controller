@@ -44,7 +44,7 @@ impl ArtNetInterface {
             ArtNetMode::Broadcast => {
                 let socket = UdpSocket::bind((String::from("0.0.0.0"), 6455))?;
                 let broadcast_addr = ("255.255.255.255", 6454).to_socket_addrs()?.next().unwrap();
-                socket.set_broadcast(true).unwrap();
+                socket.set_broadcast(true)?;
                 debug!("Broadcast mode set up OK");
                 Ok(ArtNetInterface {
                     socket,
@@ -210,7 +210,9 @@ impl ArtNetInterface {
         });
 
         let buff = command.write_to_buffer().unwrap();
-        self.socket.send_to(&buff, self.destination).unwrap();
+        self.socket
+            .send_to(&buff, self.destination)
+            .expect("failed on socket.send_to");
 
         true
     }

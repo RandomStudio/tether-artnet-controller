@@ -11,8 +11,8 @@ use rand::Rng;
 
 use crate::{
     project::fixture::{
-        CMYChannels, ChannelList, ChannelWithResolution, FixtureInstance, FixtureMacro,
-        RGBWChannels,
+        ChannelList, ChannelWithResolution, FixtureInstance, FixtureMacro, GroupedCMYChannels,
+        GroupedRGBLChannels, GroupedRGBWChannels,
     },
     settings::CHANNELS_PER_UNIVERSE,
 };
@@ -132,8 +132,8 @@ impl ArtNetInterface {
                         }
                         FixtureMacro::Colour(colour_macro) => {
                             match &colour_macro.channels {
-                                ChannelList::AdditiveRGBW(rgba) => {
-                                    let RGBWChannels {
+                                ChannelList::AdditiveRGBW8(rgba) => {
+                                    let GroupedRGBWChannels {
                                         red,
                                         green,
                                         blue,
@@ -165,7 +165,7 @@ impl ArtNetInterface {
                                     }
                                 }
                                 ChannelList::Subtractive(cmy) => {
-                                    let CMYChannels {
+                                    let GroupedCMYChannels {
                                         cyan,
                                         magenta,
                                         yellow,
@@ -194,6 +194,46 @@ impl ArtNetInterface {
                                             [(*channel - 1 + f.offset_channels) as usize] =
                                             brightness;
                                     }
+                                }
+                                ChannelList::AdditiveRGB16(_rgb16) => {
+                                    // let HiResRGBChannels { red, green, blue } = rgb16;
+
+                                    // let [r, g, b, _] = colour_macro.current_value.to_array();
+
+                                    // let channel_pairs_with_target_value =
+                                    //     vec![(red, r), (green, g), (blue, b)];
+
+                                    // for ((c1, c2), value) in channel_pairs_with_target_value {
+                                    //     // Assume coarse+fine 16-bit values are "big endian" (be):
+                                    //     let [b1, b2] = value.to_be_bytes();
+
+                                    //     // coarse channel:
+                                    //     self.channels[(*c1 - 1 + f.offset_channels) as usize] = b1;
+                                    //     // fine channel:
+                                    //     self.channels[(*c2 - 1 + f.offset_channels) as usize] = b2;
+                                    // }
+                                    todo!("Not yet implemented; current Colour Macros are 8-bit channels only!");
+                                }
+                                ChannelList::AdditiveRGBL8(rgbl) => {
+                                    let GroupedRGBLChannels {
+                                        red, green, blue, ..
+                                    } = rgbl;
+
+                                    // Convert all rgb values from "opaque" version (ignoring alpha)
+                                    let opaque = colour_macro.current_value.to_opaque();
+                                    for c in red.iter() {
+                                        self.channels[(*c - 1 + f.offset_channels) as usize] =
+                                            opaque.r();
+                                    }
+                                    for c in green.iter() {
+                                        self.channels[(*c - 1 + f.offset_channels) as usize] =
+                                            opaque.g();
+                                    }
+                                    for c in blue.iter() {
+                                        self.channels[(*c - 1 + f.offset_channels) as usize] =
+                                            opaque.b();
+                                    }
+                                    // Ignore lime, since we don't represent it in standard colour macros
                                 }
                             }
                         }

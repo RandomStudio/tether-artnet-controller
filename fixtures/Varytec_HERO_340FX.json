@@ -176,7 +176,7 @@
           "colour": {
             "label": "colour",
             "channels": {
-              "additiveRGBW": {
+              "additiveRGBW8": {
                 "red": [8],
                 "green": [9],
                 "blue": [10],

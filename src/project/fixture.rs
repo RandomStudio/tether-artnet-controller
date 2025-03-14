@@ -115,27 +115,53 @@ impl Clone for ValueMacro {
     }
 }
 
+/// These represent 8-bit channels which are controlled
+/// TOGETHER as a "single value" per colour channel.
 #[derive(Serialize, Deserialize, Clone)]
-pub struct RGBWChannels {
+pub struct GroupedRGBWChannels {
     pub red: Vec<u16>,
     pub green: Vec<u16>,
     pub blue: Vec<u16>,
     pub white: Vec<u16>,
 }
 
+/// These represent 8-bit channels which are controlled
+/// TOGETHER as a "single value" per colour channel.
 #[derive(Serialize, Deserialize, Clone)]
-pub struct CMYChannels {
+pub struct GroupedRGBLChannels {
+    pub red: Vec<u16>,
+    pub green: Vec<u16>,
+    pub blue: Vec<u16>,
+    pub lime: Vec<u16>,
+}
+
+#[derive(Serialize, Deserialize, Clone)]
+pub struct GroupedCMYChannels {
     pub cyan: Vec<u16>,
     pub magenta: Vec<u16>,
     pub yellow: Vec<u16>,
     pub white: Vec<u16>,
 }
 
+/// 16-bit channels (two 8-bit channels)
+/// for RGB.
+///
+/// TODO: there should be RGBW and RGBL versions
+/// of this in future.
+#[derive(Serialize, Deserialize, Clone)]
+pub struct HiResRGBChannels {
+    pub red: (u16, u16),
+    pub green: (u16, u16),
+    pub blue: (u16, u16),
+}
+
 #[derive(Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub enum ChannelList {
-    AdditiveRGBW(RGBWChannels),
-    Subtractive(CMYChannels),
+    AdditiveRGBW8(GroupedRGBWChannels),
+    AdditiveRGBL8(GroupedRGBLChannels),
+    AdditiveRGB16(HiResRGBChannels),
+    Subtractive(GroupedCMYChannels),
 }
 
 fn default_rgb() -> Color32 {

@@ -117,7 +117,7 @@
                 "cyan": [8],
                 "magenta": [9],
                 "yellow": [10],
-                "white": [11]
+                "cto": [11]
               }
             }
           }

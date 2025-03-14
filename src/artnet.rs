@@ -169,7 +169,7 @@ impl ArtNetInterface {
                                         cyan,
                                         magenta,
                                         yellow,
-                                        white,
+                                        cto,
                                     } = cmy;
                                     let brightness = colour_macro.current_value.a();
 
@@ -189,7 +189,7 @@ impl ArtNetInterface {
                                         self.channels
                                             [(*channel - 1 + f.offset_channels) as usize] = y;
                                     }
-                                    for channel in white.iter() {
+                                    for channel in cto.iter() {
                                         self.channels
                                             [(*channel - 1 + f.offset_channels) as usize] =
                                             brightness;

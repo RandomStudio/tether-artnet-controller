@@ -140,7 +140,7 @@ pub struct GroupedCMYChannels {
     pub cyan: Vec<u16>,
     pub magenta: Vec<u16>,
     pub yellow: Vec<u16>,
-    pub white: Vec<u16>,
+    pub cto: Vec<u16>,
 }
 
 /// 16-bit channels (two 8-bit channels)

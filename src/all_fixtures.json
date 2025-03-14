@@ -134,31 +134,23 @@
           "notes": "0 - 100%",
           "home": 255
         },
+
         {
           "channel": 8,
-          "label": "Dimmer fine"
-        },
-        {
-          "channel": 9,
           "label": "Focus",
           "notes": "0 - 100%"
         },
+
         {
-          "channel": 10,
-          "label": "Focus fine"
-        },
-        {
-          "channel": 11,
+          "channel": 9,
           "label": "Zoom",
           "notes": "near 5.7° - far 60°"
         },
+
         {
-          "channel": 12,
-          "label": "Zoom fine"
-        },
-        {
-          "channel": 13,
+          "channel": 10,
           "label": "Autofocus distance",
+          "home": 0,
           "ranges": [
             {
               "range": [0, 1],
@@ -170,9 +162,1204 @@
               "notes": "(0 =off, DMX / 10 = distance)"
             }
           ]
+        },
+        {
+          "channel": 11,
+          "label": "Reserved (no function)"
+        },
+        {
+          "channel": 12,
+          "label": "Iris",
+          "notes": "0-100% (open -> closed)"
+        },
+        {
+          "channel": 13,
+          "label": "Gobo wheel 1",
+          "home": 0,
+          "ranges": [
+            {
+              "range": [0, 7],
+              "label": "Gobo 0 (open)"
+            },
+            {
+              "range": [8, 15],
+              "label": "Gobo 1",
+              "notes": "Dense random lines across"
+            },
+            {
+              "range": [16, 23],
+              "label": "Gobo 2",
+              "notes": "Sparse random lines gridlike"
+            },
+            {
+              "range": [24, 31],
+              "label": "Gobo 3",
+              "notes": "Random sized dots"
+            },
+            {
+              "range": [32, 39],
+              "label": "Gobo 4",
+              "notes": "Random Quads and Tris"
+            },
+            {
+              "range": [40, 47],
+              "label": "Gobo 5",
+              "notes": "Open circle, 4 segments"
+            },
+            {
+              "range": [48, 55],
+              "label": "Gobo 6",
+              "notes": "Ring of regular circles"
+            },
+            {
+              "range": [56, 127],
+              "label": "Gobo 7",
+              "notes": "Noise"
+            },
+            { "range": [128, 135], "label": "Gobo 0 shake (fast - slow)" },
+            { "range": [136, 143], "label": "Gobo 1 shake (fast - slow)" },
+            { "range": [144, 151], "label": "Gobo 2 shake (fast - slow)" },
+            { "range": [152, 159], "label": "Gobo 3 shake (fast - slow)" },
+            { "range": [160, 167], "label": "Gobo 4 shake (fast - slow)" },
+            { "range": [168, 175], "label": "Gobo 5 shake (fast - slow)" },
+            { "range": [176, 183], "label": "Gobo 6 shake (fast - slow)" },
+            { "range": [184, 191], "label": "Gobo 7 shake (fast - slow)" },
+            {
+              "range": [192, 223],
+              "label": "Gobo wheel rotation (fast - slow)"
+            },
+            {
+              "range": [224, 255],
+              "label": "Gobo wheel rotation (fast - slow)"
+            }
+          ]
+        },
+        {
+          "channel": 14,
+          "label": "Gobo positioning/rotation 1",
+          "ranges": [
+            {
+              "range": [0, 191],
+              "label": "Gobo positioning 0° - 540°"
+            },
+            {
+              "range": [192, 222],
+              "label": "Gobo rotation, right (rapid - slow)"
+            },
+            {
+              "range": [223, 224],
+              "label": "Stop gobo rotation"
+            },
+            {
+              "range": [225, 255],
+              "label": "Gobo rotation, left (slow - rapid)"
+            }
+          ]
+        },
+        {
+          "channel": 15,
+          "label": "Gobo wheel 2 - rotating gobos",
+          "ranges": [
+            {
+              "range": [0, 7],
+              "label": "Gobo 0 (open)"
+            },
+            {
+              "range": [8, 15],
+              "label": "Gobo 1",
+              "notes": "Diagonal rough scratches"
+            },
+            {
+              "range": [16, 23],
+              "label": "Gobo 2",
+              "notes": "Inset square with noise texture"
+            },
+            {
+              "range": [24, 31],
+              "label": "Gobo 3",
+              "notes": "Random-position dots"
+            },
+            {
+              "range": [32, 39],
+              "label": "Gobo 4",
+              "notes": "Parabolic Pencil / Nested circles"
+            },
+            {
+              "range": [40, 47],
+              "label": "Gobo 5",
+              "notes": "4 Dots in a line"
+            },
+            {
+              "range": [48, 55],
+              "label": "Gobo 6",
+              "notes": "Colourful blobs"
+            },
+            {
+              "range": [56, 127],
+              "label": "Gobo 7",
+              "notes": "Microscopic monochrome"
+            },
+            { "range": [128, 135], "label": "Gobo 0 shake (fast - slow)" },
+            { "range": [136, 143], "label": "Gobo 1 shake (fast - slow)" },
+            { "range": [144, 151], "label": "Gobo 2 shake (fast - slow)" },
+            { "range": [152, 159], "label": "Gobo 3 shake (fast - slow)" },
+            { "range": [160, 167], "label": "Gobo 4 shake (fast - slow)" },
+            { "range": [168, 175], "label": "Gobo 5 shake (fast - slow)" },
+            { "range": [176, 183], "label": "Gobo 6 shake (fast - slow)" },
+            { "range": [184, 191], "label": "Gobo 7 shake (fast - slow)" },
+            {
+              "range": [192, 223],
+              "label": "Gobo wheel rotation (fast - slow)"
+            },
+            {
+              "range": [224, 255],
+              "label": "Gobo wheel rotation (fast - slow)"
+            }
+          ]
+        },
+        {
+          "channel": 16,
+          "label": "Gobo positioning/rotation 2",
+          "ranges": [
+            {
+              "range": [0, 191],
+              "label": "Gobo positioning 0° - 540°"
+            },
+            {
+              "range": [192, 222],
+              "label": "Gobo rotation, right (rapid - slow)"
+            },
+            {
+              "range": [223, 224],
+              "label": "Stop gobo rotation"
+            },
+            {
+              "range": [225, 255],
+              "label": "Gobo rotation, left (slow - rapid)"
+            }
+          ]
+        },
+        {
+          "channel": 17,
+          "label": "Aperture 1a",
+          "notes": "Top apterure, left side"
+        },
+        {
+          "channel": 18,
+          "label": "Aperture 1b",
+          "notes": "Top aperture, right side"
+        },
+        {
+          "channel": 19,
+          "label": "Aperture 3a",
+          "notes": "Bottom aperture, right side"
+        },
+        {
+          "channel": 20,
+          "label": "Aperture 3b",
+          "notes": "Bottom aperture, left side"
+        },
+        {
+          "channel": 21,
+          "label": "Aperture 2a",
+          "notes": "Right aperture, top side"
+        },
+        {
+          "channel": 22,
+          "label": "Aperture 2b",
+          "notes": "Right apterure, bottom side"
+        },
+        {
+          "channel": 23,
+          "label": "Aperture 4a",
+          "notes": "Left aperture, bottom side"
+        },
+        {
+          "channel": 24,
+          "label": "Aperture 4b",
+          "notes": "Left aperture, top side"
+        },
+        {
+          "channel": 25,
+          "label": "Aperture rotation",
+          "notes": "-65° / +65°"
+        },
+        {
+          "channel": 26,
+          "label": "Colour wheel",
+          "ranges": [
+            { "range": [0, 0], "label": "White (color shift gobo on)" },
+            { "range": [1, 1], "label": "White (color shift gobo off)" },
+            { "range": [2, 3], "label": "White/CTB" },
+            { "range": [4, 5], "label": "CTB" },
+            { "range": [6, 7], "label": "CTB/Red" },
+            { "range": [8, 9], "label": "Red" },
+            { "range": [10, 11], "label": "Red/Yellow" },
+            { "range": [12, 13], "label": "Yellow" },
+            { "range": [14, 15], "label": "Yellow/Magenta" },
+            { "range": [16, 17], "label": "Magenta" },
+            { "range": [18, 19], "label": "Magenta/Green" },
+            { "range": [20, 21], "label": "Green" },
+            { "range": [22, 23], "label": "Green/Orange" },
+            { "range": [24, 25], "label": "Orange" },
+            { "range": [26, 27], "label": "Orange/CRI" },
+            { "range": [28, 29], "label": "CRI" },
+            { "range": [30, 63], "label": "CTO" },
+            {
+              "range": [64, 191],
+              "label": "Linear colors",
+              "notes": "White - CTB - Red - Yellow - Magenta - Green - Orange - CRI - CTO - White"
+            },
+            {
+              "range": [192, 223],
+              "label": "Colour cycle, right (rapid - slow)"
+            },
+            {
+              "range": [224, 255],
+              "label": "Colour cycle, left (slow - rapid)"
+            }
+          ]
+        },
+        {
+          "channel": 27,
+          "label": "Cyan"
+        },
+        {
+          "channel": 28,
+          "label": "Magenta"
+        },
+        {
+          "channel": 29,
+          "label": "Yellow"
+        },
+        {
+          "channel": 30,
+          "label": "CTO/CTB",
+          "notes": "CTO = model HP, HC / CTB = model WW"
+        },
+        {
+          "channel": 31,
+          "label": "Sparkle - Glitter effect",
+          "home": 0,
+          "ranges": [
+            {
+              "range": [0, 0],
+              "label": "Sparkle effect inactive"
+            },
+            {
+              "range": [1, 255],
+              "label": "Sparkle effect intensity (minimum - maximum)"
+            }
+          ]
+        },
+        {
+          "channel": 32,
+          "label": "Sparkle speed",
+          "ranges": [
+            {
+              "range": [0, 31],
+              "label": "Faded sparkle effect (slow -> rapid)"
+            },
+            {
+              "range": [32, 63],
+              "label": "Switched sparkle effect (slow -> rapid)"
+            },
+            {
+              "range": [64, 255],
+              "label": "Repetition of the fading and switching blocks"
+            }
+          ]
+        },
+        {
+          "channel": 33,
+          "label": "Prism 1",
+          "home": 0,
+          "ranges": [
+            {
+              "range": [0, 7],
+              "label": "Open"
+            },
+            {
+              "range": [8, 255],
+              "label": "Prism 1 (5-fold linear)"
+            }
+          ]
+        },
+        {
+          "channel": 34,
+          "label": "Prism 1 positioning/rotation",
+          "ranges": [
+            {
+              "range": [0, 191],
+              "label": "Prism positioning (0° - 540°)"
+            },
+            {
+              "range": [192, 222],
+              "label": "Prism rotation, right (rapid -> slow)"
+            },
+            {
+              "range": [223, 224],
+              "label": "Stop prism rotation"
+            },
+            {
+              "range": [225, 255],
+              "label": "Prism rotation, left (slow -> rapid)"
+            }
+          ]
+        },
+        {
+          "channel": 35,
+          "label": "Frost 1",
+          "notes": "Frost 0-100%"
+        },
+        {
+          "channel": 36,
+          "label": "Frost 2",
+          "notes": "Frost 0-100%"
+        },
+        {
+          "channel": 37,
+          "label": "Effects macro",
+          "home": 0,
+          "ranges": [
+            {
+              "range": [0, 0],
+              "label": "Macro inactive"
+            },
+            {
+              "range": [1, 255],
+              "label": "Macro 001 - Macro 255"
+            }
+          ]
+        },
+        {
+          "channel": 38,
+          "label": "Pan/tilt speed",
+          "home": 0,
+          "ranges": [
+            {
+              "range": [0, 3],
+              "label": "Real-time effects"
+            },
+            {
+              "range": [4, 255],
+              "label": "Delayed effects (rapid - slow)"
+            }
+          ]
+        },
+        {
+          "channel": 39,
+          "label": "Effects speed",
+          "ranges": [
+            {
+              "range": [0, 3],
+              "label": "Real-time effects"
+            },
+            {
+              "range": [4, 255],
+              "label": "Delayed effects (rapid - slow)"
+            }
+          ]
+        },
+        {
+          "channel": 40,
+          "label": "Blackout Move",
+          "home": 0,
+          "ranges": [
+            {
+              "range": [0, 95],
+              "label": "Not assigned"
+            },
+
+            { "range": [96, 127], "label": "Blackout during pan/tilt" },
+            {
+              "range": [128, 159],
+              "label": "Blackout during Gobo, Colour, Prism, CMY, Iris, Frost"
+            },
+            {
+              "range": [160, 191],
+              "label": "Blackout during Gobo, Colour, Prism, CMY, Iris, Frost, Zoom, Focus"
+            },
+            {
+              "range": [192, 223],
+              "label": "Blackout during Gobo, Colour, Prism, CMY, Iris, Frost, Pan/Tilt"
+            },
+            {
+              "range": [224, 255],
+              "label": "Blackout during Gobo, Colour, Prism, CMY, Iris, Frost, Zoom, Focus, Pan/Tilt"
+            }
+          ]
         }
       ],
-      "macros": []
+      "macros": [
+        {
+          "control": {
+            "label": "pan",
+            "channels": [{ "HiRes": [1, 2] }]
+          }
+        },
+        {
+          "control": {
+            "label": "tilt",
+            "channels": [{ "HiRes": [3, 4] }]
+          }
+        },
+        {
+          "colour": {
+            "label": "colour",
+            "channels": {
+              "subtractive": {
+                "cyan": [27],
+                "magenta": [28],
+                "yellow": [29],
+                "cto": [30]
+              }
+            }
+          }
+        },
+        {
+          "control": {
+            "label": "brightness",
+            "channels": [{ "LoRes": 7 }]
+          }
+        },
+        {
+          "control": {
+            "label": "focus",
+            "channels": [{ "LoRes": 8 }]
+          }
+        },
+        {
+          "control": {
+            "label": "zoom",
+            "channels": [{ "LoRes": 9 }]
+          }
+        },
+        {
+          "control": {
+            "label": "shutter",
+            "channels": [{ "LoRes": 6 }]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Mode 2, 60 Channels",
+      "mappings": [
+        {
+          "channel": 1,
+          "label": "Pan",
+          "notes": "Movement 546,74°"
+        },
+        {
+          "channel": 2,
+          "label": "Pan Fine"
+        },
+        {
+          "channel": 3,
+          "label": "Tilt",
+          "notes": "Movement 281,16°"
+        },
+        {
+          "channel": 4,
+          "label": "Tilt fine"
+        },
+        {
+          "channel": 5,
+          "label": "Control Channel",
+          "notes": "See manual page 25"
+        },
+        {
+          "channel": 6,
+          "label": "Shutter",
+          "home": 255,
+          "ranges": [
+            {
+              "range": [0, 15],
+              "label": "Shutter closed"
+            },
+            {
+              "range": [16, 95],
+              "label": "Shutter open"
+            },
+            {
+              "range": [96, 110],
+              "label": "Open pulsing shutter >20Hz (rapid - slow)"
+            },
+            {
+              "range": [110, 111],
+              "label": "Shutter open"
+            },
+            {
+              "range": [112, 125],
+              "label": "Fade effect with dimmer (slow - rapid)"
+            },
+            {
+              "range": [126, 126],
+              "label": "Shutter open"
+            },
+            {
+              "range": [127, 127],
+              "label": "Shutter closed"
+            },
+            {
+              "range": [128, 142],
+              "label": "Open pulsing shutter <20Hz (rapid - slow)"
+            },
+            {
+              "range": [143, 143],
+              "label": "Shutter open"
+            },
+            {
+              "range": [144, 158],
+              "label": "Close pulsing shutter >20Hz (rapid - slow)"
+            },
+            {
+              "range": [159, 159],
+              "label": "Shutter closed"
+            },
+            {
+              "range": [160, 174],
+              "label": "Shutter fade, 0% (rapid - slow)"
+            },
+            {
+              "range": [175, 175],
+              "label": "Shutter open"
+            },
+            {
+              "range": [176, 190],
+              "label": "Shutter fade, 100% (rapid - slow)"
+            },
+            {
+              "range": [191, 191],
+              "label": "Shutter closed"
+            },
+            {
+              "range": [192, 206],
+              "label": "Random shutter 100% (rapid - slow)"
+            },
+            {
+              "range": [207, 207],
+              "label": "Shutter open"
+            },
+            {
+              "range": [208, 222],
+              "label": "Random shutter 0% (rapid - slow)"
+            },
+            {
+              "range": [223, 223],
+              "label": "Shutter closed"
+            },
+            {
+              "range": [224, 238],
+              "label": "Random shutter fade, 0% (rapid- slow)"
+            },
+            {
+              "range": [239, 239],
+              "label": "Shutter open"
+            },
+            {
+              "range": [240, 254],
+              "label": "Random shutter fade, 100% (rapid- slow)"
+            },
+            {
+              "range": [255, 255],
+              "label": "Shutter open"
+            }
+          ]
+        },
+        {
+          "channel": 7,
+          "label": "Dimmer",
+          "notes": "0 - 100%",
+          "home": 255
+        },
+        {
+          "channel": 8,
+          "label": "Dimmer Fine"
+        },
+        {
+          "channel": 9,
+          "label": "Focus",
+          "notes": "0 - 100%"
+        },
+        {
+          "channel": 10,
+          "label": "Focus Fine"
+        },
+        {
+          "channel": 11,
+          "label": "Zoom",
+          "notes": "near 5.7° - far 60°"
+        },
+        {
+          "channel": 12,
+          "label": "Zoom Fine"
+        },
+        {
+          "channel": 13,
+          "label": "Autofocus distance",
+          "home": 0,
+          "ranges": [
+            {
+              "range": [0, 1],
+              "label": "Auto focus off"
+            },
+            {
+              "range": [2, 255],
+              "label": "Auto focus 0-25.5m",
+              "notes": "(0 =off, DMX / 10 = distance)"
+            }
+          ]
+        },
+        {
+          "channel": 14,
+          "label": "Reserved (no function)"
+        },
+        {
+          "channel": 15,
+          "label": "Iris",
+          "notes": "0-100% (open -> closed)"
+        },
+        {
+          "channel": 16,
+          "label": "Iris Fine"
+        },
+        {
+          "channel": 17,
+          "label": "Gobo wheel 1",
+          "home": 0,
+          "ranges": [
+            {
+              "range": [0, 7],
+              "label": "Gobo 0 (open)"
+            },
+            {
+              "range": [8, 15],
+              "label": "Gobo 1",
+              "notes": "Dense random lines across"
+            },
+            {
+              "range": [16, 23],
+              "label": "Gobo 2",
+              "notes": "Sparse random lines gridlike"
+            },
+            {
+              "range": [24, 31],
+              "label": "Gobo 3",
+              "notes": "Random sized dots"
+            },
+            {
+              "range": [32, 39],
+              "label": "Gobo 4",
+              "notes": "Random Quads and Tris"
+            },
+            {
+              "range": [40, 47],
+              "label": "Gobo 5",
+              "notes": "Open circle, 4 segments"
+            },
+            {
+              "range": [48, 55],
+              "label": "Gobo 6",
+              "notes": "Ring of regular circles"
+            },
+            {
+              "range": [56, 127],
+              "label": "Gobo 7",
+              "notes": "Noise"
+            },
+            { "range": [128, 135], "label": "Gobo 0 shake (fast - slow)" },
+            { "range": [136, 143], "label": "Gobo 1 shake (fast - slow)" },
+            { "range": [144, 151], "label": "Gobo 2 shake (fast - slow)" },
+            { "range": [152, 159], "label": "Gobo 3 shake (fast - slow)" },
+            { "range": [160, 167], "label": "Gobo 4 shake (fast - slow)" },
+            { "range": [168, 175], "label": "Gobo 5 shake (fast - slow)" },
+            { "range": [176, 183], "label": "Gobo 6 shake (fast - slow)" },
+            { "range": [184, 191], "label": "Gobo 7 shake (fast - slow)" },
+            {
+              "range": [192, 223],
+              "label": "Gobo wheel rotation (fast - slow)"
+            },
+            {
+              "range": [224, 255],
+              "label": "Gobo wheel rotation (fast - slow)"
+            }
+          ]
+        },
+        {
+          "channel": 18,
+          "label": "Gobo positioning/rotation 1",
+          "ranges": [
+            {
+              "range": [0, 191],
+              "label": "Gobo positioning 0° - 540°"
+            },
+            {
+              "range": [192, 222],
+              "label": "Gobo rotation, right (rapid - slow)"
+            },
+            {
+              "range": [223, 224],
+              "label": "Stop gobo rotation"
+            },
+            {
+              "range": [225, 255],
+              "label": "Gobo rotation, left (slow - rapid)"
+            }
+          ]
+        },
+        {
+          "channel": 19,
+          "label": "Gobo positioning/rotation 1 Fine"
+        },
+        {
+          "channel": 20,
+          "label": "Gobo wheel 2 - rotating gobos",
+          "ranges": [
+            {
+              "range": [0, 7],
+              "label": "Gobo 0 (open)"
+            },
+            {
+              "range": [8, 15],
+              "label": "Gobo 1",
+              "notes": "Diagonal rough scratches"
+            },
+            {
+              "range": [16, 23],
+              "label": "Gobo 2",
+              "notes": "Inset square with noise texture"
+            },
+            {
+              "range": [24, 31],
+              "label": "Gobo 3",
+              "notes": "Random-position dots"
+            },
+            {
+              "range": [32, 39],
+              "label": "Gobo 4",
+              "notes": "Parabolic Pencil / Nested circles"
+            },
+            {
+              "range": [40, 47],
+              "label": "Gobo 5",
+              "notes": "4 Dots in a line"
+            },
+            {
+              "range": [48, 55],
+              "label": "Gobo 6",
+              "notes": "Colourful blobs"
+            },
+            {
+              "range": [56, 127],
+              "label": "Gobo 7",
+              "notes": "Microscopic monochrome"
+            },
+            { "range": [128, 135], "label": "Gobo 0 shake (fast - slow)" },
+            { "range": [136, 143], "label": "Gobo 1 shake (fast - slow)" },
+            { "range": [144, 151], "label": "Gobo 2 shake (fast - slow)" },
+            { "range": [152, 159], "label": "Gobo 3 shake (fast - slow)" },
+            { "range": [160, 167], "label": "Gobo 4 shake (fast - slow)" },
+            { "range": [168, 175], "label": "Gobo 5 shake (fast - slow)" },
+            { "range": [176, 183], "label": "Gobo 6 shake (fast - slow)" },
+            { "range": [184, 191], "label": "Gobo 7 shake (fast - slow)" },
+            {
+              "range": [192, 223],
+              "label": "Gobo wheel rotation (fast - slow)"
+            },
+            {
+              "range": [224, 255],
+              "label": "Gobo wheel rotation (fast - slow)"
+            }
+          ]
+        },
+        {
+          "channel": 21,
+          "label": "Gobo positioning/rotation 2",
+          "ranges": [
+            {
+              "range": [0, 191],
+              "label": "Gobo positioning 0° - 540°"
+            },
+            {
+              "range": [192, 222],
+              "label": "Gobo rotation, right (rapid - slow)"
+            },
+            {
+              "range": [223, 224],
+              "label": "Stop gobo rotation"
+            },
+            {
+              "range": [225, 255],
+              "label": "Gobo rotation, left (slow - rapid)"
+            }
+          ]
+        },
+        {
+          "channel": 22,
+          "label": "Gobo positioning/rotation 2 fine"
+        },
+        {
+          "channel": 23,
+          "label": "Aperture 1a",
+          "notes": "Top apterure, left side"
+        },
+        {
+          "channel": 24,
+          "label": "Aperture 1a fine"
+        },
+        {
+          "channel": 25,
+          "label": "Aperture 1b",
+          "notes": "Top aperture, right side"
+        },
+        {
+          "channel": 26,
+          "label": "Aperture 1b fine"
+        },
+        {
+          "channel": 27,
+          "label": "Aperture 3a",
+          "notes": "Bottom aperture, right side"
+        },
+        {
+          "channel": 28,
+          "label": "Aperture 3a fine"
+        },
+        {
+          "channel": 29,
+          "label": "Aperture 3b",
+          "notes": "Bottom aperture, left side"
+        },
+        {
+          "channel": 30,
+          "label": "Aperture 3b fine"
+        },
+        {
+          "channel": 31,
+          "label": "Aperture 2a",
+          "notes": "Right aperture, top side"
+        },
+        {
+          "channel": 32,
+          "label": "Aperture 2a fine"
+        },
+        {
+          "channel": 33,
+          "label": "Aperture 2b",
+          "notes": "Right apterure, bottom side"
+        },
+        {
+          "channel": 34,
+          "label": "Aperture 2b fine"
+        },
+        {
+          "channel": 35,
+          "label": "Aperture 4a",
+          "notes": "Left aperture, bottom side"
+        },
+        {
+          "channel": 36,
+          "label": "Aperture 4a fine"
+        },
+        {
+          "channel": 37,
+          "label": "Aperture 4b",
+          "notes": "Left aperture, top side"
+        },
+        {
+          "channel": 38,
+          "label": "Aperture 4b fine"
+        },
+        {
+          "channel": 39,
+          "label": "Aperture rotation",
+          "notes": "-65° / +65°"
+        },
+        {
+          "channel": 40,
+          "label": "Aperture rotation fine"
+        },
+        {
+          "channel": 41,
+          "label": "Colour wheel",
+          "ranges": [
+            { "range": [0, 0], "label": "White (color shift gobo on)" },
+            { "range": [1, 1], "label": "White (color shift gobo off)" },
+            { "range": [2, 3], "label": "White/CTB" },
+            { "range": [4, 5], "label": "CTB" },
+            { "range": [6, 7], "label": "CTB/Red" },
+            { "range": [8, 9], "label": "Red" },
+            { "range": [10, 11], "label": "Red/Yellow" },
+            { "range": [12, 13], "label": "Yellow" },
+            { "range": [14, 15], "label": "Yellow/Magenta" },
+            { "range": [16, 17], "label": "Magenta" },
+            { "range": [18, 19], "label": "Magenta/Green" },
+            { "range": [20, 21], "label": "Green" },
+            { "range": [22, 23], "label": "Green/Orange" },
+            { "range": [24, 25], "label": "Orange" },
+            { "range": [26, 27], "label": "Orange/CRI" },
+            { "range": [28, 29], "label": "CRI" },
+            { "range": [30, 63], "label": "CTO" },
+            {
+              "range": [64, 191],
+              "label": "Linear colors",
+              "notes": "White - CTB - Red - Yellow - Magenta - Green - Orange - CRI - CTO - White"
+            },
+            {
+              "range": [192, 223],
+              "label": "Colour cycle, right (rapid - slow)"
+            },
+            {
+              "range": [224, 255],
+              "label": "Colour cycle, left (slow - rapid)"
+            }
+          ]
+        },
+        {
+          "channel": 42,
+          "label": "Cyan"
+        },
+        {
+          "channel": 43,
+          "label": "Cyan fine"
+        },
+        {
+          "channel": 44,
+          "label": "Magenta"
+        },
+        {
+          "channel": 45,
+          "label": "Magenta fine"
+        },
+        {
+          "channel": 46,
+          "label": "Yellow"
+        },
+        {
+          "channel": 47,
+          "label": "Yellow fine"
+        },
+        {
+          "channel": 48,
+          "label": "CTO/CTB",
+          "notes": "CTO = model HP, HC / CTB = model WW"
+        },
+        {
+          "channel": 49,
+          "label": "CTO/CTB fine",
+          "notes": "CTO = model HP, HC / CTB = model WW"
+        },
+        {
+          "channel": 50,
+          "label": "Sparkle - Glitter effect",
+          "home": 0,
+          "ranges": [
+            {
+              "range": [0, 0],
+              "label": "Sparkle effect inactive"
+            },
+            {
+              "range": [1, 255],
+              "label": "Sparkle effect intensity (minimum - maximum)"
+            }
+          ]
+        },
+        {
+          "channel": 51,
+          "label": "Sparkle speed",
+          "ranges": [
+            {
+              "range": [0, 31],
+              "label": "Faded sparkle effect (slow -> rapid)"
+            },
+            {
+              "range": [32, 63],
+              "label": "Switched sparkle effect (slow -> rapid)"
+            },
+            {
+              "range": [64, 255],
+              "label": "Repetition of the fading and switching blocks"
+            }
+          ]
+        },
+        {
+          "channel": 52,
+          "label": "Prism 1",
+          "home": 0,
+          "ranges": [
+            {
+              "range": [0, 7],
+              "label": "Open"
+            },
+            {
+              "range": [8, 255],
+              "label": "Prism 1 (5-fold linear)"
+            }
+          ]
+        },
+        {
+          "channel": 53,
+          "label": "Prism 1 positioning/rotation",
+          "ranges": [
+            {
+              "range": [0, 191],
+              "label": "Prism positioning (0° - 540°)"
+            },
+            {
+              "range": [192, 222],
+              "label": "Prism rotation, right (rapid -> slow)"
+            },
+            {
+              "range": [223, 224],
+              "label": "Stop prism rotation"
+            },
+            {
+              "range": [225, 255],
+              "label": "Prism rotation, left (slow -> rapid)"
+            }
+          ]
+        },
+        {
+          "channel": 54,
+          "label": "Prism 1 positioning/rotation fine"
+        },
+        {
+          "channel": 55,
+          "label": "Frost 1",
+          "notes": "Frost 0-100%"
+        },
+        {
+          "channel": 56,
+          "label": "Frost 2",
+          "notes": "Frost 0-100%"
+        },
+        {
+          "channel": 57,
+          "label": "Effects macro",
+          "home": 0,
+          "ranges": [
+            {
+              "range": [0, 0],
+              "label": "Macro inactive"
+            },
+            {
+              "range": [1, 255],
+              "label": "Macro 001 - Macro 255"
+            }
+          ]
+        },
+        {
+          "channel": 58,
+          "label": "Pan/tilt speed",
+          "home": 0,
+          "ranges": [
+            {
+              "range": [0, 3],
+              "label": "Real-time effects"
+            },
+            {
+              "range": [4, 255],
+              "label": "Delayed effects (rapid - slow)"
+            }
+          ]
+        },
+        {
+          "channel": 59,
+          "label": "Effects speed",
+          "ranges": [
+            {
+              "range": [0, 3],
+              "label": "Real-time effects"
+            },
+            {
+              "range": [4, 255],
+              "label": "Delayed effects (rapid - slow)"
+            }
+          ]
+        },
+        {
+          "channel": 60,
+          "label": "Blackout Move",
+          "home": 0,
+          "ranges": [
+            {
+              "range": [0, 95],
+              "label": "Not assigned"
+            },
+
+            { "range": [96, 127], "label": "Blackout during pan/tilt" },
+            {
+              "range": [128, 159],
+              "label": "Blackout during Gobo, Colour, Prism, CMY, Iris, Frost"
+            },
+            {
+              "range": [160, 191],
+              "label": "Blackout during Gobo, Colour, Prism, CMY, Iris, Frost, Zoom, Focus"
+            },
+            {
+              "range": [192, 223],
+              "label": "Blackout during Gobo, Colour, Prism, CMY, Iris, Frost, Pan/Tilt"
+            },
+            {
+              "range": [224, 255],
+              "label": "Blackout during Gobo, Colour, Prism, CMY, Iris, Frost, Zoom, Focus, Pan/Tilt"
+            }
+          ]
+        }
+      ],
+      "macros": [
+        {
+          "control": {
+            "label": "pan",
+            "channels": [{ "HiRes": [1, 2] }]
+          }
+        },
+        {
+          "control": {
+            "label": "tilt",
+            "channels": [{ "HiRes": [3, 4] }]
+          }
+        },
+        {
+          "colour": {
+            "label": "colour",
+            "channels": {
+              "subtractive": {
+                "cyan": [42],
+                "magenta": [44],
+                "yellow": [46],
+                "cto": [48]
+              }
+            }
+          }
+        },
+        {
+          "control": {
+            "label": "brightness",
+            "channels": [{ "HiRes": [7, 8] }]
+          }
+        },
+        {
+          "control": {
+            "label": "focus",
+            "channels": [{ "HiRes": [9, 10] }]
+          }
+        },
+        {
+          "control": {
+            "label": "zoom",
+            "channels": [{ "HiRes": [11, 12] }]
+          }
+        },
+        {
+          "control": {
+            "label": "shutter",
+            "channels": [{ "LoRes": 6 }]
+          }
+        }
+      ]
     }
   ]
 }
@@ -295,7 +1482,7 @@
                 "cyan": [8],
                 "magenta": [9],
                 "yellow": [10],
-                "white": [11]
+                "cto": [11]
               }
             }
           }

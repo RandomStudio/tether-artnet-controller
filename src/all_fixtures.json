@@ -1,5 +1,182 @@
 [
 {
+  "name": "JB Lighting P10 Profile",
+  "reference": "https://www.jb-lighting.de/index.php?lang=EN&product=P10%20Profile&site=produkte",
+  "modes": [
+    {
+      "name": "Mode 1, 40 Channels",
+      "mappings": [
+        {
+          "channel": 1,
+          "label": "Pan",
+          "notes": "Movement 546,74°"
+        },
+        {
+          "channel": 2,
+          "label": "Pan Fine"
+        },
+        {
+          "channel": 3,
+          "label": "Tilt",
+          "notes": "Movement 281,16°"
+        },
+        {
+          "channel": 4,
+          "label": "Tilt fine"
+        },
+        {
+          "channel": 5,
+          "label": "Control Channel",
+          "notes": "See manual page 25"
+        },
+        {
+          "channel": 6,
+          "label": "Shutter",
+          "home": 255,
+          "ranges": [
+            {
+              "range": [0, 15],
+              "label": "Shutter closed"
+            },
+            {
+              "range": [16, 95],
+              "label": "Shutter open"
+            },
+            {
+              "range": [96, 110],
+              "label": "Open pulsing shutter >20Hz (rapid - slow)"
+            },
+            {
+              "range": [110, 111],
+              "label": "Shutter open"
+            },
+            {
+              "range": [112, 125],
+              "label": "Fade effect with dimmer (slow - rapid)"
+            },
+            {
+              "range": [126, 126],
+              "label": "Shutter open"
+            },
+            {
+              "range": [127, 127],
+              "label": "Shutter closed"
+            },
+            {
+              "range": [128, 142],
+              "label": "Open pulsing shutter <20Hz (rapid - slow)"
+            },
+            {
+              "range": [143, 143],
+              "label": "Shutter open"
+            },
+            {
+              "range": [144, 158],
+              "label": "Close pulsing shutter >20Hz (rapid - slow)"
+            },
+            {
+              "range": [159, 159],
+              "label": "Shutter closed"
+            },
+            {
+              "range": [160, 174],
+              "label": "Shutter fade, 0% (rapid - slow)"
+            },
+            {
+              "range": [175, 175],
+              "label": "Shutter open"
+            },
+            {
+              "range": [176, 190],
+              "label": "Shutter fade, 100% (rapid - slow)"
+            },
+            {
+              "range": [191, 191],
+              "label": "Shutter closed"
+            },
+            {
+              "range": [192, 206],
+              "label": "Random shutter 100% (rapid - slow)"
+            },
+            {
+              "range": [207, 207],
+              "label": "Shutter open"
+            },
+            {
+              "range": [208, 222],
+              "label": "Random shutter 0% (rapid - slow)"
+            },
+            {
+              "range": [223, 223],
+              "label": "Shutter closed"
+            },
+            {
+              "range": [224, 238],
+              "label": "Random shutter fade, 0% (rapid- slow)"
+            },
+            {
+              "range": [239, 239],
+              "label": "Shutter open"
+            },
+            {
+              "range": [240, 254],
+              "label": "Random shutter fade, 100% (rapid- slow)"
+            },
+            {
+              "range": [255, 255],
+              "label": "Shutter open"
+            }
+          ]
+        },
+        {
+          "channel": 7,
+          "label": "Dimmer",
+          "notes": "0 - 100%",
+          "home": 255
+        },
+        {
+          "channel": 8,
+          "label": "Dimmer fine"
+        },
+        {
+          "channel": 9,
+          "label": "Focus",
+          "notes": "0 - 100%"
+        },
+        {
+          "channel": 10,
+          "label": "Focus fine"
+        },
+        {
+          "channel": 11,
+          "label": "Zoom",
+          "notes": "near 5.7° - far 60°"
+        },
+        {
+          "channel": 12,
+          "label": "Zoom fine"
+        },
+        {
+          "channel": 13,
+          "label": "Autofocus distance",
+          "ranges": [
+            {
+              "range": [0, 1],
+              "label": "Auto focus off"
+            },
+            {
+              "range": [2, 255],
+              "label": "Auto focus 0-25.5m",
+              "notes": "(0 =off, DMX / 10 = distance)"
+            }
+          ]
+        }
+      ],
+      "macros": []
+    }
+  ]
+}
+,{
   "name": "Cameo Opus S5",
   "reference": "https://www.cameolight.com/de/loesungen/dj-musiker/bewegtes-licht/moving-heads/25591/movo-beam-200#detail-description",
   "modes": [

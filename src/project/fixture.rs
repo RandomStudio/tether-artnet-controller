@@ -200,4 +200,6 @@ pub enum FixtureMacro {
 pub struct RangeDescription {
     pub range: [u8; 2],
     pub label: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub notes: Option<String>,
 }

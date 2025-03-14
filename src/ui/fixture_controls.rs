@@ -130,6 +130,9 @@ fn fixture_controls_in_project(model: &mut Model, ui: &mut Ui) {
                         match current_range {
                             Some(r) => {
                                 ui.label(&r.label);
+                                if let Some(notes) = &r.notes {
+                                    ui.label("ℹ").on_hover_text(notes);
+                                }
                             }
                             None => {
                                 ui.label("Invalid range");

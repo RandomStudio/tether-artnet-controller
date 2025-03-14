@@ -332,7 +332,7 @@
           "colour": {
             "label": "colour",
             "channels": {
-              "additive": {
+              "additiveRGBW": {
                 "red": [5, 11],
                 "green": [6, 12],
                 "blue": [7, 13],

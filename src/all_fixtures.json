@@ -749,7 +749,7 @@
           "colour": {
             "label": "colour",
             "channels": {
-              "additive": {
+              "additiveRGBW": {
                 "red": [12],
                 "green": [14],
                 "blue": [16],
@@ -1245,7 +1245,7 @@
           "colour": {
             "label": "colour",
             "channels": {
-              "additive": {
+              "additiveRGBW": {
                 "red": [6],
                 "green": [8],
                 "blue": [10],
@@ -1604,7 +1604,7 @@
           "colour": {
             "label": "colour",
             "channels": {
-              "additive": {
+              "additiveRGBW": {
                 "red": [5, 11],
                 "green": [6, 12],
                 "blue": [7, 13],
@@ -1715,7 +1715,7 @@
           "colour": {
             "label": "colour",
             "channels": {
-              "additive": {
+              "additiveRGBW": {
                 "red": [2],
                 "green": [3],
                 "blue": [4],
@@ -1906,7 +1906,7 @@
           "colour": {
             "label": "colour",
             "channels": {
-              "additive": {
+              "additiveRGBW": {
                 "red": [8],
                 "green": [9],
                 "blue": [10],

@@ -132,7 +132,7 @@ impl ArtNetInterface {
                         }
                         FixtureMacro::Colour(colour_macro) => {
                             match &colour_macro.channels {
-                                ChannelList::Additive(rgba) => {
+                                ChannelList::AdditiveRGBW(rgba) => {
                                     let RGBWChannels {
                                         red,
                                         green,

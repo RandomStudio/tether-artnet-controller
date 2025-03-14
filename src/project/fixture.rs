@@ -134,7 +134,7 @@ pub struct CMYChannels {
 #[derive(Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub enum ChannelList {
-    Additive(RGBWChannels),
+    AdditiveRGBW(RGBWChannels),
     Subtractive(CMYChannels),
 }
 

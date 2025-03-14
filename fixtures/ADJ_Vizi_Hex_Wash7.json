@@ -330,7 +330,7 @@
       "macros": [
         {
           "colour": {
-            "label": "Colour",
+            "label": "colour",
             "channels": {
               "additive": {
                 "red": [5, 11],

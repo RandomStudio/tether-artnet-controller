@@ -1,0 +1,484 @@
+{
+  "name": "GLP Fusion X-PAR 12Z",
+  "reference": "https://www.glp.de/en/products/entertainment-lighting/static-lights/fusion-x-par-12-z",
+  "modes": [
+    {
+      "name": "Advanced, 16 Channels",
+      "mappings": [
+        {
+          "channel": 1,
+          "label": "Master Dimmer Coarse",
+          "notes": "Intensity 0-100% (16-bit)"
+        },
+        {
+          "channel": 2,
+          "label": "Master Dimmer Fine",
+          "notes": "Intensity 0-100% (16-bit)"
+        },
+        {
+          "channel": 3,
+          "label": "Shutter",
+          "home": 255,
+          "ranges": [
+            {
+              "range": [0, 4],
+              "label": "Closed"
+            },
+            {
+              "range": [5, 9],
+              "label": "Single Flash when value changes"
+            },
+            {
+              "range": [10, 39],
+              "label": "Sync Ramp Up slow -> fast"
+            },
+            {
+              "range": [40, 69],
+              "label": "Sync Ramp Down slow -> fast"
+            },
+            {
+              "range": [70, 99],
+              "label": "Sync Ramp Up-down slow -> fast"
+            },
+            {
+              "range": [100, 129],
+              "label": "Sync Double Flash slow -> fast"
+            },
+            {
+              "range": [130, 159],
+              "label": "Random Strobe slow -> fast",
+              "notes": "Incorrect in manual as 130-359"
+            },
+            {
+              "range": [160, 239],
+              "label": "Sync Strobe 1 Hz-10 Hz"
+            },
+            {
+              "range": [251, 255],
+              "label": "Open"
+            }
+          ]
+        },
+        {
+          "channel": 4,
+          "label": "Zoom",
+          "notes": "Beam angle narrow -> wide"
+        },
+        {
+          "channel": 5,
+          "label": "Control/Settings",
+          "notes": "Refer to manual page 5"
+        },
+        {
+          "channel": 6,
+          "label": "Red",
+          "notes": "Intensity 0-100% (16-bit)"
+        },
+        {
+          "channel": 7,
+          "label": "Red fine",
+          "notes": "Intensity 0-100% (16-bit)"
+        },
+        {
+          "channel": 8,
+          "label": "Green",
+          "notes": "Intensity 0-100% (16-bit)"
+        },
+        {
+          "channel": 9,
+          "label": "Green fine",
+          "notes": "Intensity 0-100% (16-bit)"
+        },
+        {
+          "channel": 10,
+          "label": "Blue",
+          "notes": "Intensity 0-100% (16-bit)"
+        },
+        {
+          "channel": 11,
+          "label": "Blue fine",
+          "notes": "Intensity 0-100% (16-bit)"
+        },
+        {
+          "channel": 12,
+          "label": "Lime",
+          "notes": "Intensity 0-100% (16-bit)"
+        },
+        {
+          "channel": 13,
+          "label": "Lime fine",
+          "notes": "Intensity 0-100% (16-bit)"
+        },
+        {
+          "channel": 14,
+          "label": "Colour Wheel",
+          "ranges": [
+            {
+              "range": [0, 3],
+              "label": "Open",
+              "notes": "Set colour on channels 6-13"
+            },
+            {
+              "range": [4, 6],
+              "label": "Preset 3200K"
+            },
+            {
+              "range": [7, 9],
+              "label": "Preset 4200K"
+            },
+            {
+              "range": [10, 12],
+              "label": "Preset 5600K"
+            },
+            {
+              "range": [13, 15],
+              "label": "Preset 6500K"
+            },
+            {
+              "range": [16, 18],
+              "label": "Filter 004 (Medium Bastard Amber)"
+            },
+            {
+              "range": [19, 21],
+              "label": "Filter 019 (Fire)"
+            },
+            {
+              "range": [22, 24],
+              "label": "Filter 025 (Sunset Red)"
+            },
+            {
+              "range": [25, 27],
+              "label": "Filter 026 (Bright Red) "
+            },
+            {
+              "range": [28, 30],
+              "label": "Filter 036 (Medium Pink)"
+            },
+            {
+              "range": [31, 33],
+              "label": "Filter 049 (Medium Purple)"
+            },
+            {
+              "range": [34, 36],
+              "label": "Filter 058 (Lavender)"
+            },
+            {
+              "range": [37, 39],
+              "label": "Filter 068 (Sky Blue)"
+            },
+            {
+              "range": [40, 42],
+              "label": "Filter 088 (Lime Green)"
+            },
+            {
+              "range": [43, 45],
+              "label": "Filter 089 (Moss Green)"
+            },
+            {
+              "range": [46, 48],
+              "label": "Filter 090 (Dark Yellow Green)"
+            },
+            {
+              "range": [49, 51],
+              "label": "Filter 102 (Light Amber)"
+            },
+            {
+              "range": [52, 54],
+              "label": "Filter 103 (Straw)"
+            },
+            {
+              "range": [55, 57],
+              "label": "Filter 106 (Primary Red)"
+            },
+            {
+              "range": [58, 60],
+              "label": "Filter 111 (Dark Pink)"
+            },
+            {
+              "range": [61, 63],
+              "label": "Filter 115 (Peacock Blue)"
+            },
+            {
+              "range": [64, 66],
+              "label": "Filter 117 (Steel Blue)"
+            },
+            {
+              "range": [67, 69],
+              "label": "Filter 118 (Light Blue)"
+            },
+            {
+              "range": [70, 72],
+              "label": "Filter 121 (Filter Green)"
+            },
+            {
+              "range": [73, 75],
+              "label": "Filter 122 (Fern Green)"
+            },
+            {
+              "range": [76, 78],
+              "label": "Filter 124 (Dark Green)"
+            },
+
+            {
+              "range": [79, 81],
+              "label": "Filter 126 (Mauve)"
+            },
+            {
+              "range": [82, 84],
+              "label": "Filter 128 (Bright Pink)"
+            },
+            {
+              "range": [85, 87],
+              "label": "Filter 131 (Marine Blue)"
+            },
+            {
+              "range": [88, 90],
+              "label": "Filter 132 (Medium Blue)"
+            },
+            {
+              "range": [91, 93],
+              "label": "Filter 134 (Golden Amber)"
+            },
+            {
+              "range": [94, 96],
+              "label": "Filter 135 (Deep Golden Amber)"
+            },
+            {
+              "range": [97, 99],
+              "label": "Filter 136 (Pale Lavender)"
+            },
+            {
+              "range": [100, 102],
+              "label": "Filter 137 (Special Lavender)"
+            },
+            {
+              "range": [103, 105],
+              "label": "Filter 138 (Pale Green)"
+            },
+            {
+              "range": [106, 108],
+              "label": "Filter 140 (Summer Blue)"
+            },
+            {
+              "range": [109, 111],
+              "label": "Filter 141 (Bright Blue)"
+            },
+            {
+              "range": [112, 114],
+              "label": "Filter 143 (Pale Navy Blue)"
+            },
+            {
+              "range": [115, 117],
+              "label": "Filter 147 (Apricot)"
+            },
+            {
+              "range": [118, 120],
+              "label": "Filter 148 (Bright Rose)"
+            },
+            {
+              "range": [121, 123],
+              "label": "Filter 152 (Pale Gold)"
+            },
+            {
+              "range": [124, 126],
+              "label": "Filter 154 (Pale Rose)"
+            },
+            {
+              "range": [127, 129],
+              "label": "Filter 157 (Pink)"
+            },
+            {
+              "range": [130, 132],
+              "label": "Filter 162 (Bastard Amber)"
+            },
+            {
+              "range": [133, 135],
+              "label": "Filter 164 (Flame Red)"
+            },
+            {
+              "range": [136, 138],
+              "label": "Filter 165 (Daylight Blue)"
+            },
+            {
+              "range": [139, 141],
+              "label": "Filter 169 (Lilac Tint)"
+            },
+            {
+              "range": [142, 144],
+              "label": "Filter 170 (Deep Lavender)"
+            },
+            {
+              "range": [145, 147],
+              "label": "Filter 172 (Lagoon Blue)"
+            },
+            {
+              "range": [148, 150],
+              "label": "Filter 180 (Dark Lavender)"
+            },
+            {
+              "range": [151, 153],
+              "label": "Filter 182 (Light Red)"
+            },
+            {
+              "range": [154, 156],
+              "label": "Filter 194 (Surprise Pink)"
+            },
+            {
+              "range": [157, 159],
+              "label": "Filter 197 (Alice Blue)"
+            },
+            {
+              "range": [160, 162],
+              "label": "Filter 201 (Full C.T. Blue)"
+            },
+            {
+              "range": [163, 165],
+              "label": "Filter 202 (Half C.T. Blue)"
+            },
+            {
+              "range": [166, 168],
+              "label": "Filter 203 (Quarter C.T. Blue)"
+            },
+            {
+              "range": [169, 171],
+              "label": "Filter 204 (Full C.T. Orange)"
+            },
+            {
+              "range": [172, 174],
+              "label": "Filter 206 (Quarter C.T. Orange)"
+            },
+            {
+              "range": [175, 177],
+              "label": "Filter 219 (Fluorescent Green)"
+            },
+            {
+              "range": [178, 180],
+              "label": "Filter 247 (Filter Minus Green)"
+            },
+            {
+              "range": [181, 183],
+              "label": "Filter 248 (Half Minus Green)",
+              "notes": "Incorrect in manual as 1811-183"
+            },
+            {
+              "range": [184, 186],
+              "label": "Filter 281 (Three Quarter C.T. Blue)"
+            },
+            {
+              "range": [187, 189],
+              "label": "Filter 285 (Three Quarter C.T. Orange)"
+            },
+            {
+              "range": [190, 192],
+              "label": "Filter 352 (Glacier Blue)"
+            },
+            {
+              "range": [193, 195],
+              "label": "Filter 353 (Lighter Blue)"
+            },
+            {
+              "range": [196, 198],
+              "label": "Filter 507 (Madge)"
+            },
+            {
+              "range": [199, 201],
+              "label": "Filter 778 (Millennium Gold)"
+            },
+            {
+              "range": [202, 204],
+              "label": "Filter 793 (Vanity Fair)"
+            },
+            {
+              "range": [205, 207],
+              "label": "Filter 798 (Chrysalis Pink)"
+            },
+            {
+              "range": [208, 210],
+              "label": "Rainbow stop at first color"
+            },
+            {
+              "range": [211, 252],
+              "label": "Rainbow slow -> fast"
+            },
+            {
+              "range": [253, 255],
+              "label": "Rainbow stop at current color"
+            }
+          ]
+        },
+        {
+          "channel": 15,
+          "label": "CTC",
+          "ranges": [
+            {
+              "range": [0, 15],
+              "label": "Open (default color temperature)"
+            },
+            {
+              "range": [16, 255],
+              "label": "10000K - 2500K",
+              "notes": "See manual page 13 for exact temperature values"
+            }
+          ]
+        },
+        {
+          "channel": 16,
+          "label": "M/G Shift",
+          "ranges": [
+            {
+              "range": [0, 9],
+              "label": "Off (no effect)"
+            },
+            {
+              "range": [10, 10],
+              "label": "Full Plus Magenta +100%"
+            },
+            {
+              "range": [11, 124],
+              "label": "Plus Magenta +99% -> + 1%"
+            },
+            {
+              "range": [125, 140],
+              "label": "Neutral / no effect"
+            },
+            {
+              "range": [141, 254],
+              "label": "Plus Green +1% -> +99%"
+            },
+            {
+              "range": [255, 255],
+              "label": "Full Plus Green +100%"
+            }
+          ]
+        }
+      ],
+      "macros": [
+        {
+          "colour": {
+            "label": "colour",
+            "channels": {
+              "additive": {
+                "red": [6],
+                "green": [8],
+                "blue": [10],
+                "white": []
+              }
+            }
+          }
+        },
+        {
+          "control": {
+            "label": "brightness",
+            "channels": [{ "HiRes": [1, 2] }]
+          }
+        },
+        {
+          "control": {
+            "label": "zoom",
+            "channels": [{ "LoRes": 4 }]
+          }
+        }
+      ]
+    }
+  ]
+}

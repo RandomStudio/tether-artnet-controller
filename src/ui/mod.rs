@@ -2,35 +2,59 @@ use egui::{Color32, Grid, RichText, ScrollArea, Slider, Ui, Vec2};
 use log::{error, info, warn};
 
 use crate::{
-    artnet::{random, zero},
-    model::Model,
-    project::Project,
+    model::{BehaviourOnExit, Model},
+    project::{artnetconfig::get_artnet_interface, Project},
     settings::CHANNELS_PER_UNIVERSE,
 };
 
-use self::{fixture_controls::render_fixture_controls, scenes::render_scenes};
+use self::{
+    fixture_controls::render_fixture_controls, macro_controls::render_macro_controls,
+    network_controls::render_network_controls, scenes::render_scenes,
+};
 
 mod fixture_controls;
+mod macro_controls;
+mod network_controls;
 mod scenes;
 
-pub const SIMPLE_WIN_SIZE: Vec2 = Vec2::new(400., 1024.0);
-pub const ADVANCED_WIN_SIZE: Vec2 = Vec2::new(1280., 900.);
+pub const NARROW_WINDOW: Vec2 = Vec2::new(800., 1024.0);
+pub const WIDER_WINDOW: Vec2 = Vec2::new(1280., 900.);
+
+// const WINDOW_RESET_POSITION: [f32; 2] = [32.0, 32.0];
 
 #[derive(PartialEq)]
 pub enum ViewMode {
-    Simple,
-    Advanced,
     Scenes,
+    Setup,
 }
 
-pub fn render_gui(model: &mut Model, ctx: &egui::Context, frame: &mut eframe::Frame) {
+pub fn render_gui(model: &mut Model, ctx: &eframe::egui::Context, frame: &mut eframe::Frame) {
     ctx.request_repaint();
+
+    if ctx.input(|i| i.viewport().close_requested()) {
+        if model.allowed_to_close {
+            // do nothing - we will close
+        } else {
+            ctx.send_viewport_cmd(egui::ViewportCommand::CancelClose);
+            model.show_confirm_exit = true;
+        }
+    }
 
     render_mode_switcher(model, ctx, frame);
 
     match model.view_mode {
-        ViewMode::Advanced => {
+        ViewMode::Scenes => {
             egui::SidePanel::left("LeftPanel").show(ctx, |ui| {
+                render_network_controls(model, ui);
+                render_macro_controls(model, ui);
+            });
+            egui::CentralPanel::default().show(ctx, |ui| {
+                render_scenes(model, ui);
+            });
+        }
+        ViewMode::Setup => {
+            egui::SidePanel::left("LeftPanel").show(ctx, |ui| {
+                render_network_controls(model, ui);
                 render_macro_controls(model, ui);
             });
 
@@ -42,67 +66,105 @@ pub fn render_gui(model: &mut Model, ctx: &egui::Context, frame: &mut eframe::Fr
                 render_fixture_controls(model, ui);
             });
         }
-        ViewMode::Simple => {
-            egui::CentralPanel::default().show(ctx, |ui| {
-                render_macro_controls(model, ui);
-            });
-        }
-        ViewMode::Scenes => {
-            egui::SidePanel::left("LeftPanel").show(ctx, |ui| {
-                render_macro_controls(model, ui);
-            });
-            egui::CentralPanel::default().show(ctx, |ui| {
-                render_scenes(model, ui);
-            });
-        }
     }
 
-    model.update();
+    if model.show_confirm_exit {
+        egui::Window::new("Ready to Quit?")
+            .collapsible(false)
+            .resizable(false)
+            .show(ctx, |ui| {
+                ui.horizontal(|ui| {
+                    if ui.button(RichText::new("Yes ⏏").heading()).clicked() {
+                        model.show_confirm_exit = false;
+                        model.allowed_to_close = true;
+                        ui.ctx().send_viewport_cmd(egui::ViewportCommand::Close);
+                    }
+                    if ui.button(RichText::new("Cancel 🗙").heading()).clicked() {
+                        model.show_confirm_exit = false;
+                        model.allowed_to_close = false;
+                    }
+                });
+                ui.checkbox(&mut model.save_on_exit, "Save Project on exit");
+                ui.group(|ui| {
+                    ui.heading("Behaviour on exit");
+                    ui.radio_value(
+                        &mut model.exit_mode,
+                        BehaviourOnExit::DoNothing,
+                        "Do nothing",
+                    );
+                    ui.radio_value(
+                        &mut model.exit_mode,
+                        BehaviourOnExit::Home,
+                        "All fixtures to Home",
+                    );
+                    ui.radio_value(
+                        &mut model.exit_mode,
+                        BehaviourOnExit::Zero,
+                        "All channels to Zero",
+                    );
+                });
+            });
+    } else {
+        model.update();
+    }
 }
 
-pub fn render_mode_switcher(model: &mut Model, ctx: &egui::Context, frame: &mut eframe::Frame) {
+pub fn render_mode_switcher(
+    model: &mut Model,
+    ctx: &eframe::egui::Context,
+    _frame: &mut eframe::Frame,
+) {
     egui::TopBottomPanel::top("Tabs")
         .min_height(32.)
         .show(ctx, |ui| {
             ui.horizontal(|ui| {
                 ui.heading("🗖");
                 if ui
-                    .selectable_value(&mut model.view_mode, ViewMode::Simple, "Simple")
-                    .clicked()
-                {
-                    frame.set_window_size(SIMPLE_WIN_SIZE);
-                };
-                if ui
-                    .selectable_value(&mut model.view_mode, ViewMode::Advanced, "Advanced")
-                    .clicked()
-                {
-                    frame.set_window_size(ADVANCED_WIN_SIZE);
-                    frame.set_window_pos([0., 0.].into())
-                }
-                if ui
                     .selectable_value(&mut model.view_mode, ViewMode::Scenes, "Scenes")
                     .clicked()
                 {
-                    frame.set_window_size(ADVANCED_WIN_SIZE);
-                    frame.set_window_pos([0., 0.].into())
+                    ctx.send_viewport_cmd(egui::ViewportCommand::InnerSize(WIDER_WINDOW));
+                }
+                if ui
+                    .selectable_value(&mut model.view_mode, ViewMode::Setup, "Setup")
+                    .clicked()
+                {
+                    ctx.send_viewport_cmd(egui::ViewportCommand::InnerSize(WIDER_WINDOW));
                 }
                 ui.label("|");
                 if ui.button("New").clicked() {
                     // TODO: ask for confirmation first!
                     warn!("Clearing current project from memory");
                     model.project = Project::new();
+                    model.current_project_path = None;
                 }
-                if ui.button("Save").clicked() {
-                    if let Some(path) = rfd::FileDialog::new()
-                        .add_filter("text", &["json"])
-                        .save_file()
-                    {
-                        match Project::save(&path.display().to_string(), &model.project) {
-                            Ok(()) => {
-                                info!("Saved OK!");
+                match &model.current_project_path {
+                    Some(existing_project_path) => {
+                        if ui.button("Save").clicked() {
+                            match Project::save(existing_project_path, &model.project) {
+                                Ok(()) => {
+                                    info!("Saved OK!");
+                                }
+                                Err(e) => {
+                                    error!("Error saving project: {:?}", e);
+                                }
                             }
-                            Err(e) => {
-                                error!("Error saving project: {:?}", e);
+                        }
+                    }
+                    None => {
+                        if ui.button("Save As...").clicked() {
+                            if let Some(path) = rfd::FileDialog::new()
+                                .add_filter("text", &["json"])
+                                .save_file()
+                            {
+                                match Project::save(&path.display().to_string(), &model.project) {
+                                    Ok(()) => {
+                                        info!("Saved OK!");
+                                    }
+                                    Err(e) => {
+                                        error!("Error saving project: {:?}", e);
+                                    }
+                                }
                             }
                         }
                     }
@@ -113,7 +175,15 @@ pub fn render_mode_switcher(model: &mut Model, ctx: &egui::Context, frame: &mut 
                         .pick_file()
                     {
                         match Project::load(&path.display().to_string()) {
-                            Ok(p) => model.project = p,
+                            Ok(p) => {
+                                model.project = p;
+                                model.current_project_path = Some(path.display().to_string());
+                                model.artnet =
+                                    match get_artnet_interface(&model.settings, &model.project) {
+                                        Ok(a) => Some(a),
+                                        Err(_e) => None,
+                                    }
+                            }
                             Err(e) => {
                                 error!(
                                     "Failed to load project from path \"{}\"; {:?}",
@@ -123,6 +193,21 @@ pub fn render_mode_switcher(model: &mut Model, ctx: &egui::Context, frame: &mut 
                             }
                         }
                     }
+                }
+                if let Some(existing_project_path) = &model.current_project_path {
+                    ui.label(
+                        RichText::new(existing_project_path)
+                            .color(Color32::WHITE)
+                            .italics()
+                            .small(),
+                    );
+                } else {
+                    ui.label(
+                        RichText::new("No project file")
+                            .color(Color32::GRAY)
+                            .italics()
+                            .small(),
+                    );
                 }
             });
         });
@@ -152,92 +237,5 @@ pub fn render_sliders(model: &mut Model, ui: &mut Ui) {
                     ui.end_row();
                 }
             });
-        });
-}
-
-pub fn render_macro_controls(model: &mut Model, ui: &mut Ui) {
-    ui.heading("All");
-    ui.horizontal(|ui| {
-        if ui.button("HOME").clicked() {
-            model.apply_macros = false;
-            model.apply_home_values();
-        }
-        if ui.button("ZERO").clicked() {
-            model.apply_macros = false;
-            zero(&mut model.channels_state);
-        }
-        if ui.button("RANDOM").clicked() {
-            model.apply_macros = false;
-            random(&mut model.channels_state);
-        }
-    });
-
-    ui.separator();
-
-    ui.horizontal(|ui| {
-        ui.heading("Macros");
-        ui.label(if model.apply_macros {
-            RichText::new("active").color(Color32::DARK_GREEN)
-        } else {
-            RichText::new("inactive").color(Color32::GRAY)
-        });
-    });
-
-    ScrollArea::vertical()
-        .auto_shrink([false, false])
-        .show(ui, |ui| {
-            for (i, fixture) in model.project.fixtures.iter_mut().enumerate() {
-                ui.group(|ui| {
-                    let mut this_selected = model.selected_macro_group_index == i;
-                    if ui
-                        .toggle_value(&mut this_selected, "MIDI Control Target")
-                        .clicked()
-                    {
-                        model.selected_macro_group_index = i;
-                    }
-                    ui.heading(&fixture.label);
-                    ui.label(&fixture.config.name);
-                    let current_mode = &mut fixture.config.active_mode;
-
-                    Grid::new(format!("macros_{}", i))
-                        .num_columns(3)
-                        .show(ui, |ui| {
-                            for m in current_mode.macros.iter_mut() {
-                                let remapped_channels: Vec<u16> = m
-                                    .channels
-                                    .iter()
-                                    .map(|c| c + fixture.offset_channels)
-                                    .collect();
-                                let channel_list =
-                                    format!("{:?} => {:?}", &m.channels, remapped_channels);
-                                ui.label(&m.label).on_hover_text(channel_list);
-                                if ui
-                                    .add_enabled(
-                                        m.animation.is_none(),
-                                        Slider::new(&mut m.current_value, 0..=255),
-                                    )
-                                    .changed()
-                                {
-                                    model.apply_macros = true;
-                                };
-
-                                if let Some(animation) = &mut m.animation {
-                                    ui.label(
-                                        RichText::new(format!(
-                                            "{}%",
-                                            (animation.get_progress() * 100.) as u8
-                                        ))
-                                        .color(Color32::GREEN)
-                                        .small(),
-                                    );
-                                } else {
-                                    ui.label("");
-                                }
-
-                                ui.end_row();
-                            }
-                        });
-                });
-            }
         });
 }

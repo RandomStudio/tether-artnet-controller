@@ -1,9 +1,7 @@
-use std::net::{IpAddr, Ipv4Addr};
-
 use clap::Parser;
 
-const UNICAST_SRC: std::net::IpAddr = IpAddr::V4(Ipv4Addr::new(10, 0, 0, 102));
-const UNICAST_DST: std::net::IpAddr = IpAddr::V4(Ipv4Addr::new(10, 0, 0, 1));
+pub const UNICAST_SRC_STRING: &str = "127.0.0.1";
+pub const UNICAST_DST_STRING: &str = "127.0.0.1";
 
 pub const DEFAULT_ARTNET_HERTZ: u64 = 44;
 
@@ -17,7 +15,7 @@ pub struct Cli {
     #[arg(long = "headless")]
     pub headless_mode: bool,
 
-    #[arg(long = "project",default_value_t=String::from("./example.project.json"))]
+    #[arg(default_value_t=String::from("./example.project.json"))]
     pub project_path: String,
 
     #[arg(long = "loglevel",default_value_t=String::from("info"))]
@@ -28,12 +26,12 @@ pub struct Cli {
     pub artnet_broadcast: bool,
 
     /// IP address for ArtNet source interface (ignored if broadcast enabled)
-    #[arg(long = "artnet.interface", default_value_t=UNICAST_SRC)]
-    pub unicast_src: std::net::IpAddr,
+    #[arg(long = "artnet.interface")]
+    pub unicast_src: Option<std::net::IpAddr>,
 
     /// IP address for ArtNet destination node (ignored if broadcast enabled)
-    #[arg(long = "artnet.destination", default_value_t=UNICAST_DST)]
-    pub unicast_dst: std::net::IpAddr,
+    #[arg(long = "artnet.destination")]
+    pub unicast_dst: Option<std::net::IpAddr>,
 
     /// Update frequency, in Hertz, for sending ArtNet data (gets converted to ms)
     #[arg(long = "artnet.freq", default_value_t=DEFAULT_ARTNET_HERTZ)]
@@ -45,4 +43,17 @@ pub struct Cli {
 
     #[arg(long = "auto.random")]
     pub auto_random: bool,
+
+    /// Flag to disable Tether connect on start (GUI only)
+    #[arg(long = "tether.noAutoConnect")]
+    pub tether_disable_autoconnect: bool,
+
+    /// Optionally set an ID/group for lighting-related Input Plugs (macros, scenes); useful for separating messages.
+    /// Essentially defaults to wildcard (+) if omitted. Does NOT affect Tether MIDI subscriptions.
+    #[arg(long = "tether.subscribe.id")]
+    pub tether_subscribe_id: Option<String>,
+
+    /// Host/IP for Tether MQTT Broker
+    #[arg(long = "tether.host")]
+    pub tether_host: Option<String>,
 }

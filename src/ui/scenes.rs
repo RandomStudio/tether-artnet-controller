@@ -1,10 +1,14 @@
-use std::{collections::HashMap, time::SystemTime};
+use indexmap::IndexMap;
 
-use egui::{Grid, RichText, ScrollArea, Slider, Spinner, Ui};
+use egui::{Color32, RichText, ScrollArea, Slider, Ui};
+use log::debug;
 
 use crate::{
     model::Model,
-    project::{Scene, SceneState},
+    project::{
+        fixture::FixtureMacro,
+        scene::{Scene, SceneState, SceneValue},
+    },
 };
 
 pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
@@ -12,7 +16,8 @@ pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
 
     ui.separator();
 
-    let mut go_scene: Option<usize> = None;
+    let mut go_scene: Option<(usize, Option<u64>)> = None;
+    let mut edit_scene: Option<usize> = None;
     let mut update_scene: Option<usize> = None;
     let mut delete_scene: Option<usize> = None;
     let mut add_scene: Option<Scene> = None;
@@ -21,12 +26,25 @@ pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
         if ui.button("+ Add New").clicked() {
             let label = format!("New Scene {}", model.project.scenes.len());
 
-            let mut state = HashMap::<String, SceneState>::new();
+            let mut state = IndexMap::<String, SceneState>::new();
 
             for fixture in model.project.fixtures.iter() {
-                let mut m_state = HashMap::new();
+                let mut m_state: IndexMap<String, SceneValue> = IndexMap::new();
                 for m in fixture.config.active_mode.macros.iter() {
-                    m_state.insert(String::from(&m.label), m.current_value);
+                    match m {
+                        FixtureMacro::Control(control_macro) => {
+                            m_state.insert(
+                                String::from(&control_macro.label),
+                                SceneValue::ControlValue(control_macro.current_value),
+                            );
+                        }
+                        FixtureMacro::Colour(colour_macro) => {
+                            m_state.insert(
+                                String::from(&colour_macro.label),
+                                SceneValue::ColourValue(colour_macro.current_value),
+                            );
+                        }
+                    };
                 }
                 state.insert(String::from(&fixture.label), m_state);
             }
@@ -34,8 +52,9 @@ pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
             add_scene = Some(Scene {
                 label,
                 state,
-                is_editing: false,
-                last_active: None
+                is_editing: true,
+                last_active: true,
+                next_transition: 0.,
             });
         }
 
@@ -44,104 +63,153 @@ pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
         for (scene_index, scene) in model.project.scenes.iter_mut().enumerate() {
             ui.group(|ui| {
                 if scene.is_editing {
-                    ui.text_edit_singleline(&mut scene.label);
+                    ui.horizontal(|ui| {
+                        ui.label("Name");
+                        ui.text_edit_singleline(&mut scene.label);
+                    });
                 } else {
                     ui.horizontal(|ui| {
                         if ui
-                            .button(RichText::new(&scene.label).size(24.0))
+                            .button(RichText::new(&scene.label).size(24.0).color({
+                                if scene.last_active {
+                                    Color32::WHITE
+                                } else {
+                                    Color32::GRAY
+                                }
+                            }))
                             .clicked()
                         {
-                            go_scene = Some(scene_index);
+                            go_scene = Some((scene_index, None)); // go to scene "immediately"
                         };
-                        if let Some(t) = scene.last_active {
-                            let progress = t.elapsed().unwrap().as_secs_f32() / 5.0;
-                            if progress >= 1.0 { scene.last_active = None; }
-                            ui.add(Spinner::new());
+                        for (_fixture_instance_label, macros_used) in scene.state.iter() {
+                            for (_macro_name, value) in macros_used.iter() {
+                                match value {
+                                    SceneValue::ControlValue(_) => {}
+                                    SceneValue::ColourValue(c) => {
+                                        let [r, g, b, a] = c.to_array();
+                                        let text_color = {
+                                            if a == 0 {
+                                                Color32::from_rgba_unmultiplied(255, 255, 255, 255)
+                                            } else {
+                                                Color32::from_rgba_unmultiplied(r, g, b, 255)
+                                            }
+                                        };
+                                        ui.label(RichText::new("💡").color(text_color));
+                                    }
+                                }
+                            }
                         }
+                    });
+                    ui.separator();
+
+                    ui.horizontal(|ui| {
+                        ui.label("Transition:");
+                        if ui.button("1s").clicked() {
+                            go_scene = Some((scene_index, Some(1000)));
+                        }
+                        if ui.button("3s").clicked() {
+                            go_scene = Some((scene_index, Some(3000)));
+                        }
+                        if ui.button("10s").clicked() {
+                            go_scene = Some((scene_index, Some(10000)));
+                        }
+                        ui.horizontal(|ui| {
+                            ui.label("Custom (s)");
+                            ui.add(
+                                Slider::new(&mut scene.next_transition, 0. ..=10.0).step_by(0.1),
+                            );
+                            if ui.button("Go").clicked() {
+                                go_scene = Some((
+                                    scene_index,
+                                    Some((scene.next_transition * 1000.) as u64),
+                                ));
+                            }
+                        });
                     });
                 }
 
                 if scene.is_editing {
-                    for (fixture_index, s) in scene.state.iter_mut().enumerate() {
-                        let (fixture_label, states) = s;
-                        ui.label(fixture_label);
-                        ui.add_enabled_ui(false, |ui| {
-                            Grid::new(format!("scene-{}-state-{}", scene_index, fixture_index))
-                                .num_columns(2)
-                                .show(ui, |ui| {
-                                    for m in states.iter_mut() {
-                                        let (macro_label, scene_value) = m;
-                                        ui.label(macro_label);
-                                        // ui.add(Slider::new(scene_value, 0..=255));
-                                        if let Some(matched_fixture) = model
-                                            .project
-                                            .fixtures
-                                            .iter()
-                                            .find(|x| x.label.eq(fixture_label))
-                                        {
-                                            if let Some(matched_macro) = matched_fixture
-                                                .config
-                                                .active_mode
-                                                .macros
-                                                .iter()
-                                                .find(|x| x.label.eq(macro_label))
-                                            {
-                                                let mut value = matched_macro.current_value;
-                                                ui.add(Slider::new(&mut value, 0..=255));
-                                                ui.small("Adjust values in Macros panel");
-                                            }
-                                        } else {
-                                            ui.label("Something went wrong matching fixture macros to scene macros!");
-                                        }
-                                        ui.end_row();
-                                    }
-                                });
-                        });
-                    }
-                    if ui.button("Update ✅").clicked() {
-                        update_scene = Some(scene_index);
-                        scene.is_editing = false;
-                    }
+                    ui.label("Edit values in Macro panel, then click Save.");
+                    ui.horizontal(|ui| {
+                        if ui.button("Save ✅").clicked() {
+                            update_scene = Some(scene_index);
+                            edit_scene = None;
+                        }
+                        if ui.button("Cancel ❌").clicked() {
+                            edit_scene = None;
+                            scene.is_editing = false;
+                        }
+                    });
                 } else {
                     ui.horizontal(|ui| {
                         if ui.button("✏").clicked() {
-                            scene.is_editing = true;
-                            go_scene = Some(scene_index);
+                            // Mark scene for editing
+                            edit_scene = Some(scene_index);
+                            // Also go to this scene (immediately)
+                            go_scene = Some((scene_index, None));
                         }
                         if ui.button("🗑").clicked() {
                             delete_scene = Some(scene_index);
                         }
                     });
                 }
-                ui.separator();
             });
         }
     });
 
-    if let Some(scene_index) = go_scene {
-        model.apply_scene(scene_index, None, None);
-
+    if let Some(scene_index) = edit_scene {
+        // First, mark any CURRENTLY-edited scene for update (save)
         for (index, scene) in model.project.scenes.iter_mut().enumerate() {
-            if index == scene_index {
-                // This one
-                scene.last_active = Some(SystemTime::now());
-            } else {
-                // Others
-                scene.is_editing = false;
+            if scene.is_editing {
+                debug!("Scene {} should get saved", index);
+                update_scene = Some(index);
             }
+        }
+
+        // Then mark is_editing exclusively to the target Scene
+        for (index, scene) in model.project.scenes.iter_mut().enumerate() {
+            scene.is_editing = index == scene_index;
         }
     }
 
     if let Some(scene_index) = update_scene {
         let scene = &mut model.project.scenes[scene_index];
-        // scene.state.clear();
+        scene.is_editing = false;
 
         for fixture in model.project.fixtures.iter() {
-            let mut m_state = HashMap::new();
+            let mut m_state = IndexMap::new();
             for m in fixture.config.active_mode.macros.iter() {
-                m_state.insert(String::from(&m.label), m.current_value);
+                match m {
+                    FixtureMacro::Control(control_macro) => {
+                        m_state.insert(
+                            String::from(&control_macro.label),
+                            SceneValue::ControlValue(control_macro.current_value),
+                        );
+                    }
+                    FixtureMacro::Colour(colour_macro) => {
+                        m_state.insert(
+                            String::from(&colour_macro.label),
+                            SceneValue::ColourValue(colour_macro.current_value),
+                        );
+                    }
+                }
             }
             scene.state.insert(String::from(&fixture.label), m_state);
+        }
+    }
+
+    if let Some((scene_index, ms)) = go_scene {
+        model.apply_scene(scene_index, ms, None);
+
+        for (index, scene) in model.project.scenes.iter_mut().enumerate() {
+            if index == scene_index {
+                // This one
+                scene.last_active = true;
+            } else {
+                // Others
+                scene.last_active = false;
+                scene.is_editing = false;
+            }
         }
     }
 
@@ -151,5 +219,15 @@ pub fn render_scenes(model: &mut Model, ui: &mut Ui) {
 
     if let Some(scene) = add_scene {
         model.project.scenes.push(scene);
+
+        let new_scene_index = model.project.scenes.len() - 1;
+
+        // Also, mark all other scenes as not-editing and not-active...
+        for (index, scene) in model.project.scenes.iter_mut().enumerate() {
+            if index != new_scene_index {
+                scene.last_active = false;
+                scene.is_editing = false;
+            }
+        }
     }
 }

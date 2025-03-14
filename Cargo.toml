@@ -1,12 +1,23 @@
 [package]
 name = "tether-artnet-controller"
-version = "0.1.0"
+version = "0.8.9-beta"
 edition = "2021"
+repository = "https://github.com/RandomStudio/tether-artnet-controller"
+homepage = "https://github.com/RandomStudio/tether-artnet-controller"
+authors = ["Stephen Buchanan"]
+description = "A remote control software lighting desk"
+license = "MIT"
+
+[package.metadata.wix]
+upgrade-guid = "8E5F37FF-2FE0-464D-B307-5F64A0466ACF"
+path-guid = "87AAF93E-3AEB-44BA-8820-64AF53491A88"
+license = false
+eula = false
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-tether-agent = "0.12.1"
+tether-agent = "0.14"
 artnet_protocol = "0.4.1"
 tween = "2.0.0"
 rand = "0.8.5"
@@ -16,9 +27,14 @@ log = "0.4.18"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0.91"
 rmp-serde = "1.1.1"
-eframe = "0.22.0"
-egui = "0.22.0"
+egui = { version = "0.26.2", features = ["persistence"] }
 anyhow = "1.0.75"
 rfd = "0.12.1"
+eframe = "0.26.2"
+ctrlc = "3.4.2"
+indexmap = { version = "2.2.5", features = ["serde"] }
 
-
+# The profile that 'cargo dist' will build with
+[profile.dist]
+inherits = "release"
+lto = "thin"

@@ -16,7 +16,7 @@
         },
         {
           "channel": 3,
-          "label": "Inclination (tilt) ",
+          "label": "Inclination (tilt)",
           "notes": "(0° up to the maximum value of the Tilt area. middle position: 128)",
           "home": 128
         },
@@ -33,7 +33,7 @@
           "channel": 6,
           "label": "Dimmer intensity",
           "notes": "from dark (0) to bright (255)",
-          "home": 255
+          "home": 0
         },
         {
           "channel": 7,
@@ -167,32 +167,48 @@
       ],
       "macros": [
         {
-          "label": "red",
-          "channels": [8]
+          "control": {
+            "label": "brightness",
+            "channels": [{ "LoRes": 6 }]
+          }
         },
         {
-          "label": "green",
-          "channels": [9]
+          "colour": {
+            "label": "colour",
+            "channels": {
+              "additive": {
+                "red": [8],
+                "green": [9],
+                "blue": [10],
+                "white": [11]
+              }
+            }
+          }
+        },
+
+        {
+          "control": {
+            "label": "pan",
+            "channels": [{ "HiRes": [1, 2] }]
+          }
         },
         {
-          "label": "blue",
-          "channels": [10]
+          "control": {
+            "label": "tilt",
+            "channels": [{ "HiRes": [3, 4] }]
+          }
         },
         {
-          "label": "white",
-          "channels": [11]
+          "control": {
+            "label": "zoom",
+            "channels": [{ "LoRes": 14 }]
+          }
         },
         {
-          "label": "pan",
-          "channels": [1]
-        },
-        {
-          "label": "tilt",
-          "channels": [3]
-        },
-        {
-          "label": "zoom",
-          "channels": [14]
+          "control": {
+            "label": "beamsplit",
+            "channels": [{ "LoRes": 15 }]
+          }
         }
       ]
     }

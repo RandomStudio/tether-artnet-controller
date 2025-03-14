@@ -3,7 +3,7 @@
     {
       "generic": {
         "common": {
-          "name": "Direct Control ALL",
+          "name": "Macro Control Value ALL",
           "description": "Any generic data, in JSON format",
           "plug": {
             "OutputPlug": {
@@ -22,57 +22,57 @@
           },
           "midiMapping": null
         },
-        "value": "{\"macroLabel\":\"white\", \"value\": 0}"
+        "value": "{\"macroLabel\":\"pan\",  \"value\": { \"ControlValue\": 255 } }"
       }
     },
     {
       "generic": {
         "common": {
-          "name": "Animations ALL",
+          "name": "Macro Control Value ALL",
           "description": "Any generic data, in JSON format",
           "plug": {
             "OutputPlug": {
-              "name": "animations",
+              "name": "macros",
               "topic": {
                 "Tether": {
                   "role": "gui",
                   "id": "any",
-                  "plug_name": "animations",
-                  "full_topic": "gui/any/animations"
+                  "plug_name": "macros",
+                  "full_topic": "gui/any/macros"
                 }
               },
-              "qos": 0,
+              "qos": 1,
               "retain": false
             }
           },
           "midiMapping": null
         },
-        "value": "{\"macroLabel\":\"white\", \"targetValue\": 0, \"duration\": 3000}"
+        "value": "{\"macroLabel\":\"zoom\", \"value\": { \"ControlValue\": 255 }, \"ms\": 3000}"
       }
     },
     {
       "generic": {
         "common": {
-          "name": "Animations FIXTURE",
+          "name": "Macro Control Value FIXTURE",
           "description": "Any generic data, in JSON format",
           "plug": {
             "OutputPlug": {
-              "name": "animations",
+              "name": "macros",
               "topic": {
                 "Tether": {
                   "role": "gui",
                   "id": "any",
-                  "plug_name": "animations",
-                  "full_topic": "gui/any/animations"
+                  "plug_name": "macros",
+                  "full_topic": "gui/any/macros"
                 }
               },
-              "qos": 0,
+              "qos": 1,
               "retain": false
             }
           },
           "midiMapping": null
         },
-        "value": "{\"fixtureLabel\": \"Hex East\",  \"macroLabel\":\"white\", \"targetValue\": 0, \"duration\": 3000}"
+        "value": "{\"fixtureLabels\": [\"Hex Left\"],  \"macroLabel\":\"pan\", \"value\": { \"ControlValue\": 200 }, \"ms\": 3000}"
       }
     },
     {
@@ -97,7 +97,7 @@
           },
           "midiMapping": null
         },
-        "value": "{\"sceneLabel\":\"multi-coloured\", \"ms\":3000}"
+        "value": "{\"sceneLabel\":\"rgbw plus yellow\", \"ms\":3000}"
       }
     },
     {
@@ -123,6 +123,31 @@
           "midiMapping": null
         },
         "value": "{\"sceneLabel\":\"white down\", \"ms\":5000}"
+      }
+    },
+    {
+      "generic": {
+        "common": {
+          "name": "Macro Colour",
+          "description": "Any generic data, in JSON format",
+          "plug": {
+            "OutputPlug": {
+              "name": "macros",
+              "topic": {
+                "Tether": {
+                  "role": "gui",
+                  "id": "any",
+                  "plug_name": "macros",
+                  "full_topic": "gui/any/macros"
+                }
+              },
+              "qos": 0,
+              "retain": false
+            }
+          },
+          "midiMapping": null
+        },
+        "value": "{\"macroLabel\":\"colour\",  \"value\": { \"ColourValue\": [20,100,10,255] },\"ms\":5000 }"
       }
     }
   ],

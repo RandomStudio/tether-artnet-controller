@@ -29,7 +29,7 @@
           "channel": 5,
           "label": "Intensity coarse",
           "notes": "Intensity 0 -> 100%",
-          "home": 255
+          "home": 0
         },
         {
           "channel": 6,
@@ -587,28 +587,47 @@
       ],
       "macros": [
         {
-          "label": "red",
-          "channels": [12]
+          "control": {
+            "label": "brightness",
+            "channels": [{ "HiRes": [5, 6] }]
+          }
         },
         {
-          "label": "green",
-          "channels": [14]
+          "colour": {
+            "label": "colour",
+            "channels": {
+              "additive": {
+                "red": [12],
+                "green": [14],
+                "blue": [16],
+                "white": [18]
+              }
+            }
+          }
         },
         {
-          "label": "blue",
-          "channels": [16]
+          "control": {
+            "label": "pan",
+            "channels": [{ "HiRes": [1, 2] }]
+          }
         },
         {
-          "label": "pan",
-          "channels": [1]
+          "control": {
+            "label": "tilt",
+            "channels": [{ "HiRes": [3, 4] }]
+          }
         },
         {
-          "label": "tilt",
-          "channels": [3]
+          "control": {
+            "label": "zoom",
+            "channels": [{ "LoRes": 8 }]
+          }
         },
         {
-          "label": "zoom",
-          "channels": [8]
+          "control": {
+            "label": "shutter",
+            "channels": [{ "LoRes": 7 }]
+          }
         }
       ]
     }

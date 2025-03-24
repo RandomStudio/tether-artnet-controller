@@ -639,6 +639,12 @@
             "label": "shutter",
             "channels": [{ "LoRes": 6 }]
           }
+        },
+        {
+          "control": {
+            "label": "cto",
+            "channels": [{ "LoRes": 30 }]
+          }
         }
       ]
     },
@@ -1355,6 +1361,12 @@
           "control": {
             "label": "shutter",
             "channels": [{ "LoRes": 6 }]
+          }
+        },
+        {
+          "control": {
+            "label": "cto",
+            "channels": [{ "HiRes": [48, 49] }]
           }
         }
       ]
@@ -3203,6 +3215,7 @@
         {
           "channel": 14,
           "label": "Colour Wheel",
+          "home": 0,
           "ranges": [
             {
               "range": [0, 3],
@@ -3567,6 +3580,18 @@
           "control": {
             "label": "zoom",
             "channels": [{ "LoRes": 4 }]
+          }
+        },
+        {
+          "control": {
+            "label": "ctc",
+            "channels": [{ "LoRes": 15 }]
+          }
+        },
+        {
+          "control": {
+            "label": "colour wheel",
+            "channels": [{ "LoRes": 14 }]
           }
         }
       ]

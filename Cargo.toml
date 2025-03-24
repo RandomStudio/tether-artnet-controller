@@ -1,6 +1,6 @@
 [package]
 name = "tether-artnet-controller"
-version = "0.8.9-beta"
+version = "0.9.0-beta"
 edition = "2021"
 repository = "https://github.com/RandomStudio/tether-artnet-controller"
 homepage = "https://github.com/RandomStudio/tether-artnet-controller"

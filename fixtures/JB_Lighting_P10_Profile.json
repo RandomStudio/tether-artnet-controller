@@ -638,6 +638,12 @@
             "label": "shutter",
             "channels": [{ "LoRes": 6 }]
           }
+        },
+        {
+          "control": {
+            "label": "cto",
+            "channels": [{ "LoRes": 30 }]
+          }
         }
       ]
     },
@@ -1354,6 +1360,12 @@
           "control": {
             "label": "shutter",
             "channels": [{ "LoRes": 6 }]
+          }
+        },
+        {
+          "control": {
+            "label": "cto",
+            "channels": [{ "HiRes": [48, 49] }]
           }
         }
       ]

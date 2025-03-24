@@ -169,30 +169,28 @@ impl ArtNetInterface {
                                         cyan,
                                         magenta,
                                         yellow,
-                                        cto,
                                     } = cmy;
-                                    let brightness = colour_macro.current_value.a();
+                                    // let c = 255 - colour_macro.current_value.r();
+                                    // let m = 255 - colour_macro.current_value.g();
+                                    // let y = 255 - colour_macro.current_value.b();
 
-                                    let c = 255 - colour_macro.current_value.r();
-                                    let m = 255 - colour_macro.current_value.g();
-                                    let y = 255 - colour_macro.current_value.b();
+                                    // Convert all cmy values from "opaque" version (ignoring alpha)
+                                    let opaque = colour_macro.current_value.to_opaque();
 
                                     for channel in cyan.iter() {
                                         self.channels
-                                            [(*channel - 1 + f.offset_channels) as usize] = c;
+                                            [(*channel - 1 + f.offset_channels) as usize] =
+                                            255 - opaque.r();
                                     }
                                     for channel in magenta.iter() {
                                         self.channels
-                                            [(*channel - 1 + f.offset_channels) as usize] = m;
+                                            [(*channel - 1 + f.offset_channels) as usize] =
+                                            255 - opaque.g();
                                     }
                                     for channel in yellow.iter() {
                                         self.channels
-                                            [(*channel - 1 + f.offset_channels) as usize] = y;
-                                    }
-                                    for channel in cto.iter() {
-                                        self.channels
                                             [(*channel - 1 + f.offset_channels) as usize] =
-                                            brightness;
+                                            255 - opaque.b();
                                     }
                                 }
                                 ChannelList::AdditiveRGB16(_rgb16) => {

@@ -116,8 +116,7 @@
               "subtractive": {
                 "cyan": [8],
                 "magenta": [9],
-                "yellow": [10],
-                "cto": [11]
+                "yellow": [10]
               }
             }
           }

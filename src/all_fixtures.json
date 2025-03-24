@@ -611,8 +611,7 @@
               "subtractive": {
                 "cyan": [27],
                 "magenta": [28],
-                "yellow": [29],
-                "cto": [30]
+                "yellow": [29]
               }
             }
           }
@@ -1329,8 +1328,7 @@
               "subtractive": {
                 "cyan": [42],
                 "magenta": [44],
-                "yellow": [46],
-                "cto": [48]
+                "yellow": [46]
               }
             }
           }
@@ -1481,8 +1479,7 @@
               "subtractive": {
                 "cyan": [8],
                 "magenta": [9],
-                "yellow": [10],
-                "cto": [11]
+                "yellow": [10]
               }
             }
           }

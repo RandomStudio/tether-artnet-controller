@@ -18,7 +18,7 @@ pub fn render_fixture_controls(model: &mut Model, ui: &mut Ui) {
                             ui.label("Offset channels:");
                             ui.add(
                                 DragValue::new(&mut new_fixture.offset_channels)
-                                    .clamp_range(0..=255)
+                                    .clamp_range(0..=512)
                                     .speed(1),
                             );
                         });
@@ -87,7 +87,7 @@ fn fixture_controls_in_project(model: &mut Model, ui: &mut Ui) {
             ui.label("Offset channels:");
             ui.add(
                 DragValue::new(&mut fixture.offset_channels)
-                    .clamp_range(0..=255)
+                    .clamp_range(0..=512)
                     .speed(1),
             );
         });

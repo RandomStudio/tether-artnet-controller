@@ -3459,7 +3459,7 @@ dependencies = [
 
 [[package]]
 name = "tether-artnet-controller"
-version = "0.8.9-beta"
+version = "0.9.0-beta"
 dependencies = [
  "anyhow",
  "artnet_protocol",

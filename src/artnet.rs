@@ -242,7 +242,7 @@ impl ArtNetInterface {
 
         trace!("Channel state {:?}", self.channels);
         let command = ArtCommand::Output(Output {
-            port_address: 0.into(),
+            port_address: 1.into(),
             data: self.channels.clone().into(), // make temp copy of self channel state (?)
             ..Output::default()
         });

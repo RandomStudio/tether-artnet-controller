@@ -179,10 +179,7 @@ pub fn render_mode_switcher(
                                 model.project = p;
                                 model.current_project_path = Some(path.display().to_string());
                                 model.artnet =
-                                    match get_artnet_interface(&model.settings, &model.project) {
-                                        Ok(a) => Some(a),
-                                        Err(_e) => None,
-                                    }
+                                    get_artnet_interface(&model.settings, &model.project).ok()
                             }
                             Err(e) => {
                                 error!(

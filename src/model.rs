@@ -128,10 +128,7 @@ impl Model {
             channels_state: Vec::new(),
             channels_assigned,
             settings: cli,
-            artnet: match artnet {
-                Ok(artnet) => Some(artnet),
-                Err(_) => None,
-            },
+            artnet: artnet.ok(),
             artnet_edit_mode: ArtNetConfigMode::Broadcast,
             project,
             // ----

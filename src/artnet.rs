@@ -20,6 +20,7 @@ use crate::{
 pub struct ArtNetInterface {
     socket: UdpSocket,
     destination: SocketAddr,
+    universe: u8,
     channels: Vec<u8>,
     update_interval: Duration,
     last_sent: Option<SystemTime>,
@@ -35,7 +36,7 @@ pub enum ArtNetMode {
 }
 
 impl ArtNetInterface {
-    pub fn new(mode: ArtNetMode, update_frequency: u64) -> anyhow::Result<Self> {
+    pub fn new(mode: ArtNetMode, update_frequency: u64, universe: u8) -> anyhow::Result<Self> {
         let channels = Vec::with_capacity(CHANNELS_PER_UNIVERSE as usize);
 
         let update_interval = Duration::from_secs_f32(1.0 / update_frequency as f32);
@@ -49,6 +50,7 @@ impl ArtNetInterface {
                 Ok(ArtNetInterface {
                     socket,
                     destination: broadcast_addr,
+                    universe,
                     channels,
                     update_interval,
                     last_sent: None,
@@ -67,6 +69,7 @@ impl ArtNetInterface {
                             socket,
                             destination,
                             channels,
+                            universe,
                             update_interval,
                             last_sent: None,
                             mode_in_use: mode.clone(),
@@ -242,7 +245,7 @@ impl ArtNetInterface {
 
         trace!("Channel state {:?}", self.channels);
         let command = ArtCommand::Output(Output {
-            port_address: 1.into(),
+            port_address: self.universe.into(),
             data: self.channels.clone().into(), // make temp copy of self channel state (?)
             ..Output::default()
         });

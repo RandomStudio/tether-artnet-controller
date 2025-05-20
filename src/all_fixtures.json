@@ -1374,6 +1374,41 @@
   ]
 }
 ,{
+  "name": "Godox KNOWLED F400Bi",
+  "reference": "https://www.godox.com/static/upload/file/20231205/1701740691518042.pdf",
+  "modes": [
+    {
+      "name": "CCT 8bit Mode",
+      "mappings": [
+        {
+          "channel": 1,
+          "label": "DIM",
+          "notes": "Brightness"
+        },
+        {
+          "channel": 2,
+          "label": "CCT",
+          "notes": "Colour temperature 2700K-8500K"
+        }
+      ],
+      "macros": [
+        {
+          "control": {
+            "label": "brightness",
+            "channels": [{ "LoRes": 1 }]
+          }
+        },
+        {
+          "control": {
+            "label": "colourTemp",
+            "channels": [{ "LoRes": 2 }]
+          }
+        }
+      ]
+    }
+  ]
+}
+,{
   "name": "Cameo Opus S5",
   "reference": "https://www.cameolight.com/de/loesungen/dj-musiker/bewegtes-licht/moving-heads/25591/movo-beam-200#detail-description",
   "modes": [
@@ -2637,6 +2672,41 @@
           "control": {
             "label": "zoom",
             "channels": [{ "LoRes": 4 }]
+          }
+        }
+      ]
+    }
+  ]
+}
+,{
+  "name": "Godox KNOWLED F600Bi",
+  "reference": "https://www.godox.com/static/upload/file/20230713/1689216265265540.pdf",
+  "modes": [
+    {
+      "name": "CCT 8bit Mode",
+      "mappings": [
+        {
+          "channel": 1,
+          "label": "DIM",
+          "notes": "Brightness"
+        },
+        {
+          "channel": 2,
+          "label": "CCT",
+          "notes": "Colour temperature 2700K-8500K"
+        }
+      ],
+      "macros": [
+        {
+          "control": {
+            "label": "brightness",
+            "channels": [{ "LoRes": 1 }]
+          }
+        },
+        {
+          "control": {
+            "label": "colourTemp",
+            "channels": [{ "LoRes": 2 }]
           }
         }
       ]

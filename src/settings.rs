@@ -25,6 +25,10 @@ pub struct Cli {
     #[arg(long = "artnet.broadcast")]
     pub artnet_broadcast: bool,
 
+    /// Universe number for ArtNet, since there isn't a rigid standard for this
+    #[arg(long = "artnet.universe", default_value_t = 1)]
+    pub artnet_universe: u8,
+
     /// IP address for ArtNet source interface (ignored if broadcast enabled)
     #[arg(long = "artnet.interface")]
     pub unicast_src: Option<std::net::IpAddr>,

@@ -93,6 +93,7 @@ pub fn render_network_controls(model: &mut Model, ui: &mut Ui) {
                     ArtNetConfigMode::Broadcast => ArtNetInterface::new(
                         ArtNetMode::Broadcast,
                         model.settings.artnet_update_frequency,
+                        model.settings.artnet_universe,
                     ),
                     ArtNetConfigMode::Unicast(src, dst) => {
                         let src_parsed = Ipv4Addr::from_str(src);
@@ -104,6 +105,7 @@ pub fn render_network_controls(model: &mut Model, ui: &mut Ui) {
                                     SocketAddr::from((Ipv4Addr::from_str(dst).unwrap(), 6454)),
                                 ),
                                 model.settings.artnet_update_frequency,
+                                model.settings.artnet_universe,
                             )
                         } else {
                             Err(anyhow!("Invalid IP address string"))
@@ -116,6 +118,10 @@ pub fn render_network_controls(model: &mut Model, ui: &mut Ui) {
             }
         }
     }
+    ui.horizontal(|ui| {
+        ui.label("Output Universe");
+        ui.label(format!("{}", model.settings.artnet_universe));
+    });
     ui.separator();
 }
 

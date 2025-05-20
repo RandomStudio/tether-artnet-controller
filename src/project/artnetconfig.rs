@@ -27,7 +27,11 @@ pub fn get_artnet_interface(
     debug!("get_artnet_interface");
     if cli.artnet_broadcast {
         warn!("CLI artnetBroadcast flag overrides any Project ArtNet settings");
-        ArtNetInterface::new(ArtNetMode::Broadcast, cli.artnet_update_frequency)
+        ArtNetInterface::new(
+            ArtNetMode::Broadcast,
+            cli.artnet_update_frequency,
+            cli.artnet_universe,
+        )
     } else if cli.unicast_src.is_some() && cli.unicast_dst.is_some() {
         warn!("CLI unicastSrc + unicastDst options override any Project ArtNet settings");
         ArtNetInterface::new(
@@ -36,6 +40,7 @@ pub fn get_artnet_interface(
                 SocketAddr::from((cli.unicast_dst.unwrap(), 6454)),
             ),
             cli.artnet_update_frequency,
+            cli.artnet_universe,
         )
     } else {
         debug!("No CLI overrides, attempt to use Project ArtNet config...");
@@ -43,9 +48,11 @@ pub fn get_artnet_interface(
             Some(artnet_mode) => {
                 info!("Using project ArtNet Config {:?}", artnet_mode);
                 match artnet_mode {
-                    ArtNetConfigMode::Broadcast => {
-                        ArtNetInterface::new(ArtNetMode::Broadcast, cli.artnet_update_frequency)
-                    }
+                    ArtNetConfigMode::Broadcast => ArtNetInterface::new(
+                        ArtNetMode::Broadcast,
+                        cli.artnet_update_frequency,
+                        cli.artnet_universe,
+                    ),
                     ArtNetConfigMode::Unicast(interface_ip, destination_ip) => {
                         ArtNetInterface::new(
                             ArtNetMode::Unicast(
@@ -56,6 +63,7 @@ pub fn get_artnet_interface(
                                 )),
                             ),
                             cli.artnet_update_frequency,
+                            cli.artnet_universe,
                         )
                     }
                 }

@@ -217,9 +217,10 @@ pub fn render_sliders(model: &mut Model, ui: &mut Ui) {
         .auto_shrink([false, false])
         .show(ui, |ui| {
             Grid::new("sliders").num_columns(2).show(ui, |ui| {
-                for i in 0..CHANNELS_PER_UNIVERSE {
-                    let text = format!("Channel #{}", i + 1);
-                    let is_assigned = model.channels_assigned[i as usize];
+                for i in 0..(CHANNELS_PER_UNIVERSE - 1) {
+                    let one_indexed_channel = i + 1;
+                    let text = format!("Channel #{}", one_indexed_channel);
+                    let is_assigned = model.channels_assigned[one_indexed_channel as usize];
                     ui.label(RichText::new(text).color(if is_assigned {
                         Color32::GREEN
                     } else {

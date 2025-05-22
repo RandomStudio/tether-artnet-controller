@@ -111,7 +111,7 @@ impl Model {
         for fixture in fixtures_clone.iter() {
             let current_mode = &fixture.config.modes[0];
             for m in &current_mode.mappings {
-                let channel_index = m.channel + fixture.offset_channels - 1;
+                let channel_index = m.channel + fixture.start_channel - 1;
                 channels_assigned[channel_index as usize] = true;
             }
         }
@@ -593,7 +593,7 @@ impl Model {
             let current_mode = &fixture.config.active_mode;
             for m in &current_mode.mappings {
                 if let Some(default_value) = m.home {
-                    let channel_index = m.channel + fixture.offset_channels - 1;
+                    let channel_index = m.channel + fixture.start_channel - 2;
                     self.channels_state[channel_index as usize] = default_value;
                 }
             }

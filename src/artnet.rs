@@ -108,7 +108,7 @@ impl ArtNetInterface {
                                 match c {
                                     ChannelWithResolution::LoRes(single_channel) => {
                                         let target_channel =
-                                            (*single_channel - 1 + f.offset_channels) as usize;
+                                            (*single_channel + f.start_channel - 1) as usize;
                                         let scaled_value = ((control_macro.current_value as f32
                                             / u16::MAX as f32)
                                             * 255.0)
@@ -120,15 +120,15 @@ impl ArtNetInterface {
                                             control_macro.current_value,
                                             scaled_value
                                         );
-                                        self.channels[target_channel] = scaled_value;
+                                        self.channels[target_channel - 1] = scaled_value;
                                     }
                                     ChannelWithResolution::HiRes((c1, c2)) => {
                                         // Assume coarse+fine 16-bit values are "big endian" (be):
                                         let [b1, b2] = control_macro.current_value.to_be_bytes();
                                         // coarse channel:
-                                        self.channels[(*c1 - 1 + f.offset_channels) as usize] = b1;
+                                        self.channels[(*c1 + f.start_channel - 2) as usize] = b1;
                                         // fine channel:
-                                        self.channels[(*c2 - 1 + f.offset_channels) as usize] = b2;
+                                        self.channels[(*c2 + f.start_channel - 2) as usize] = b2;
                                     }
                                 }
                             }
@@ -146,16 +146,13 @@ impl ArtNetInterface {
                                     // Convert all rgb values from "opaque" version (ignoring alpha)
                                     let opaque = colour_macro.current_value.to_opaque();
                                     for c in red.iter() {
-                                        self.channels[(*c - 1 + f.offset_channels) as usize] =
-                                            opaque.r();
+                                        self.channels[(*c + f.start_channel) as usize] = opaque.r();
                                     }
                                     for c in green.iter() {
-                                        self.channels[(*c - 1 + f.offset_channels) as usize] =
-                                            opaque.g();
+                                        self.channels[(*c + f.start_channel) as usize] = opaque.g();
                                     }
                                     for c in blue.iter() {
-                                        self.channels[(*c - 1 + f.offset_channels) as usize] =
-                                            opaque.b();
+                                        self.channels[(*c + f.start_channel) as usize] = opaque.b();
                                     }
 
                                     // Use inverse of alpha for "white mix" , i.e.
@@ -163,7 +160,7 @@ impl ArtNetInterface {
                                     //  alpha = 0% => RGB the same, but mix in full white
                                     let white_inverse = 255 - colour_macro.current_value.a();
                                     for c in white.iter() {
-                                        self.channels[(*c - 1 + f.offset_channels) as usize] =
+                                        self.channels[(*c + f.start_channel) as usize] =
                                             white_inverse;
                                     }
                                 }
@@ -181,18 +178,15 @@ impl ArtNetInterface {
                                     let opaque = colour_macro.current_value.to_opaque();
 
                                     for channel in cyan.iter() {
-                                        self.channels
-                                            [(*channel - 1 + f.offset_channels) as usize] =
+                                        self.channels[(*channel + f.start_channel) as usize] =
                                             255 - opaque.r();
                                     }
                                     for channel in magenta.iter() {
-                                        self.channels
-                                            [(*channel - 1 + f.offset_channels) as usize] =
+                                        self.channels[(*channel + f.start_channel) as usize] =
                                             255 - opaque.g();
                                     }
                                     for channel in yellow.iter() {
-                                        self.channels
-                                            [(*channel - 1 + f.offset_channels) as usize] =
+                                        self.channels[(*channel + f.start_channel) as usize] =
                                             255 - opaque.b();
                                     }
                                 }
@@ -209,9 +203,9 @@ impl ArtNetInterface {
                                     //     let [b1, b2] = value.to_be_bytes();
 
                                     //     // coarse channel:
-                                    //     self.channels[(*c1 - 1 + f.offset_channels) as usize] = b1;
+                                    //     self.channels[(*c1  + f.offset_channels) as usize] = b1;
                                     //     // fine channel:
-                                    //     self.channels[(*c2 - 1 + f.offset_channels) as usize] = b2;
+                                    //     self.channels[(*c2  + f.offset_channels) as usize] = b2;
                                     // }
                                     todo!("Not yet implemented; current Colour Macros are 8-bit channels only!");
                                 }
@@ -223,16 +217,13 @@ impl ArtNetInterface {
                                     // Convert all rgb values from "opaque" version (ignoring alpha)
                                     let opaque = colour_macro.current_value.to_opaque();
                                     for c in red.iter() {
-                                        self.channels[(*c - 1 + f.offset_channels) as usize] =
-                                            opaque.r();
+                                        self.channels[(*c + f.start_channel) as usize] = opaque.r();
                                     }
                                     for c in green.iter() {
-                                        self.channels[(*c - 1 + f.offset_channels) as usize] =
-                                            opaque.g();
+                                        self.channels[(*c + f.start_channel) as usize] = opaque.g();
                                     }
                                     for c in blue.iter() {
-                                        self.channels[(*c - 1 + f.offset_channels) as usize] =
-                                            opaque.b();
+                                        self.channels[(*c + f.start_channel) as usize] = opaque.b();
                                     }
                                     // Ignore lime, since we don't represent it in standard colour macros
                                 }

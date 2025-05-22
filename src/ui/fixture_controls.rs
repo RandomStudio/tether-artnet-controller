@@ -17,7 +17,7 @@ pub fn render_fixture_controls(model: &mut Model, ui: &mut Ui) {
                         ui.horizontal(|ui| {
                             ui.label("Offset channels:");
                             ui.add(
-                                DragValue::new(&mut new_fixture.offset_channels)
+                                DragValue::new(&mut new_fixture.start_channel)
                                     .clamp_range(0..=512)
                                     .speed(1),
                             );
@@ -86,7 +86,7 @@ fn fixture_controls_in_project(model: &mut Model, ui: &mut Ui) {
         ui.horizontal(|ui| {
             ui.label("Offset channels:");
             ui.add(
-                DragValue::new(&mut fixture.offset_channels)
+                DragValue::new(&mut fixture.start_channel)
                     .clamp_range(0..=512)
                     .speed(1),
             );
@@ -100,15 +100,12 @@ fn fixture_controls_in_project(model: &mut Model, ui: &mut Ui) {
             .num_columns(3)
             .show(ui, |ui| {
                 for m in &current_mode.mappings {
-                    let channel_index = m.channel + fixture.offset_channels - 1;
+                    let channel_index = m.channel + fixture.start_channel - 2;
                     ui.horizontal(|ui| {
                         ui.label(&m.label);
                         if let Some(notes) = &m.notes {
-                            ui.label("ℹ").on_hover_text(format!(
-                                "#Channel {}: {}",
-                                channel_index + 1,
-                                notes
-                            ));
+                            ui.label("ℹ")
+                                .on_hover_text(format!("#Channel {}: {}", channel_index, notes));
                         }
                     });
                     if ui

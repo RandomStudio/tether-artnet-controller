@@ -593,7 +593,7 @@ impl Model {
             let current_mode = &fixture.config.active_mode;
             for m in &current_mode.mappings {
                 if let Some(default_value) = m.home {
-                    let channel_index = m.channel + fixture.start_channel - 2;
+                    let channel_index = (m.channel - 1) + (fixture.start_channel - 1);
                     self.channels_state[channel_index as usize] = default_value;
                 }
             }

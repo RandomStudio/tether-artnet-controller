@@ -97,32 +97,34 @@ fn fixture_controls_in_project(model: &mut Model, ui: &mut Ui) {
         ui.heading("Mappings");
 
         Grid::new(format!("mappings_{}", i))
-            .num_columns(3)
+            .num_columns(4)
             .show(ui, |ui| {
                 for m in &current_mode.mappings {
-                    let channel_index = m.channel + fixture.start_channel - 2;
+                    let channel_zero_index = (m.channel - 1) + (fixture.start_channel - 1);
+                    let channel_one_index = channel_zero_index + 1;
                     ui.horizontal(|ui| {
                         ui.label(&m.label);
-                        if let Some(notes) = &m.notes {
-                            ui.label("ℹ")
-                                .on_hover_text(format!("#Channel {}: {}", channel_index, notes));
-                        }
+                        ui.label("ℹ").on_hover_text(format!(
+                            "Fixture CH{} => DMX CH{} (idx [{}])",
+                            m.channel, channel_one_index, channel_zero_index
+                        ));
                     });
                     if ui
                         .add(Slider::new(
-                            &mut model.channels_state[(channel_index) as usize],
+                            &mut model.channels_state[(channel_zero_index) as usize],
                             0..=255,
                         ))
                         .changed()
                     {
                         model.apply_macros = false;
                     };
+                    ui.label(m.notes.as_deref().unwrap_or(" "));
                     if let Some(range_sections) = &m.ranges {
                         ui.label("Mode/Programme:");
                         let current_range = range_sections.iter().find(|x| {
                             let [start, end] = x.range;
-                            model.channels_state[(channel_index) as usize] >= start
-                                && model.channels_state[(channel_index) as usize] <= end
+                            model.channels_state[(channel_zero_index) as usize] >= start
+                                && model.channels_state[(channel_zero_index) as usize] <= end
                         });
                         match current_range {
                             Some(r) => {

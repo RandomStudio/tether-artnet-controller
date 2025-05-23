@@ -18,3 +18,6 @@ publish-jobs = ["homebrew"]
 
 [dist.dependencies.apt]
 libgtk-3-dev = "*"
+
+[dist.github-custom-runners]
+global = "ubuntu-latest"

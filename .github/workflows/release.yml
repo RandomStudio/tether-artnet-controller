@@ -220,9 +220,7 @@ jobs:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     runs-on: "ubuntu-latest"
     permissions:
-      contents: write
-      pull-requests: write
-      repository-projects: write
+      "contents": "write"
     outputs:
       val: ${{ steps.host.outputs.manifest }}
     steps:

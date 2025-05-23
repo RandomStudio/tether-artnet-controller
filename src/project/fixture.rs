@@ -13,7 +13,8 @@ pub struct FixtureInstance {
     pub label: String,
     /// The exact match for the fixture name as it appears in the fixture config JSON
     pub config_name: String,
-    pub offset_channels: u16,
+    /// The **one-indexed** starting channel for this fixture instance
+    pub start_channel: u16,
     #[serde(default)]
     pub mode_index: usize,
     #[serde(skip)]
@@ -47,7 +48,7 @@ impl From<&FixtureConfig> for FixtureInstance {
         FixtureInstance {
             label: format!("My {}", config.name),
             config_name: String::from(&config.name),
-            offset_channels: 0,
+            start_channel: 0,
             mode_index: 0,
             config: config.clone(),
         }

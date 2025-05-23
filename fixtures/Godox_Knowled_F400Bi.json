@@ -1,0 +1,35 @@
+{
+  "name": "Godox KNOWLED F400Bi",
+  "reference": "https://www.godox.com/static/upload/file/20231205/1701740691518042.pdf",
+  "modes": [
+    {
+      "name": "CCT 8bit Mode",
+      "mappings": [
+        {
+          "channel": 1,
+          "label": "DIM",
+          "notes": "Brightness"
+        },
+        {
+          "channel": 2,
+          "label": "CCT",
+          "notes": "Colour temperature 2700K-8500K"
+        }
+      ],
+      "macros": [
+        {
+          "control": {
+            "label": "brightness",
+            "channels": [{ "LoRes": 1 }]
+          }
+        },
+        {
+          "control": {
+            "label": "colourTemp",
+            "channels": [{ "LoRes": 2 }]
+          }
+        }
+      ]
+    }
+  ]
+}

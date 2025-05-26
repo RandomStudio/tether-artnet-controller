@@ -42,6 +42,12 @@ tether-artnet-controller --artnet.interface 10.112.10.187 --artnet.destination 1
 If you have Tether Egui installed (`cargo install tether-egui`) then the easiest way to test Tether remote control is to launch Tether Egui with the example project file included, i.e.:
 `tether-egui tether-egui-testing.json`
 
+## Publishing
+Installed forked version of cargo-dist using
+```
+cargo install --git https://github.com/astral-sh/cargo-dist.git cargo-dist
+```
+
 ---
 
 ## TODO

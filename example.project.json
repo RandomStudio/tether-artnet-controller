@@ -1,6 +1,18 @@
 {
   "fixtures": [
     {
+      "label": "Hero Left",
+      "configName": "Varytec HERO 340FX",
+      "startChannel": 28,
+      "modeIndex": 0
+    },
+    {
+      "label": "Hero Right",
+      "configName": "Varytec HERO 340FX",
+      "startChannel": 71,
+      "modeIndex": 0
+    },
+    {
       "label": "Hex Left",
       "configName": "ADJ Vizi Hex Wash 7",
       "startChannel": 44,
@@ -13,10 +25,250 @@
       "modeIndex": 0
     }
   ],
-  "scenes": [],
+  "scenes": [
+    {
+      "label": "all off",
+      "state": {
+        "Hero Left": {
+          "beamsplit": {
+            "ControlValue": 0
+          },
+          "brightness": {
+            "ControlValue": 0
+          },
+          "colour": {
+            "ColourValue": [255, 255, 224, 255]
+          },
+          "pan": {
+            "ControlValue": 33025
+          },
+          "tilt": {
+            "ControlValue": 34573
+          },
+          "zoom": {
+            "ControlValue": 0
+          }
+        },
+        "Hero Right": {
+          "beamsplit": {
+            "ControlValue": 0
+          },
+          "brightness": {
+            "ControlValue": 0
+          },
+          "colour": {
+            "ColourValue": [255, 255, 224, 255]
+          },
+          "pan": {
+            "ControlValue": 26833
+          },
+          "tilt": {
+            "ControlValue": 31477
+          },
+          "zoom": {
+            "ControlValue": 0
+          }
+        },
+        "Hex Left": {
+          "brightness": {
+            "ControlValue": 0
+          },
+          "colour": {
+            "ColourValue": [255, 255, 224, 255]
+          },
+          "pan": {
+            "ControlValue": 31993
+          },
+          "tilt": {
+            "ControlValue": 31477
+          },
+          "zoom": {
+            "ControlValue": 0
+          }
+        },
+        "Hex Right": {
+          "brightness": {
+            "ControlValue": 0
+          },
+          "colour": {
+            "ColourValue": [255, 255, 224, 255]
+          },
+          "pan": {
+            "ControlValue": 32509
+          },
+          "tilt": {
+            "ControlValue": 31993
+          },
+          "zoom": {
+            "ControlValue": 0
+          }
+        }
+      }
+    },
+    {
+      "label": "speaker",
+      "state": {
+        "Hero Left": {
+          "beamsplit": {
+            "ControlValue": 0
+          },
+          "brightness": {
+            "ControlValue": 65535
+          },
+          "colour": {
+            "ColourValue": [0, 0, 0, 0]
+          },
+          "pan": {
+            "ControlValue": 13932
+          },
+          "tilt": {
+            "ControlValue": 22705
+          },
+          "zoom": {
+            "ControlValue": 65535
+          }
+        },
+        "Hero Right": {
+          "beamsplit": {
+            "ControlValue": 0
+          },
+          "brightness": {
+            "ControlValue": 65535
+          },
+          "colour": {
+            "ColourValue": [0, 0, 0, 0]
+          },
+          "pan": {
+            "ControlValue": 5676
+          },
+          "tilt": {
+            "ControlValue": 15996
+          },
+          "zoom": {
+            "ControlValue": 65535
+          }
+        },
+        "Hex Left": {
+          "brightness": {
+            "ControlValue": 65535
+          },
+          "colour": {
+            "ColourValue": [0, 0, 0, 0]
+          },
+          "pan": {
+            "ControlValue": 13416
+          },
+          "tilt": {
+            "ControlValue": 28381
+          },
+          "zoom": {
+            "ControlValue": 27349
+          }
+        },
+        "Hex Right": {
+          "brightness": {
+            "ControlValue": 45410
+          },
+          "colour": {
+            "ColourValue": [0, 0, 0, 0]
+          },
+          "pan": {
+            "ControlValue": 33025
+          },
+          "tilt": {
+            "ControlValue": 23737
+          },
+          "zoom": {
+            "ControlValue": 24253
+          }
+        }
+      }
+    },
+    {
+      "label": "truss",
+      "state": {
+        "Hero Left": {
+          "beamsplit": {
+            "ControlValue": 0
+          },
+          "brightness": {
+            "ControlValue": 65535
+          },
+          "colour": {
+            "ColourValue": [255, 255, 0, 255]
+          },
+          "pan": {
+            "ControlValue": 21672
+          },
+          "tilt": {
+            "ControlValue": 2064
+          },
+          "zoom": {
+            "ControlValue": 0
+          }
+        },
+        "Hero Right": {
+          "beamsplit": {
+            "ControlValue": 0
+          },
+          "brightness": {
+            "ControlValue": 65535
+          },
+          "colour": {
+            "ColourValue": [255, 0, 0, 255]
+          },
+          "pan": {
+            "ControlValue": 44378
+          },
+          "tilt": {
+            "ControlValue": 0
+          },
+          "zoom": {
+            "ControlValue": 0
+          }
+        },
+        "Hex Left": {
+          "brightness": {
+            "ControlValue": 65535
+          },
+          "colour": {
+            "ColourValue": [0, 255, 157, 255]
+          },
+          "pan": {
+            "ControlValue": 11352
+          },
+          "tilt": {
+            "ControlValue": 0
+          },
+          "zoom": {
+            "ControlValue": 65535
+          }
+        },
+        "Hex Right": {
+          "brightness": {
+            "ControlValue": 45410
+          },
+          "colour": {
+            "ColourValue": [211, 175, 205, 255]
+          },
+          "pan": {
+            "ControlValue": 31993
+          },
+          "tilt": {
+            "ControlValue": 0
+          },
+          "zoom": {
+            "ControlValue": 32509
+          }
+        }
+      }
+    }
+  ],
   "midiConfig": {
     "controllerStart": 48,
     "noteStart": 49
   },
-  "artnetConfig": "Broadcast"
+  "artnetConfig": {
+    "Unicast": ["10.0.0.106", "10.0.0.99"]
+  }
 }

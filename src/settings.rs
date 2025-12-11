@@ -60,4 +60,16 @@ pub struct Cli {
     /// Host/IP for Tether MQTT Broker
     #[arg(long = "tether.host")]
     pub tether_host: Option<String>,
+
+    /// Port for Tether MQTT Broker
+    #[arg(long = "tether.port")]
+    pub tether_port: Option<u16>,
+
+    /// Username for Tether MQTT Broker
+    #[arg(long = "tether.user")]
+    pub tether_user: Option<String>,
+
+    /// Password for Tether MQTT Broker
+    #[arg(long = "tether.pass")]
+    pub tether_pass: Option<String>,
 }

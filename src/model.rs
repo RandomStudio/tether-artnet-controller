@@ -653,6 +653,9 @@ pub fn attempt_connection(model: &mut Model) {
     match model.tether_interface.connect(
         model.should_quit.clone(),
         model.settings.tether_host.as_deref(),
+        model.settings.tether_port.as_ref(),
+        model.settings.tether_user.as_deref(),
+        model.settings.tether_pass.as_deref(),
         model.settings.tether_subscribe_id.as_deref(),
     ) {
         Ok(_) => {

@@ -97,12 +97,18 @@ impl TetherInterface {
         &mut self,
         should_quit: Arc<Mutex<bool>>,
         tether_host: Option<&str>,
+        tether_port: Option<&u16>,
+        tether_user: Option<&str>,
+        tether_pass: Option<&str>,
         lighting_id: Option<&str>,
     ) -> Result<(), anyhow::Error> {
         info!("Attempt to connect Tether Agent...");
 
         if let Ok(mut tether_agent) = TetherAgentOptionsBuilder::new("ArtnetController")
             .host(tether_host)
+            .port(tether_port.copied())
+            .username(tether_user)
+            .password(tether_pass)
             .build()
         {
             let input_midi_cc = PlugOptionsBuilder::create_input("controlChange")

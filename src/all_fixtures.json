@@ -1560,6 +1560,281 @@
   ]
 }
 ,{
+  "name": "Aputure INFINIMAT",
+  "reference": "https://docs.aputure.com/hubfs/Knowledge%20Base/Aputure/INFINIMAT/Documents/INFINIMAT%20DMX%20Profile%20Specification%20V1.1.pdf",
+  "modes": [
+    {
+      "name": "Mode 18: RGB 16-bit",
+      "mappings": [
+        {
+          "channel": 1,
+          "label": "Intensity",
+          "notes": "Master dimmer 8-bit (MSB of 16-bit)"
+        },
+        {
+          "channel": 2,
+          "label": "Intensity Fine",
+          "notes": "Master dimmer fine (LSB of 16-bit)"
+        },
+        {
+          "channel": 3,
+          "label": "Red",
+          "notes": "Red 8-bit (MSB of 16-bit)"
+        },
+        {
+          "channel": 4,
+          "label": "Red Fine",
+          "notes": "Red fine (LSB of 16-bit)"
+        },
+        {
+          "channel": 5,
+          "label": "Green",
+          "notes": "Green 8-bit (MSB of 16-bit)"
+        },
+        {
+          "channel": 6,
+          "label": "Green Fine",
+          "notes": "Green fine (LSB of 16-bit)"
+        },
+        {
+          "channel": 7,
+          "label": "Blue",
+          "notes": "Blue 8-bit (MSB of 16-bit)"
+        },
+        {
+          "channel": 8,
+          "label": "Blue Fine",
+          "notes": "Blue fine (LSB of 16-bit)"
+        },
+        {
+          "channel": 9,
+          "label": "White",
+          "notes": "Cool white 8-bit (MSB of 16-bit)"
+        },
+        {
+          "channel": 10,
+          "label": "White Fine",
+          "notes": "Cool white fine (LSB of 16-bit)"
+        },
+        {
+          "channel": 11,
+          "label": "Warm White",
+          "notes": "Warm white 8-bit (MSB of 16-bit)"
+        },
+        {
+          "channel": 12,
+          "label": "Warm White Fine",
+          "notes": "Warm white fine (LSB of 16-bit)"
+        },
+        {
+          "channel": 13,
+          "label": "Strobe",
+          "ranges": [
+            {
+              "range": [0, 19],
+              "label": "No Effect"
+            },
+            {
+              "range": [20, 255],
+              "label": "Strobe",
+              "notes": "1–25 Hz (slow–fast)"
+            }
+          ]
+        },
+        {
+          "channel": 14,
+          "label": "Fan Mode",
+          "notes": "Requires Function Configuration ON",
+          "ranges": [
+            {
+              "range": [0, 63],
+              "label": "Smart"
+            },
+            {
+              "range": [64, 127],
+              "label": "High"
+            },
+            {
+              "range": [128, 191],
+              "label": "Medium"
+            },
+            {
+              "range": [192, 255],
+              "label": "Silent"
+            }
+          ]
+        },
+        {
+          "channel": 15,
+          "label": "Dimmer Curve",
+          "notes": "Requires Function Configuration ON",
+          "ranges": [
+            {
+              "range": [0, 63],
+              "label": "Linear"
+            },
+            {
+              "range": [64, 127],
+              "label": "S-curve"
+            },
+            {
+              "range": [128, 191],
+              "label": "Exponential"
+            },
+            {
+              "range": [192, 255],
+              "label": "Logarithmic"
+            }
+          ]
+        }
+      ],
+      "macros": [
+        {
+          "colour": {
+            "label": "colour",
+            "channels": {
+              "additiveRGBW8": {
+                "red": [3, 4],
+                "green": [5, 6],
+                "blue": [7, 8],
+                "white": [9, 10]
+              }
+            }
+          }
+        },
+        {
+          "control": {
+            "label": "brightness",
+            "channels": [
+              { "HiRes": [1, 2] }
+            ]
+          }
+        },
+        {
+          "control": {
+            "label": "strobe",
+            "channels": [
+              { "LoRes": 13 }
+            ]
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "Mode 23: FX 16-bit",
+      "mappings": [
+        {
+          "channel": 1,
+          "label": "Intensity",
+          "notes": "Master dimmer 8-bit (MSB of 16-bit)"
+        },
+        {
+          "channel": 2,
+          "label": "Intensity Fine",
+          "notes": "Master dimmer fine (LSB of 16-bit)"
+        },
+        {
+          "channel": 3,
+          "label": "FX Run Mode",
+          "notes": "Loop / Trigger / Stop (behaviour depends on effect)",
+          "ranges": [
+            {
+              "range": [0, 9],
+              "label": "Loop / Trigger (see manual)"
+            },
+            {
+              "range": [10, 69],
+              "label": "Trigger / Loop (see manual)"
+            },
+            {
+              "range": [70, 255],
+              "label": "Stop"
+            }
+          ]
+        },
+        {
+          "channel": 4,
+          "label": "Effect Selection",
+          "ranges": [
+            { "range": [0, 9], "label": "Club Lights" },
+            { "range": [10, 19], "label": "Paparazzi" },
+            { "range": [20, 29], "label": "Lightning" },
+            { "range": [30, 39], "label": "TV" },
+            { "range": [40, 49], "label": "Candle" },
+            { "range": [50, 59], "label": "Fire" },
+            { "range": [60, 69], "label": "Strobe (FX)" },
+            { "range": [70, 79], "label": "Explosion" },
+            { "range": [80, 89], "label": "Faulty Bulb" },
+            { "range": [90, 99], "label": "Pulsing" },
+            { "range": [100, 109], "label": "Welding" },
+            { "range": [110, 119], "label": "Cop Car" },
+            { "range": [120, 129], "label": "Color Chase" },
+            { "range": [130, 139], "label": "Party Lights" },
+            { "range": [140, 149], "label": "Fireworks" },
+            { "range": [150, 255], "label": "Reserved" }
+          ]
+        },
+        {
+          "channel": 5,
+          "label": "FX Parameter 1",
+          "notes": "Meaning depends on effect (CCT/saturation/etc.)"
+        },
+        {
+          "channel": 6,
+          "label": "FX Parameter 2",
+          "notes": "Often speed / frequency"
+        },
+        {
+          "channel": 7,
+          "label": "FX Parameter 3",
+          "notes": "See FX Parameter tables in manual"
+        },
+        {
+          "channel": 8,
+          "label": "FX Parameter 4",
+          "notes": "See FX Parameter tables in manual"
+        },
+        {
+          "channel": 9,
+          "label": "FX Parameter 5",
+          "notes": "See FX Parameter tables in manual"
+        },
+        {
+          "channel": 10,
+          "label": "FX Parameter 6",
+          "notes": "See FX Parameter tables in manual"
+        },
+        {
+          "channel": 11,
+          "label": "FX Parameter 7",
+          "notes": "See FX Parameter tables in manual"
+        },
+        {
+          "channel": 12,
+          "label": "FX Parameter 8",
+          "notes": "See FX Parameter tables in manual"
+        },
+        {
+          "channel": 13,
+          "label": "FX Parameter 9",
+          "notes": "See FX Parameter tables in manual"
+        }
+      ],
+      "macros": [
+        {
+          "control": {
+            "label": "brightness",
+            "channels": [
+              { "HiRes": [1, 2] }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
+,{
   "name": "GLP Impression X5",
   "reference": "https://www.glp.de/en/products/entertainment-lighting/moving-lights-led/impression-x5",
   "modes": [

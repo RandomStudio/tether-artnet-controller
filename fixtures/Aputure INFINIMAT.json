@@ -97,11 +97,11 @@
             "label": "colour",
             "channels": {
               "additiveRGBW8": {
-                "red": 2,
-                "green": 3,
-                "blue": 4,
-                "white": 5,
-                "warmWhite": 6
+                "red": [2],
+                "green": [3],
+                "blue": [4],
+                "white": [5],
+                "warmWhite": [6]
               }
             }
           }
@@ -123,6 +123,6 @@
           }
         }
       ]
-    },
+    }
   ]
 }

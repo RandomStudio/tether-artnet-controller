@@ -25,15 +25,15 @@
       "modeIndex": 0
     },
     {
-      "label": "Light Mats (Mode 18)",
+      "label": "Light Mat Port D (4x4)",
       "configName": "Aputure INFINIMAT",
       "startChannel": 87,
       "modeIndex": 0
     },
     {
-      "label": "Light Mats FXs (Mode 23)",
+      "label": "Light Mat Port E (4x4)",
       "configName": "Aputure INFINIMAT",
-      "startChannel": 87,
+      "startChannel": 96,
       "modeIndex": 0
     }
   ],
